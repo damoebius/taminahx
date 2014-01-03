@@ -1,4 +1,5 @@
 package ;
+import org.tamina.utils.SWFObject;
 import org.tamina.log.QuickLogger;
 class Main {
 
@@ -7,5 +8,6 @@ class Main {
 
     public static function main():Void{
         QuickLogger.info('test lib');
+        var swfo = new SWFObject();
     }
 }
