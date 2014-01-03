@@ -16,6 +16,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="createjs" level="project" />
     <orderEntry type="library" name="mconsole" level="project" />
+    <orderEntry type="library" name="msignal" level="project" />
   </component>
 </module>
 
