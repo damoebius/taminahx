@@ -1,9 +1,9 @@
 package org.tamina.view;
 
-import createjs.easeljs.Sprite;
+import createjs.easeljs.Container;
 import createjs.easeljs.DisplayObject;
 
-class Group<T : (DisplayObject) > extends Sprite {
+class Group<T : (DisplayObject) > extends Container {
 
     public function new() {
         super();
