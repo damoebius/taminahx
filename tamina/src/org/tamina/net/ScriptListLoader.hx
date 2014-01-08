@@ -11,6 +11,8 @@ class ScriptListLoader {
     private var _loader:ScriptLoader;
 
     public function new() {
+        completeSignal = new Signal0();
+        errorSignal = new Signal0();
         _loader = new ScriptLoader();
         _loader.completeSignal.add(scriptCompleteHandler);
         _loader.errorSignal.add(scriptErrorHandler);
