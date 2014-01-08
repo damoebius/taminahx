@@ -1,0 +1,11 @@
+{
+        "name": "taminahx",
+        "url" : "http://tamina-online.com",
+        "license": "GPL",
+        "tags": ["html5", "tools"],
+        "description": "Tamina common",
+        "classPath": "tamina/src",
+        "version": "0.1",
+        "releasenote": "Fixed issues with `haxelib git` and `haxelib dev`. Added `classPath` to haxelib JSON format. Small fixes.",
+        "contributors": ["damoebius"]
+}
