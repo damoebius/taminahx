@@ -1,4 +1,5 @@
 package ;
+import org.tamina.html.Global;
 import createjs.easeljs.Sprite;
 import org.tamina.view.Group;
 import org.tamina.net.ScriptListLoader;
@@ -20,5 +21,7 @@ class Main {
         loader.load(scripts);
 
         var g = new Group<Sprite>();
+
+        Global.getInstance().call('errorHandler',[]);
     }
 }
