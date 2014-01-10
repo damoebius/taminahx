@@ -6,12 +6,14 @@ import org.tamina.net.ScriptListLoader;
 import org.tamina.net.URL;
 import org.tamina.net.ScriptLoader;
 import org.tamina.log.QuickLogger;
+import org.tamina.log.DivPrinter;
 class Main {
 
     public function new() {
     }
 
     public static function main():Void {
+        Console.addPrinter(new DivPrinter());
         QuickLogger.info('test lib');
         var loader = new ScriptListLoader();
         var scripts = new Array<URL>();
@@ -22,6 +24,6 @@ class Main {
 
         var g = new Group<Sprite>();
 
-        Global.getInstance().call('errorHandler',[]);
+        Global.getInstance().call('errorHandler', []);
     }
 }
