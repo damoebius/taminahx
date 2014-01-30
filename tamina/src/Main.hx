@@ -1,4 +1,5 @@
 package ;
+import org.tamina.geom.Junction;
 import org.tamina.html.Global;
 import createjs.easeljs.Sprite;
 import org.tamina.view.Group;
@@ -23,6 +24,11 @@ class Main {
         loader.load(scripts);
 
         var g = new Group<Sprite>();
+
+        var j1:Junction = new Junction(10,10);
+        var j2:Junction = new Junction(100,100);
+        j1.links.push(j2);
+        j2.links.push(j1);
 
         Global.getInstance().call('errorHandler', []);
     }
