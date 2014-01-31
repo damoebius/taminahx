@@ -13,6 +13,8 @@ class DivPrinter implements Printer {
     public function print(level:LogLevel, params:Array<Dynamic>, indent:Int, pos:PosInfos):Void
     {
         var div:DivElement =  cast Browser.document.getElementById('debugDiv');
-        div.innerHTML += Std.string(level) + "@" + pos.className + "." + pos.methodName + ":" + params.join(", ") + '<br/>';
+        if (div != null) {
+            div.innerHTML += Std.string(level) + "@" + pos.className + "." + pos.methodName + ":" + params.join(", ") + '<br/>';
+        }
     }
 }
