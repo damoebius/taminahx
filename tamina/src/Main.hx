@@ -1,4 +1,5 @@
 package ;
+import js.html.Document;
 import org.tamina.net.XMLLoader;
 import org.tamina.geom.Junction;
 import org.tamina.html.Global;
@@ -39,7 +40,7 @@ class Main {
         Global.getInstance().call('errorHandler', []);
     }
 
-    public static function xml_completeHandler(xml):Void{
+    public static function xml_completeHandler(xml:Document):Void{
         QuickLogger.info('hop');
     }
 }

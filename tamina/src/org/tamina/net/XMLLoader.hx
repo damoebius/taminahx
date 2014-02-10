@@ -1,4 +1,5 @@
 package org.tamina.net;
+import js.html.Document;
 import js.html.XMLHttpRequestProgressEvent;
 import org.tamina.log.QuickLogger;
 import org.tamina.events.XMLHttpRequestEvent;
@@ -6,9 +7,9 @@ import js.html.XMLHttpRequest;
 import msignal.Signal;
 class XMLLoader {
 
-    public var completeSignal:Signal1<Xml>;
+    public var completeSignal:Signal1<Document>;
     public var errorSignal:Signal1<Dynamic>;
-    private var _configXML:Xml;
+    private var _configDocument:Document;
     private var _configLoader:XMLHttpRequest;
 
     public function new() {
@@ -22,7 +23,7 @@ class XMLLoader {
             QuickLogger.warn('responseType not supported');
         }
 
-        completeSignal = new Signal1<Xml>();
+        completeSignal = new Signal1<Document>();
         errorSignal = new Signal1<Dynamic>();
     }
 
@@ -35,8 +36,8 @@ class XMLLoader {
 
     private function loadCompleteHandler(event:XMLHttpRequestProgressEvent):Void {
         QuickLogger.info('xml loaded : ' + _configLoader.responseText);
-        _configXML = Xml.parse(_configLoader.responseText);
-        completeSignal.dispatch(_configXML);
+        _configDocument = _configLoader.responseXML;
+        completeSignal.dispatch(_configDocument);
     }
 
     private function loadErrorHandler(error:Dynamic):Void {
