@@ -1,4 +1,5 @@
 package ;
+import org.tamina.net.XMLLoader;
 import org.tamina.geom.Junction;
 import org.tamina.html.Global;
 import createjs.easeljs.Sprite;
@@ -18,7 +19,6 @@ class Main {
         QuickLogger.info('test lib');
         var loader = new ScriptListLoader();
         var scripts = new Array<URL>();
-        scripts.push(new URL('http://code.createjs.com/easeljs-0.7.1.min.js'));
         scripts.push(new URL('http://code.createjs.com/tweenjs-0.5.1.min.js'));
         scripts.push(new URL('http://code.createjs.com/preloadjs-0.4.1.min.js'));
         loader.load(scripts);
@@ -30,6 +30,16 @@ class Main {
         j1.links.push(j2);
         j2.links.push(j1);
 
+
+
+        var xmlLoader:XMLLoader = new XMLLoader();
+        xmlLoader.completeSignal.add(xml_completeHandler);
+        xmlLoader.load( new URL('http://linuxfr.org/news.atom') );
+
         Global.getInstance().call('errorHandler', []);
+    }
+
+    public static function xml_completeHandler(xml):Void{
+        QuickLogger.info('hop');
     }
 }
