@@ -31,8 +31,6 @@ class Main {
         j1.links.push(j2);
         j2.links.push(j1);
 
-
-
         var xmlLoader:XMLLoader = new XMLLoader();
         xmlLoader.completeSignal.add(xml_completeHandler);
         xmlLoader.load( new URL('http://linuxfr.org/news.atom') );
