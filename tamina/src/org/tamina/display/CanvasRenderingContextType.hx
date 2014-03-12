@@ -4,7 +4,7 @@ enum CanvasRenderingContextType {
     _3D;
 }
 
-class CanvasRenderingContextTypes {
+class CanvasRenderingContextTypeHelper {
     public static function toString(value:CanvasRenderingContextType):String {
         var result:String = '';
         switch (value) {

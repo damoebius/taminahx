@@ -5,7 +5,7 @@ enum MimeType {
 
 }
 
-class MimeTypes {
+class MimeTypeHelper {
     public static function toString(value:MimeType):String {
         var result:String = '';
         switch (value) {
