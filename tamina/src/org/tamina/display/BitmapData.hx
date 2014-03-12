@@ -1,5 +1,4 @@
 package org.tamina.display;
-import org.tamina.display.CanvasRenderingContextType.CanvasRenderingContextTypes;
 import org.tamina.html.MimeType;
 import js.html.Image;
 import js.html.CanvasRenderingContext2D;
