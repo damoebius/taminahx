@@ -13,6 +13,10 @@ class Group<T : (DisplayObject) > extends Container {
         this.addChild(element);
     }
 
+    public function addElementAt(element:T, index:Float):Void {
+        this.addChildAt(element,index);
+    }
+
     public function getElementAt(index:Int):T {
         return cast getChildAt(index);
     }
