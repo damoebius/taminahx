@@ -1,4 +1,7 @@
 package ;
+import org.tamina.html.MimeType;
+import js.html.Image;
+import org.tamina.display.BitmapData;
 import js.html.Document;
 import org.tamina.net.XMLLoader;
 import org.tamina.geom.Junction;
@@ -36,6 +39,7 @@ class Main {
         xmlLoader.load( new URL('http://linuxfr.org/news.atom') );
 
         Global.getInstance().call('errorHandler', []);
+        BitmapData.toDataUrl( new Image(),100,100,MimeType.PNG);
     }
 
     public static function xml_completeHandler(xml:Document):Void{
