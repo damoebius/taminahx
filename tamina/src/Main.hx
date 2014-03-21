@@ -1,4 +1,5 @@
 package ;
+import org.tamina.log.LogLevel;
 import org.tamina.html.MimeType;
 import js.html.Image;
 import org.tamina.display.BitmapData;
@@ -20,7 +21,9 @@ class Main {
 
     public static function main():Void {
         Console.addPrinter(new DivPrinter());
+        QuickLogger.level = LogLevel.INFO;
         QuickLogger.info('test lib');
+        QuickLogger.warn('test warn message');
         var loader = new ScriptListLoader();
         var scripts = new Array<URL>();
         scripts.push(new URL('http://code.createjs.com/tweenjs-0.5.1.min.js'));
