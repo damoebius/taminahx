@@ -35,15 +35,14 @@ import haxe.ds.StringMap;
 * @class EventDispatcher
 * @constructor
 */
-class EventDispatcher<T> {
+class EventDispatcher<T:String> {
 
 
     private var _eventsCallback:StringMap<Event<T> -> Void>;
 
-/**
+    /**
     * @constructor
     */
-
     public function new() {
         _eventsCallback = new StringMap<Event<T> -> Void>();
     }
