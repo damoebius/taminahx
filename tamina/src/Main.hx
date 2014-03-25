@@ -1,4 +1,5 @@
 package ;
+import org.tamina.utils.DateUtils;
 import org.tamina.log.LogLevel;
 import org.tamina.html.MimeType;
 import js.html.Image;
@@ -29,7 +30,7 @@ class Main {
         scripts.push(new URL('http://code.createjs.com/tweenjs-0.5.1.min.js'));
         scripts.push(new URL('http://code.createjs.com/preloadjs-0.4.1.min.js'));
         loader.load(scripts);
-
+        QuickLogger.warn('toto');
         var g = new Group<Sprite>();
 
         var j1:Junction = new Junction(10,10);
@@ -43,6 +44,9 @@ class Main {
 
         Global.getInstance().call('errorHandler', []);
         BitmapData.toDataUrl( new Image(),100,100,MimeType.PNG);
+
+        DateUtils.toFrenchString( Date.now() );
+
     }
 
     public static function xml_completeHandler(xml:Document):Void{
