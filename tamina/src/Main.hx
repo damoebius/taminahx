@@ -1,4 +1,5 @@
 package ;
+import org.tamina.html.TextAlign;
 import org.tamina.utils.DateUtils;
 import org.tamina.log.LogLevel;
 import org.tamina.html.MimeType;
@@ -46,6 +47,7 @@ class Main {
         BitmapData.toDataUrl( new Image(),100,100,MimeType.PNG);
 
         DateUtils.toFrenchString( Date.now() );
+        TextAlign.CENTER;
 
     }
 
