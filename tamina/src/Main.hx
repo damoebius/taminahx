@@ -1,4 +1,5 @@
 package ;
+import org.tamina.utils.NumberUtils;
 import org.tamina.html.TextAlign;
 import org.tamina.utils.DateUtils;
 import org.tamina.log.LogLevel;
@@ -48,6 +49,7 @@ class Main {
 
         DateUtils.toFrenchString( Date.now() );
         TextAlign.CENTER;
+        NumberUtils.toFixed(29.90,2);
 
     }
 
