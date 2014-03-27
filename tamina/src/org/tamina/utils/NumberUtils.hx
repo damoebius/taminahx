@@ -63,7 +63,7 @@ class NumberUtils {
 		 *
 		 */
 
-    inline public static function roundDec(numIn:Int, decimalPlaces:Int):Float {
+    inline public static function roundDec(numIn:Float, decimalPlaces:Int):Float {
         var nExp = Math.pow(10, decimalPlaces);
         var nRetVal = Math.round(numIn * nExp) / nExp;
         return nRetVal;
