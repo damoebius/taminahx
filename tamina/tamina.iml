@@ -7,7 +7,7 @@
     <option name="outputFileName" value="Tamina.js" />
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/../out/production/tamina" />
+    <output url="file://$MODULE_DIR$/out" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
