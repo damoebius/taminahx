@@ -15,7 +15,7 @@ class BitmapData {
         tempCanvas.width = width;
         tempCanvas.height = height;
         var tempContext:CanvasRenderingContext2D = cast tempCanvas.getContext( CanvasRenderingContextType._2D.toString() );
-        tempContext.scale(scale,scale);
+        tempContext.transform(scale, 0, 0, scale, 0, 0);
         tempContext.drawImage(source,0,0);
         result = tempCanvas.toDataURL(type.toString());
         tempContext = null;
