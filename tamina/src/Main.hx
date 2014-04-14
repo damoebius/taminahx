@@ -27,6 +27,7 @@ class Main {
         QuickLogger.level = LogLevel.INFO;
         QuickLogger.info('test lib');
         QuickLogger.warn('test warn message');
+        QuickLogger.profile();
         var loader = new ScriptListLoader();
         loader.completeSignal.add(scripts_completeHandler);
         var scripts = new Array<URL>();
@@ -40,7 +41,7 @@ class Main {
         var j2:Junction = new Junction(100,100);
         j1.links.push(j2);
         j2.links.push(j1);
-
+        QuickLogger.profile();
         var xmlLoader:XMLLoader = new XMLLoader();
         xmlLoader.completeSignal.add(xml_completeHandler);
         //xmlLoader.load( new URL('http://linuxfr.org/news.atom') );
@@ -51,6 +52,7 @@ class Main {
         DateUtils.toFrenchString( Date.now() );
         TextAlign.CENTER;
         NumberUtils.toFixed(29.90,2);
+
 
     }
 
