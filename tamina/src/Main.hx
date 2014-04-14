@@ -28,6 +28,7 @@ class Main {
         QuickLogger.info('test lib');
         QuickLogger.warn('test warn message');
         var loader = new ScriptListLoader();
+        loader.completeSignal.add(scripts_completeHandler);
         var scripts = new Array<URL>();
         scripts.push(new URL('http://code.createjs.com/tweenjs-0.5.1.min.js'));
         scripts.push(new URL('http://code.createjs.com/preloadjs-0.4.1.min.js'));
@@ -42,7 +43,7 @@ class Main {
 
         var xmlLoader:XMLLoader = new XMLLoader();
         xmlLoader.completeSignal.add(xml_completeHandler);
-        xmlLoader.load( new URL('http://linuxfr.org/news.atom') );
+        //xmlLoader.load( new URL('http://linuxfr.org/news.atom') );
 
         Global.getInstance().call('errorHandler', []);
         BitmapData.toDataUrl( new Image(),100,100,MimeType.PNG);
@@ -51,6 +52,14 @@ class Main {
         TextAlign.CENTER;
         NumberUtils.toFixed(29.90,2);
 
+    }
+
+    public static function scripts_completeHandler():Void{
+        var loader = new ScriptListLoader();
+        var scripts = new Array<URL>();
+        scripts.push(new URL('http://code.createjs.com/tweenjs-0.5.1.min.js'));
+        scripts.push(new URL('http://code.createjs.com/preloadjs-0.4.1.min.js'));
+        loader.load(scripts);
     }
 
     public static function xml_completeHandler(xml:Document):Void{
