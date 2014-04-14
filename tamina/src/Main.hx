@@ -47,7 +47,7 @@ class Main {
         //xmlLoader.load( new URL('http://linuxfr.org/news.atom') );
 
         Global.getInstance().call('errorHandler', []);
-        BitmapData.toDataUrl( new Image(),100,100,MimeType.PNG);
+        BitmapData.toDataUrl( new Image(),100,100,1.0,MimeType.PNG);
 
         DateUtils.toFrenchString( Date.now() );
         TextAlign.CENTER;
