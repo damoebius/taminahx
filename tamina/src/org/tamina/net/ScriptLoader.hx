@@ -6,7 +6,7 @@ import js.html.HtmlElement;
 import js.Browser;
 import msignal.Signal.Signal0;
 
-@:expose class ScriptLoader {
+class ScriptLoader {
 
     public var completeSignal:Signal0;
     public var errorSignal:Signal0;
@@ -14,23 +14,19 @@ import msignal.Signal.Signal0;
     private var _header:Element;
     private var _url:URL;
     private var _script:ScriptElement;
-    private static var _scriptsLoaded:Array<String>;
-    private static var _scriptsLoading:Array<ScriptElement>;
+    private var _cache:ScriptLoaderCache;
 
     public function new() {
         completeSignal = new Signal0();
         errorSignal = new Signal0();
-        if (_scriptsLoaded == null) {
-            _scriptsLoaded = new Array<String>();
-            _scriptsLoading = new Array<ScriptElement>();
-        }
+        _cache = new ScriptLoaderCache();
     }
 
     public function load(url:URL):Void {
         _url = url;
-        _script = getLoadingScript(_url);
+        _script = _cache.getLoadingScript(_url);
 
-        if (_scriptsLoaded.indexOf(_url.path) >= 0 ) {
+        if ( _cache.isLoaded(_url) ) {
             QuickLogger.info('Script déja chargé : ' + _url.documentName);
             loadCompleteHandler();
         } else if( _script != null){
@@ -42,6 +38,7 @@ import msignal.Signal.Signal0;
             QuickLogger.info('chargement de ' + _url.path);
             _script.addEventListener('load', loadCompleteHandler) ;
             _script.addEventListener('error', loadErrorHandler) ;
+            _cache.addLoadingScript(_script);
             _script.src = _url.path;
             _header = cast Browser.document.getElementsByTagName('head')[0];
             _header.appendChild(_script);
@@ -49,25 +46,15 @@ import msignal.Signal.Signal0;
 
     }
 
-    private function getLoadingScript(url:URL):ScriptElement{
-        var result:ScriptElement = null;
-        for(i in 0..._scriptsLoading.length){
-            var script = _scriptsLoading[i];
-            if(script.src == url.path){
-                result = script;
-                break;
-            }
-        }
-        return result;
-    }
-
     private function loadCompleteHandler(?event:Dynamic):Void {
         QuickLogger.info('script loaded');
-        _scriptsLoaded.push(_url.path);
+        _cache.addLoadedScript(_url);
+        _cache.removeLoadingScript(_script);
         completeSignal.dispatch();
     }
 
     private function loadErrorHandler(event:Dynamic):Void {
+        _cache.removeLoadingScript(_script);
         errorSignal.dispatch();
     }
 }
