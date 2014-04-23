@@ -19,7 +19,12 @@ class BitmapData {
         tempContext.drawImage(source,0,0);
         result = tempCanvas.toDataURL(type.toString());
         tempContext = null;
-        tempCanvas.remove();
+        try{
+            tempCanvas.remove();
+        } catch (e:Dynamic) {
+            tempCanvas = null;
+        }
+
 
         return result;
     }
