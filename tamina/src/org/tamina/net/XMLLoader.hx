@@ -16,7 +16,11 @@ class XMLLoader {
         _configLoader = new XMLHttpRequest();
         _configLoader.addEventListener(XMLHttpRequestEvent.LOAD, loadCompleteHandler);
         _configLoader.addEventListener(XMLHttpRequestEvent.ERROR, loadErrorHandler);
-        _configLoader.overrideMimeType("text/xml");
+        try {
+            _configLoader.overrideMimeType("text/xml");
+        } catch (e:Dynamic) {
+            QuickLogger.warn('overrideMimeType not supported');
+        }
         try {
             _configLoader.responseType = "xml";
         } catch (e:Dynamic) {
