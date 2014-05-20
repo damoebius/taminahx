@@ -2,7 +2,6 @@ package org.tamina.net;
 import js.html.Element;
 import org.tamina.log.QuickLogger;
 import js.html.ScriptElement;
-import js.html.HtmlElement;
 import js.Browser;
 import msignal.Signal.Signal0;
 

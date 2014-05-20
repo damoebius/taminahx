@@ -1,4 +1,5 @@
 package ;
+import org.tamina.io.ImageLoader;
 import org.tamina.utils.NumberUtils;
 import org.tamina.html.TextAlign;
 import org.tamina.utils.DateUtils;
@@ -14,7 +15,6 @@ import createjs.easeljs.Sprite;
 import org.tamina.view.Group;
 import org.tamina.net.ScriptListLoader;
 import org.tamina.net.URL;
-import org.tamina.net.ScriptLoader;
 import org.tamina.log.QuickLogger;
 import org.tamina.log.DivPrinter;
 class Main {
@@ -52,6 +52,9 @@ class Main {
         DateUtils.toFrenchString( Date.now() );
         TextAlign.CENTER;
         NumberUtils.toFixed(29.90,2);
+
+        var loader = new ImageLoader();
+        loader.load( new URL("http://storage.sakuradesigner.microclimat.com//partners/6/designs/305199/67417854-2de7-4926-89ec-5f61c48c84a2.jpg"));
 
 
     }
