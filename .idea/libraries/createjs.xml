@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="createjs" type="haXe">
-    <CLASSES>
-      <root url="file://C:/HaxeToolkit/haxe/lib/createjs/1,5,3" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
