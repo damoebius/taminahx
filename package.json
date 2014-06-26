@@ -1,0 +1,24 @@
+{
+  "name": "taminahx",
+  "description": "tamina library for haxe",
+  "keywords": [
+    "tamina",
+    "haxe"
+  ],
+  "author": "David Mouton",
+  "version": "0.1.2",
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "main": "",
+  "preferGlobal": false,
+  "homepage": "http://www.tamina-online.com",
+  "bugs": "https://github.com/damoebius/taminahx/issues",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/damoebius/taminahx.git"
+  },
+  "dependencies": {
+  }
+}
