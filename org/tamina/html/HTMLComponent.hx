@@ -8,6 +8,7 @@ class HTMLComponent {
     public inline static var CONTENT_TAG:String='content';
 
     public var parent:Element;
+    public var element:Element;
 
     public var visible(get,set):Bool;
 
@@ -50,7 +51,8 @@ class HTMLComponent {
         if(content == null){
             content = _tempElement.firstChild;
         }
-        parent.appendChild(content);
+        element = cast content;
+        parent.appendChild(element);
     }
 
     private function getContent():String{
