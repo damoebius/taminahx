@@ -5,20 +5,32 @@
     "tamina",
     "haxe"
   ],
-  "author": "David Mouton",
-  "version": "0.1.2",
+  "author": {
+    "name": "David Mouton"
+  },
+  "version": "0.1.5",
   "license": "MIT",
   "engines": {
     "node": ">=0.8.0"
   },
   "main": "",
   "preferGlobal": false,
+  "files": [
+    "org",
+    "README.md"
+  ],
   "homepage": "http://www.tamina-online.com",
-  "bugs": "https://github.com/damoebius/taminahx/issues",
+  "bugs": {
+    "url": "https://github.com/damoebius/taminahx/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/damoebius/taminahx.git"
   },
-  "dependencies": {
-  }
+  "dependencies": {},
+  "readme": "taminahx\r\n========\r\n\r\ntamina library for haxe\r\n\r\nuseful classes for :\r\n- createjs\r\n- mconsole\r\n- html5\r\n- nodejs\r\n- msignal\r\n",
+  "readmeFilename": "README.md",
+  "_id": "taminahx@0.1.3",
+  "_shasum": "64a674f83a63d6a81401184d17b9f6f76764d203",
+  "_from": "taminahx@>=0.1.0"
 }

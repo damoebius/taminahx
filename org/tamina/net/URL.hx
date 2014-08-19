@@ -42,4 +42,32 @@ class URL
 	{
 		return path;
 	}
+
+    public function removeParameter(key:String):Void {
+        var rtn:String = path;
+
+        if(path.indexOf('?') != -1) {
+            rtn = path.split("?")[0];
+            var param:String;
+            var params_arr = new Array();
+            var queryString:String = (path.indexOf("?") != -1) ? path.split("?")[1] : "";
+
+            if (queryString != "") {
+                params_arr = queryString.split("&");
+
+                var i = params_arr.length - 1;
+                while(i >= 0) {
+                    param = params_arr[i].split("=")[0];
+                    if (param == key) {
+                        params_arr.splice(i, 1);
+                    }
+                    i -= 1;
+                }
+
+                rtn = rtn + "?" + params_arr.join("&");
+            }
+        }
+
+        path = rtn;
+    }
 }

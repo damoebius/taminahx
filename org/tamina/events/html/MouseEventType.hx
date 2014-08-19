@@ -5,4 +5,5 @@ class MouseEventType {
     static public inline var MOUSE_MOVE:String='mousemove';
     static public inline var MOUSE_DOWN:String='mousedown';
     static public inline var MOUSE_UP:String='mouseup';
+    static public inline var SCROLL:String='scroll';
 }
