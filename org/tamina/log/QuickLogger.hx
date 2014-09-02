@@ -38,8 +38,8 @@ class QuickLogger {
 
     }
 
-    public static function profile():Void {
-        if (_startProfilingDate != null) {
+    public static function profile(start:Bool=false):Void {
+        if (_startProfilingDate != null && !start) {
             debug('profling result : ' + ( Date.now().getTime() - _startProfilingDate.getTime() ) + ' ms');
         }
         _startProfilingDate = Date.now();
