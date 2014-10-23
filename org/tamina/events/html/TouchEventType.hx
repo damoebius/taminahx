@@ -1,4 +1,4 @@
-package ;
+package org.tamina.events.html;
 
 class TouchEventType {
     static public inline var CANCEL:String='touchcancel';
