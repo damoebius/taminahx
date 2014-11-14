@@ -15,7 +15,7 @@ class Main {
         g1.add( new URL('http://code.createjs.com/tweenjs-0.5.1.min.js'));
         g1.add( new URL('http://code.createjs.com/soundjs-0.5.2.min.js'));
 
-        var g2 = new GroupURL(ScriptLoadingType.PARALLEL, cacheKiller);
+        var g2 = new GroupURL(ScriptLoadingType.PARALLEL, Math.random);
         g2.add( new URL('https://code.jquery.com/jquery-2.1.1.js'));
         g2.add( new URL('https://code.jquery.com/ui/1.11.2/jquery-ui.js'));
         g2.add( new URL('https://code.jquery.com/qunit/qunit-1.15.0.js'));
@@ -32,7 +32,5 @@ class Main {
         l.start();
     }
 
-    public static function cacheKiller():String{
-        return cast Math.random();
-    }
+
 }

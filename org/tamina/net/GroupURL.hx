@@ -4,9 +4,9 @@ class GroupURL {
     public var loadingType:ScriptLoadingType;
 
     private var _pool:Array<URL>;
-    private var _cacheKiller:Void->String;
+    private var _cacheKiller:Void->Dynamic;
 
-    public function new(type:ScriptLoadingType = ScriptLoadingType.SEQUENCE, cacheKiller:Void->String=null) {
+    public function new(type:ScriptLoadingType = ScriptLoadingType.SEQUENCE, cacheKiller:Void->Dynamic=null) {
         loadingType = type;
         _pool = new Array<URL>();
         _cacheKiller = cacheKiller;
