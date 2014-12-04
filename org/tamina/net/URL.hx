@@ -5,17 +5,35 @@ package org.tamina.net;
  * @author David Mouton
  */
 
+import haxe.ds.StringMap;
+
 class URL 
 {
 	public var path:String;
 	
 	public var documentName(get, null):String;
 	public var extension(get, null):String;
+
+    public var parameters(get, null):StringMap<String>;
+    private var _parameters:StringMap<String>;
 	
 	public function new(path:String = "") 
 	{
 		this.path = path;
+        _parameters = new StringMap<String>();
+        if ( path.lastIndexOf( "?" ) > 0 ){
+           var params = path.substring( path.lastIndexOf( "?" ) + 1 );
+            var elements = params.split('&');
+            for(i in 0...elements.length){
+                var element = elements[i].split('=');
+                _parameters.set(element[0],element[1]);
+            }
+        }
 	}
+
+    private function get_parameters():StringMap<String>{
+        return _parameters;
+    }
 	
 	private function get_extension():String
 	{

@@ -9,6 +9,12 @@ class Main {
     }
 
     public static function main():Void {
+
+        var paramUrl = new URL("http://www.tamere.com/test.html?var1=aaaaa&var2=bbbbb&var3=ccccc");
+        trace(paramUrl.parameters.get('var1'));
+        trace(paramUrl.parameters.get('var2'));
+        trace(paramUrl.parameters.get('var3'));
+
         var l = new ScriptCompositeLoader();
         var g1 = new GroupURL();
         g1.add( new URL('http://code.createjs.com/easeljs-0.7.1.min.js'));

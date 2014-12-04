@@ -13,14 +13,19 @@ class GroupURL {
     }
 
     public function add(url:URL):Void{
-        if(_cacheKiller != null){
-           url.path += '?cacheKiller=' + _cacheKiller();
-        }
         _pool.push(url);
     }
 
     public function toArray():Array<URL>{
-        return _pool;
+        var result = new Array<URL>();
+        for(i in 0..._pool.length){
+            var path = _pool[i].path;
+            if(_cacheKiller != null){
+                path += '?cacheKiller=' + _cacheKiller();
+            }
+            result.push( new URL(path)) ;
+        }
+        return result;
     }
 
 }
