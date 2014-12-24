@@ -24,7 +24,7 @@ class BaseRequest {
     public var id(get, null):Float;
 
 
-    public function new( remoteMethod:String ) {
+    public function new( remoteMethod:String, method:HTTPMethode = HTTPMethode.POST ) {
         _id = UID.getUID();
         completeSignal = new Signal1<XMLHttpRequestProgressEvent>();
         errorSignal = new Signal0();
@@ -33,7 +33,7 @@ class BaseRequest {
         _httpRequest.addEventListener(XMLHttpRequestEvent.LOAD, successHandler);
         _httpRequest.addEventListener(XMLHttpRequestEvent.ERROR, errorHandler);
         _httpRequest.addEventListener(XMLHttpRequestEvent.PROGRESS, progressHandler);
-        _httpRequest.open("POST", endpoint.path + '/' + remoteMethod, true);
+        _httpRequest.open(method, endpoint.path + '/' + remoteMethod, true);
         _httpRequest.setRequestHeader("Content-Type", MimeType.JSON+"; charset=utf-8");
     }
 

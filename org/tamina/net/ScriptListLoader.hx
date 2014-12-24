@@ -13,6 +13,7 @@ class ScriptListLoader {
     public function new() {
         completeSignal = new Signal0();
         errorSignal = new Signal0();
+        _pool = new Array<URL>();
         _loader = new ScriptLoader();
         _loader.completeSignal.add(scriptCompleteHandler);
         _loader.errorSignal.add(scriptErrorHandler);
@@ -35,7 +36,6 @@ class ScriptListLoader {
         if (_pool.length > 0) {
             _loader.load(_pool.shift());
         } else {
-            QuickLogger.info("ALL SCRIPTS LOADED");
             completeSignal.dispatch();
         }
     }
