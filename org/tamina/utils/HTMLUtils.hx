@@ -7,23 +7,41 @@ class HTMLUtils {
         var result:Element = null;
         for (i in 0...parent.children.length) {
             var el:Element = cast parent.children.item(i);
-            var elId = getAttribute(el,'id');
-            trace(elId);
-            if(elId == id){
+            var elId = getAttribute(el, 'id');
+            if (elId == id) {
                 result = el;
                 break;
             } else {
-                result = getElementById(el,id);
+                result = getElementById(el, id);
             }
         }
         return result;
     }
 
-    public static function getAttribute(element:Node,name:String):String{
+    public static function getElementByAttribute(parent:Element, attribute:String, value:String):Element {
+        var result:Element = null;
+        for (i in 0...parent.children.length) {
+            if (result == null) {
+                var el:Element = cast parent.children.item(i);
+                var elId = getAttribute(el, attribute);
+                if (elId == value) {
+                    result = el;
+                    return result;
+                } else {
+                    result = getElementByAttribute(el, attribute, value);
+                }
+            } else {
+                return result;
+            }
+        }
+        return result;
+    }
+
+    public static function getAttribute(element:Node, name:String):String {
         var result:String = '';
-        for(i in 0...element.attributes.length){
+        for (i in 0...element.attributes.length) {
             var att = element.attributes.item(i);
-            if(att.nodeName == name){
+            if (att.nodeName == name) {
                 result = att.nodeValue;
                 break;
             }

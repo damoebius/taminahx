@@ -1,5 +1,7 @@
 package org.tamina.html;
 
+import org.tamina.utils.HTMLUtils;
+import haxe.rtti.Meta;
 import js.Browser;
 import js.html.Element;
 @:autoBuild(org.tamina.html.HTMLComponentFactory.build())
@@ -40,6 +42,17 @@ class HTMLComponent {
     private function  parseContent():Void{
         _tempElement = Browser.document.createDivElement();
         _tempElement.innerHTML = getContent();
+        var meta = Meta.getFields(Type.getClass(this));
+        var metaFields = Reflect.fields( meta );
+        var classFields = Reflect.fields(this);
+        for( i in 0...metaFields.length){
+            var field = Reflect.field(meta, metaFields[i]);
+            if(field.skinpart != null){
+                var element = HTMLUtils.getElementByAttribute(_tempElement,'ta-id',metaFields[i]);
+                Reflect.setField(this,metaFields[i],element);
+            }
+        }
+
     }
 
     private function  initContent():Void{
