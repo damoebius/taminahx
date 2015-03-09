@@ -7,15 +7,16 @@ import js.html.Element;
 @:autoBuild(org.tamina.html.HTMLComponentFactory.build())
 class HTMLComponent {
 
-    public inline static var CONTENT_TAG:String='content';
+    public inline static var CONTENT_TAG:String = 'content';
 
     public var parent:Element;
     public var element:Element;
 
-    public var visible(get,set):Bool;
+    public var visible(get, set):Bool;
 
-    private var _visible:Bool=true;
+    private var _visible:Bool = true;
     private var _tempElement:Element;
+    private var _useExternalContent:Bool=false;
 
     public function new(?parent:Element):Void {
         if (parent != null) {
@@ -26,49 +27,73 @@ class HTMLComponent {
         }
     }
 
-    public function get_visible():Bool{
+
+    public function get_visible():Bool {
         return _visible;
     }
-    public function set_visible(value:Bool):Bool{
+
+    public function set_visible(value:Bool):Bool {
         _visible = value;
-        if(_visible){
-            parent.style.display='block';
+        if (_visible) {
+            parent.style.display = 'block';
         } else {
-            parent.style.display='none';
+            parent.style.display = 'none';
         }
         return _visible;
     }
 
-    private function  parseContent():Void{
-        _tempElement = Browser.document.createDivElement();
-        _tempElement.innerHTML = getContent();
+    public function addToElement(parent:Element):Void{
+        this.parent = parent;
+        parseContent(false);
+        initContent();
+        displayContent();
+    }
+    private function parseContent(useExternalContent:Bool=true):Void {
+        if (parent.childElementCount == 0 || !useExternalContent) {
+            _tempElement = Browser.document.createDivElement();
+            _tempElement.innerHTML = getContent();
+        } else {
+            _useExternalContent=true;
+            _tempElement = parent;
+        }
+        initSkinParts(_tempElement);
+    }
+
+    private function initSkinParts(target:Element):Void {
         var meta = Meta.getFields(Type.getClass(this));
-        var metaFields = Reflect.fields( meta );
+        var metaFields = Reflect.fields(meta);
         var classFields = Reflect.fields(this);
-        for( i in 0...metaFields.length){
+        for (i in 0...metaFields.length) {
             var field = Reflect.field(meta, metaFields[i]);
-            if(field.skinpart != null){
-                var element = HTMLUtils.getElementByAttribute(_tempElement,'ta-id',metaFields[i]);
-                Reflect.setField(this,metaFields[i],element);
+            if (field.skinpart != null) {
+                var element = HTMLUtils.getElementByAttribute(target, 'data-id', metaFields[i]);
+                Reflect.setField(this, metaFields[i], element);
             }
         }
+    }
+
+    private function initContent():Void {
 
     }
 
-    private function  initContent():Void{
-
-    }
-
-    private function  displayContent():Void{
-        var content = _tempElement.getElementsByTagName(CONTENT_TAG)[0];
-        if(content == null){
-            content = _tempElement.firstChild;
+    private function displayContent():Void {
+        element = _tempElement;
+        var numChildren = _tempElement.children.length;
+        if (numChildren == 1) {
+            element = _tempElement.firstElementChild;
+        } else {
+            element = parent;
         }
-        element = cast content;
-        parent.appendChild(element);
+        if(!_useExternalContent){
+            while (numChildren > 0) {
+                numChildren--;
+                var item:Element = cast _tempElement.children.item(0);
+                parent.appendChild(item);
+            }
+        }
     }
 
-    private function getContent():String{
+    private function getContent():String {
         return untyped this.view;
     }
 
