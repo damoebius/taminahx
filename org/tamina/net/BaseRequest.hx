@@ -1,12 +1,12 @@
 package org.tamina.net;
 
+import js.html.ProgressEvent;
 import org.tamina.html.MimeType;
 import org.tamina.net.URL;
 import msignal.Signal;
 import org.tamina.utils.UID;
 import org.tamina.events.XMLHttpRequestEvent;
 import org.tamina.log.QuickLogger;
-import js.html.XMLHttpRequestProgressEvent;
 import js.html.XMLHttpRequest;
 import haxe.Json;
 
@@ -16,7 +16,7 @@ class BaseRequest {
 
     private var _httpRequest:XMLHttpRequest;
 
-    public var completeSignal:Signal1<XMLHttpRequestProgressEvent>;
+    public var completeSignal:Signal1<ProgressEvent>;
     public var errorSignal:Signal0;
 
 
@@ -26,7 +26,7 @@ class BaseRequest {
 
     public function new( remoteMethod:String, method:HTTPMethode = HTTPMethode.POST ) {
         _id = UID.getUID();
-        completeSignal = new Signal1<XMLHttpRequestProgressEvent>();
+        completeSignal = new Signal1<ProgressEvent>();
         errorSignal = new Signal0();
         _httpRequest = new XMLHttpRequest();
         _httpRequest.upload.addEventListener(XMLHttpRequestEvent.PROGRESS, uploadHandler) ;
@@ -50,7 +50,7 @@ class BaseRequest {
         _httpRequest.abort();
     }
 
-    private function uploadHandler( progress:XMLHttpRequestProgressEvent ):Void {
+    private function uploadHandler( progress:ProgressEvent ):Void {
         QuickLogger.info('uploading ' + progress.loaded + "/" + progress.total);
     }
 
@@ -59,7 +59,7 @@ class BaseRequest {
         return data;
     }
 
-    private function successHandler( result:XMLHttpRequestProgressEvent ):Void {
+    private function successHandler( result:ProgressEvent ):Void {
         var req:XMLHttpRequest = cast result.target;
         try {
             var p = Json.parse(req.response);
@@ -70,7 +70,7 @@ class BaseRequest {
         }
     }
 
-    private function progressHandler( progress:XMLHttpRequestProgressEvent ):Void {
+    private function progressHandler( progress:ProgressEvent ):Void {
         QuickLogger.info('downloading ' + progress.loaded + "/" + progress.total);
 
     }

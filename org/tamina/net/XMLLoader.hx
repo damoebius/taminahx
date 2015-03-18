@@ -1,6 +1,7 @@
 package org.tamina.net;
+import js.html.XMLHttpRequestResponseType;
 import js.html.Document;
-import js.html.XMLHttpRequestProgressEvent;
+import js.html.ProgressEvent;
 import org.tamina.log.QuickLogger;
 import org.tamina.events.XMLHttpRequestEvent;
 import js.html.XMLHttpRequest;
@@ -22,7 +23,7 @@ class XMLLoader {
             QuickLogger.warn('overrideMimeType not supported');
         }
         try {
-            _configLoader.responseType = "xml";
+            _configLoader.responseType = XMLHttpRequestResponseType.DOCUMENT;
         } catch (e:Dynamic) {
             QuickLogger.warn('responseType not supported');
         }
@@ -38,8 +39,8 @@ class XMLLoader {
 
     }
 
-    private function loadCompleteHandler(event:XMLHttpRequestProgressEvent):Void {
-        QuickLogger.info('xml loaded : ' + _configLoader.responseText);
+    private function loadCompleteHandler(event:ProgressEvent):Void {
+        QuickLogger.info('xml loaded : ' + _configLoader.responseXML);
         _configDocument = _configLoader.responseXML;
         completeSignal.dispatch(_configDocument);
     }
