@@ -37,12 +37,12 @@ class HTMLUtils {
         return result;
     }
 
-    public static function getAttribute(element:Node, name:String):String {
+    public static function getAttribute(element:Element, name:String):String {
         var result:String = '';
         for (i in 0...element.attributes.length) {
             var att = element.attributes.item(i);
-            if (att.nodeName == name) {
-                result = att.nodeValue;
+            if (att.name == name) {
+                result = att.value;
                 break;
             }
         }
