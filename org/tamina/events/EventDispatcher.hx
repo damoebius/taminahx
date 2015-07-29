@@ -38,22 +38,38 @@ import haxe.ds.StringMap;
 class EventDispatcher<T:String> {
 
 
-    private var _eventsCallback:StringMap<Event<T> -> Void>;
+    private var _eventsCallback:StringMap<Array<Event<T> -> Void>>;
 
-    /**
+/**
     * @constructor
     */
     public function new() {
-        _eventsCallback = new StringMap<Event<T> -> Void>();
+
+        _eventsCallback = new StringMap<Array<Event<T> -> Void>>();
     }
 
     public function addEventListener(type:T, listener:Event<T> -> Void):Void {
-        _eventsCallback.set(type, listener);
+        if (!_eventsCallback.exists(type)) {
+            _eventsCallback.set(type, new Array<Event<T> -> Void>());
+        }
+        _eventsCallback.get(type).push(listener);
+    }
+
+    public function removeEventListener(type:T, listener:Event<T> -> Void):Void {
+        if (_eventsCallback.exists(type)) {
+            var events = _eventsCallback.get(type);
+            events.remove(listener);
+        }
     }
 
     public function dispatchEvent(event:Event<T>):Void {
         if (_eventsCallback.exists(event.type)) {
-            _eventsCallback.get(event.type)(event);
+            var events = _eventsCallback.get(event.type);
+            for(i in 0...events.length){
+                events[i](event);
+            }
         }
     }
 }
+
+
