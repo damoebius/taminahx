@@ -62,6 +62,12 @@ class EventDispatcher<T:String> {
         }
     }
 
+    public function removeAllEventListeners(type:T):Void {
+        if (_eventsCallback.exists(type)) {
+            _eventsCallback.remove(type);
+        }
+    }
+
     public function dispatchEvent(event:Event<T>):Void {
         if (_eventsCallback.exists(event.type)) {
             var events = _eventsCallback.get(event.type);
