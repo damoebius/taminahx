@@ -1,5 +1,7 @@
 package org.tamina.html;
 
+import org.tamina.i18n.LocalizationManager;
+import js.RegExp;
 import org.tamina.utils.HTMLUtils;
 import haxe.rtti.Meta;
 import js.Browser;
@@ -57,6 +59,7 @@ class HTMLComponent {
             _tempElement = parent;
         }
         initSkinParts(_tempElement);
+        translateContent(_tempElement);
     }
 
     private function initSkinParts(target:Element):Void {
@@ -70,6 +73,28 @@ class HTMLComponent {
                 Reflect.setField(this, metaFields[i], element);
             }
         }
+    }
+
+    private function translateContent(target:Element):Void {
+        var html = target.innerHTML;
+        var stringToTranslate = new RegExp('\\{\\{(?!\\}\\})(.+)\\}\\}', 'gim');
+        var results:Array<Array<String>> = new Array<Array<String>>();
+        var result:Array<String> = new Array<String>();
+        var i = 0;
+
+        while ((result = stringToTranslate.exec(html)) != null) {
+            results[i] = result;
+            i++;
+        }
+
+        result = new Array<String>();
+        for (result in results) {
+            var totalString = result[0];
+            var key = StringTools.trim(result[1]);
+            html = StringTools.replace(html, totalString, LocalizationManager.instance.getString(key));
+        }
+
+        target.innerHTML = html;
     }
 
     private function initContent():Void {

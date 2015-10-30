@@ -1,5 +1,6 @@
 package ;
 
+import org.tamina.i18n.LocalizationManager;
 import org.tamina.net.URL;
 import org.tamina.net.ScriptLoadingType;
 import org.tamina.net.GroupURL;
@@ -36,6 +37,8 @@ class Main {
         l.add(g3);
 
         l.start();
+
+        var dd = LocalizationManager.instance;
     }
 
 
