@@ -58,8 +58,8 @@ class HTMLComponent {
             _useExternalContent=true;
             _tempElement = parent;
         }
-        initSkinParts(_tempElement);
         translateContent(_tempElement);
+        initSkinParts(_tempElement);
     }
 
     private function initSkinParts(target:Element):Void {
