@@ -1,5 +1,6 @@
-package org.tamina.html;
+package org.tamina.html.component;
 
+import js.html.HTMLElement;
 import org.tamina.i18n.LocalizationManager;
 import js.RegExp;
 import org.tamina.utils.HTMLUtils;
@@ -7,13 +8,8 @@ import haxe.rtti.Meta;
 import js.Browser;
 import js.html.Element;
 
-@:autoBuild(org.tamina.html.HTMLComponentFactory.build())
-class HTMLComponent {
-
-    public inline static var CONTENT_TAG:String = 'content';
-
-    public var parent:Element;
-    public var element:Element;
+@:autoBuild(org.tamina.html.component.HTMLComponentFactory.build())
+class HTMLComponent extends HTMLElement {
 
     public var visible(get, set):Bool;
 
@@ -21,15 +17,28 @@ class HTMLComponent {
     private var _tempElement:Element;
     private var _useExternalContent:Bool=false;
 
-    public function new(?parent:Element):Void {
-        if (parent != null) {
-            this.parent = parent;
-            parseContent();
-            initContent();
-            displayContent();
-        }
+    private function new() {
     }
 
+    public function createdCallback() {
+        trace('createdCallback---------------->');
+       // this();
+        parseContent();
+        initContent();
+        displayContent();
+    }
+
+    public function attachedCallback() {
+        trace('attachedCallback---------------->');
+    }
+
+    public function detachedCallback() {
+        trace('detachedCallback---------------->');
+    }
+
+    public function attributeChangedCallback(attrName:String, oldVal:String, newVal:String) {
+        trace('attributeChangedCallback---------------->'+attrName);
+    }
 
     public function get_visible():Bool {
         return _visible;
@@ -38,26 +47,24 @@ class HTMLComponent {
     public function set_visible(value:Bool):Bool {
         _visible = value;
         if (_visible) {
-            parent.style.display = 'block';
+            this.style.display = 'block';
         } else {
-            parent.style.display = 'none';
+            this.style.display = 'none';
         }
         return _visible;
     }
 
-    public function addToElement(parent:Element):Void{
-        this.parent = parent;
-        parseContent(false);
-        initContent();
-        displayContent();
+    private function getContent():String {
+        return untyped this.getView();
     }
+
     private function parseContent(useExternalContent:Bool=true):Void {
-        if (parent.childElementCount == 0 || !useExternalContent) {
+        if (this.childElementCount == 0 || !useExternalContent) {
             _tempElement = Browser.document.createDivElement();
             _tempElement.innerHTML = getContent();
         } else {
             _useExternalContent=true;
-            _tempElement = parent;
+            _tempElement = this;
         }
         translateContent(_tempElement);
         initSkinParts(_tempElement);
@@ -103,24 +110,13 @@ class HTMLComponent {
     }
 
     private function displayContent():Void {
-        element = _tempElement;
         var numChildren = _tempElement.children.length;
-        if (numChildren == 1) {
-            element = _tempElement.firstElementChild;
-        } else {
-            element = parent;
-        }
         if(!_useExternalContent){
             while (numChildren > 0) {
                 numChildren--;
                 var item:Element = cast _tempElement.children.item(0);
-                parent.appendChild(item);
+                this.appendChild(item);
             }
         }
     }
-
-    private function getContent():String {
-        return untyped this.view;
-    }
-
 }

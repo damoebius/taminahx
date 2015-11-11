@@ -1,4 +1,4 @@
-package org.tamina.html;
+package org.tamina.html.component;
 
 import haxe.macro.Context;
 import haxe.macro.Expr.Field;
@@ -12,10 +12,22 @@ class HTMLComponentFactory {
         var p = Context.resolvePath(getViewPath(cls));
         var content = sys.io.File.getContent(p);
         var pos = Context.currentPos();
-        Context.get
         var fields = Context.getBuildFields();
-        //fields.push({ name : "view", doc : null, meta : [], access : [APublic], kind : FVar(macro:String, Context.makeExpr(content, Context.currentPos())), pos : pos });
-fields.push({ name : "view", doc : null, meta : [], access : [APublic], kind : FVar(macro:String, Context.makeExpr(content, Context.currentPos())), pos : pos });
+        fields.push({
+            name : "getView",
+            doc : null,
+            meta : [],
+            access : [APublic],
+            kind : FFun({
+                args:[],
+                ret:null,
+                expr:macro {
+                    return $v{content};
+                },
+                params:[]
+            }),
+            pos : pos
+        });
         return fields;
     }
 
