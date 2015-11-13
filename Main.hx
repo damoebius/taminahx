@@ -1,5 +1,8 @@
 package ;
 
+import html.view.OtherTestComponent;
+import html.view.TestComponent;
+import org.tamina.html.component.HTMLApplication;
 import js.html.HTMLElement;
 import org.tamina.html.component.HTMLComponent;
 import js.Browser;
@@ -8,11 +11,20 @@ import org.tamina.net.URL;
 import org.tamina.net.ScriptLoadingType;
 import org.tamina.net.GroupURL;
 import org.tamina.net.ScriptCompositeLoader;
-class Main {
+
+class Main extends HTMLApplication{
+
+    private static var _instance:Main;
+
     public function new():Void {
+        super();
+        /*Browser.document.registerElement('my-element', cast TestComponent);
+        Browser.document.registerElement('my-other-element', cast OtherTestComponent);*/
     }
 
     public static function main():Void {
+
+        _instance = new Main();
 
         var paramUrl = new URL("http://www.tamere.com/test.html?var1=aaaaa&var2=bbbbb&var3=ccccc");
         trace(paramUrl.parameters.get('var1'));
@@ -20,6 +32,7 @@ class Main {
         trace(paramUrl.parameters.get('var3'));
 
         var l = new ScriptCompositeLoader();
+        l.completeSignal.add(scriptsLoadedHandler);
         var g1 = new GroupURL();
         g1.add(new URL('http://code.createjs.com/easeljs-0.7.1.min.js'));
         g1.add(new URL('http://code.createjs.com/tweenjs-0.5.1.min.js'));
@@ -41,17 +54,10 @@ class Main {
 
         l.start();
 
-        var dd = LocalizationManager.instance;
-        var g = TestComponent;
-        //var ff = new TestComponent();
-        //Browser.document.body.appendChild(Browser.document.createElement('TestComponent'));
-        /*var MyClass = Browser.document.registerElement('my-element', {
-            extends_: 'TestComponent'
-        });
-        untyped __js__("document.body.appendChild(new MyClass())");*/
-        Browser.document.registerElement('my-element', cast TestComponent);
-        Browser.document.registerElement('my-other-element', cast OtherTestComponent);
-        //Browser.document.body.appendChild(Browser.document.createElement('my-element'));
+    }
+
+    private static function scriptsLoadedHandler():Void{
+        _instance.loadComponents();
     }
 
 

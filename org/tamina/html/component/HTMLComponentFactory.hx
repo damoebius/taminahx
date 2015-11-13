@@ -1,5 +1,6 @@
 package org.tamina.html.component;
 
+import haxe.macro.TypeTools;
 import haxe.macro.Context;
 import haxe.macro.Expr.Field;
 import haxe.macro.Type;
@@ -7,8 +8,11 @@ import haxe.macro.Type;
 using Lambda;
 
 class HTMLComponentFactory {
-    macro public static function build():Array<Field>{
+    public static function build():Array<Field>{
         var cls = Context.getLocalClass().get();
+        var className = cls.pack.join('.') + '.' + cls.name;
+       //registerComponent(className);
+        //Context.error("Debug : " + htmlApplicationClass.name, Context.currentPos());
         var p = Context.resolvePath(getViewPath(cls));
         var content = sys.io.File.getContent(p);
         var pos = Context.currentPos();
@@ -27,6 +31,15 @@ class HTMLComponentFactory {
                 params:[]
             }),
             pos : pos
+        });
+        fields.push({
+            name: '__registered',
+            pos: cls.pos,
+            access: [AStatic],
+            kind: FVar(macro : Bool, macro @:pos(cls.pos) {
+            org.tamina.html.component.HTMLApplication.componentsClassList.push($v{className});
+            true;
+            })
         });
         return fields;
     }
