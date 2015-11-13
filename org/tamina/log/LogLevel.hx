@@ -47,6 +47,16 @@ package org.tamina.log;
 	 */
     var ERROR = 3;
 
+/**
+	 * NONE
+	 * @property NONE
+	 * @type Int
+	 * @readOnly
+	 * @static
+	 * @default 4
+	 */
+    var NONE = 4;
+
     @:op(A<=B) public function compareMinusOrEqual(target:Int):Bool{ return this <= target;}
 
 }
