@@ -16,6 +16,7 @@ class HTMLComponent extends HTMLElement {
     private var _visible:Bool = true;
     private var _tempElement:Element;
     private var _useExternalContent:Bool=false;
+    private var _defaultDisplayStyle:String="";
 
     private function new() {
     }
@@ -46,8 +47,14 @@ class HTMLComponent extends HTMLElement {
 
     public function set_visible(value:Bool):Bool {
         _visible = value;
+        if(_defaultDisplayStyle == ""){
+            _defaultDisplayStyle = this.style.display;
+            if(_defaultDisplayStyle == ""){
+                _defaultDisplayStyle = "block";
+            }
+        }
         if (_visible) {
-            this.style.display = 'block';
+            this.style.display = _defaultDisplayStyle;
         } else {
             this.style.display = 'none';
         }

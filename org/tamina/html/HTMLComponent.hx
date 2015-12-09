@@ -20,6 +20,7 @@ class HTMLComponent {
     private var _visible:Bool = true;
     private var _tempElement:Element;
     private var _useExternalContent:Bool=false;
+    private var _defaultDisplayStyle:String="";
 
     public function new(?parent:Element):Void {
         if (parent != null) {
@@ -37,8 +38,14 @@ class HTMLComponent {
 
     public function set_visible(value:Bool):Bool {
         _visible = value;
+        if(_defaultDisplayStyle == ""){
+            _defaultDisplayStyle = parent.style.display;
+            if(_defaultDisplayStyle == ""){
+                _defaultDisplayStyle = "block";
+            }
+        }
         if (_visible) {
-            parent.style.display = 'block';
+            parent.style.display = _defaultDisplayStyle;
         } else {
             parent.style.display = 'none';
         }
