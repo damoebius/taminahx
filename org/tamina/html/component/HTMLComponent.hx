@@ -21,6 +21,13 @@ class HTMLComponent extends HTMLElement {
     private function new() {
     }
 
+    public static function createInstance<T>(type:Class<T>):T {
+        var className:String = Type.getClassName(type);
+        className = className.toLowerCase().split('.').join('-');
+
+        return cast Browser.document.createElement(className);
+    }
+
     public function createdCallback() {
         trace('createdCallback---------------->');
        // this();
