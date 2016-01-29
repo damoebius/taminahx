@@ -1,11 +1,34 @@
 package org.tamina.display;
 
+/**
+ * Pre builded ColorMatrix
+ * @class ColorMatrix
+ * @static
+ */
 class ColorMatrix {
 
+/**
+ * @property BANDW_MATRIX
+ * @type Float[]
+ * @static
+ * @readOnly
+ */
     static public var BANDW_MATRIX(get,null):Array<Float>;
 
+/**
+ * @property NEGATIVE_MATRIX
+ * @type Float[]
+ * @static
+ * @readOnly
+ */
     static public var NEGATIVE_MATRIX(get,null):Array<Float>;
 
+/**
+ * @property SEPIA_MATRIX
+ * @type Float[]
+ * @static
+ * @readOnly
+ */
     static public var SEPIA_MATRIX(get,null):Array<Float>;
 
 

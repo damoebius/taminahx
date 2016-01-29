@@ -4,6 +4,12 @@ import org.tamina.i18n.LocalizationManager;
 import org.tamina.i18n.ITranslation;
 import html.view.TestComponent;
 import org.tamina.html.component.HTMLApplication;
+/**
+ * Tamina Haxe Library
+ *
+ * @module Tamina
+ */
+
 
 @:expose class Main extends HTMLApplication{
 
@@ -24,3 +30,10 @@ import org.tamina.html.component.HTMLApplication;
         _instance = new Main();
     }
 }
+/**
+ * <br/>http://www.createjs.com/easeljs
+ * <br/>To install easeljs external definition
+ * @module EaselJS
+ * @example
+ *      npm install createjs-haxe
+**/
