@@ -3,12 +3,16 @@
   "description": "tamina library for haxe",
   "keywords": [
     "tamina",
+    "web components",
+    "http requests",
+    "loaders",
+    "utils",
     "haxe"
   ],
   "author": {
     "name": "David Mouton"
   },
-  "version": "1.0.3",
+  "version": "1.0.4",
   "license": "MIT",
   "engines": {
     "node": ">=0.8.0"
@@ -19,7 +23,7 @@
     "org",
     "README.md"
   ],
-  "homepage": "http://www.tamina-online.com",
+  "homepage": "http://lib.tamina-online.com",
   "bugs": {
     "url": "https://github.com/damoebius/taminahx/issues"
   },
@@ -28,10 +32,5 @@
     "url": "git://github.com/damoebius/taminahx.git"
   },
   "dependencies": {},
-  "readme": "taminahx\r\n========\r\n\r\ntamina library for haxe\r\n\r\nuseful classes for :\r\n- createjs\r\n- mconsole\r\n- html5\r\n- nodejs\r\n- msignal\r\n",
-  "readmeFilename": "README.md",
-  "_id": "taminahx@0.1.8",
-  "_shasum": "64a674f83a63d6a81401184d17b9f6f76764d203",
-  "_from": "taminahx@>=0.1.0",
-  "_resolved": "https://registry.npmjs.org/taminahx/-/taminahx-0.1.8.tgz"
+  "readmeFilename": "README.md"
 }
