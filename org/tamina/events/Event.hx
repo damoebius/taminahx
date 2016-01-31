@@ -33,7 +33,7 @@ class Event<T> {
     *       ExternalEventBus.instance.send(new SakuraEvent(SakuraEventType.PROGRESS, new Progress(0, 0))) ;
     */
 
-    public function new(type:T, ?data:Dynamic) {
+    public function new( type:T, ?data:Dynamic ) {
         this.type = type;
         this.data = data;
     }
