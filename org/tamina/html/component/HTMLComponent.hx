@@ -9,8 +9,20 @@ import js.Browser;
 import js.html.Element;
 
 @:autoBuild(org.tamina.html.component.HTMLComponentFactory.build())
+
+/**
+ * HTMLComponent is the base class to build Custom Elements.
+ * more info : http://happy-technologies.com/custom-elements-and-component-developement-en/
+ * @class HTMLComponent
+ * @extends HTMLElement
+ */
 class HTMLComponent extends HTMLElement {
 
+    /**
+     * Whether or not the display object is visible.
+     * @property visible
+     * @type Bool
+     */
     public var visible(get, set):Bool;
 
     private var _visible:Bool = true;
@@ -21,6 +33,16 @@ class HTMLComponent extends HTMLElement {
     private function new() {
     }
 
+    /**
+	 * To instantiate dynamically a component from your application, like an itemRenderer for example, you can use a Factory available in HTMLComponent.
+	 * @method createInstance
+	 * @static
+	 * @param	type {Class<T>} A string representing the event type to listen for.
+	 * @return listener {T} The function that's called when an event of the specified type occurs.
+	 * @example
+	 *      var myComponent = HTMLComponent.createInstance(TestComponent);
+	 *      Browser.document.body.appendChild(myComponent);
+	 */
     public static function createInstance<T>(type:Class<T>):T {
         var className:String = Type.getClassName(type);
         className = className.toLowerCase().split('.').join('-');
@@ -28,7 +50,11 @@ class HTMLComponent extends HTMLElement {
         return cast Browser.document.createElement(className);
     }
 
-    public function createdCallback() {
+    /**
+	 * Called after the element is created.
+	 * @method createdCallback
+	 */
+    public function createdCallback():Void {
         trace('createdCallback---------------->');
        // this();
         parseContent();
@@ -36,23 +62,38 @@ class HTMLComponent extends HTMLElement {
         displayContent();
     }
 
-    public function attachedCallback() {
+/**
+	 * Called when the element is attached to the document
+	 * @method attachedCallback
+	 */
+    public function attachedCallback():Void {
         trace('attachedCallback---------------->');
     }
 
-    public function detachedCallback() {
+/**
+	 * Called when the element is detached from the document.
+	 * @method detachedCallback
+	 */
+    public function detachedCallback():Void {
         trace('detachedCallback---------------->');
     }
 
-    public function attributeChangedCallback(attrName:String, oldVal:String, newVal:String) {
+/**
+	 * Called when one of attributes of the element is changed.
+	 * @method attributeChangedCallback
+	 * @param	attrName {String} A string representing the attribute's name
+	 * @param	oldVal {String} A string representing the old value.
+	 * @param	newVal {String} A string representing the new value.
+	 */
+    public function attributeChangedCallback(attrName:String, oldVal:String, newVal:String):Void {
         trace('attributeChangedCallback---------------->'+attrName);
     }
 
-    public function get_visible():Bool {
+    private function get_visible():Bool {
         return _visible;
     }
 
-    public function set_visible(value:Bool):Bool {
+    private function set_visible(value:Bool):Bool {
         _visible = value;
         if(_defaultDisplayStyle == ""){
             _defaultDisplayStyle = this.style.display;
