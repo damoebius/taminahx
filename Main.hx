@@ -28,6 +28,7 @@ import org.tamina.html.component.HTMLApplication;
  * Tamina Haxe Library
  *
  * @module Tamina
+ * @main
  */
 
 typedef MainEvent=Event<String>;
@@ -75,6 +76,7 @@ typedef MainEvent=Event<String>;
 /**
  * <br/>http://www.createjs.com/easeljs
  * <br/>To install easeljs external definition
+ * @main
  * @module EaselJS
  * @example
  *      npm install createjs-haxe

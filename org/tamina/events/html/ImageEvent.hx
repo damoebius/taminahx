@@ -1,13 +1,14 @@
 package org.tamina.events.html;
 
 /**
-     * ImageEvent Type
+     * Image API Events
      * @class ImageEvent
      * @static
      */
 class ImageEvent {
 
 /**
+     * The load event is fired when progression has begun successful.
      * @property LOAD
      * @type String
      * @static

@@ -31,14 +31,17 @@ package org.tamina.utils;
 * This is the description for my class.
 * @author d.mouton
 * @class DateUtils
+* @module Tamina
 * @constructor
 */
 class DateUtils {
 
 /**
      * Convertie une date en chaine au format HHhMM
-     * @param pDate
-     * @return
+     * @method hourToFrenchString
+     * @static
+     * @param {Date} pDate
+     * @return {String}
      */
     public static function hourToFrenchString(pDate:Date):String {
         var result:String = "";
@@ -56,9 +59,10 @@ class DateUtils {
 
 /**
 		 *Retourne une date au format jj/mm/aaaa
-		 * @param maDate
-		 * @return
-		 *
+     * @method toFrenchString
+     * @static
+     * @param {Date} pDate
+     * @return {String}
 		 */
 
     public static function toFrenchString(pDate:Date):String {

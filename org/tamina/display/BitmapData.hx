@@ -8,6 +8,7 @@ import js.Browser;
  * Utiliy to manipulte Bitmap
  * @class BitmapData
  * @static
+ * @module Tamina
  */
 class BitmapData {
 

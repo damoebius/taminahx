@@ -3,6 +3,7 @@ package org.tamina.display;
 /**
  * Pre builded ColorMatrix
  * @class ColorMatrix
+ * @module Tamina
  * @static
  */
 class ColorMatrix {

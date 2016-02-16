@@ -3,7 +3,33 @@ package org.tamina.events;
 import haxe.ds.StringMap;
 
 /**
-* Dispatch Events
+* The EventDispatcher class is the base class for all classes that dispatch events. The EventDispatcher class allows any object on the display list to be an event target and as such, to use the methods of the EventDispatcher class.
+* <br>
+* In general, the easiest way for a user-defined class to gain event dispatching capabilities is to extend EventDispatcher. If this is impossible (that is, if the class is already extending another class), you can instead create an EventDispatcher member, and write simple hooks to route calls into the aggregated EventDispatcher.
+*
+*      class ExternalEventBus extends EventDispatcher<SakuraEventType> {
+*
+*       public static var instance(get, null):ExternalEventBus;
+*       private static var _instance:ExternalEventBus;
+*
+*       private function new() {
+*           super();
+*       }
+*
+*       private static function get_instance():ExternalEventBus {
+*           if (_instance == null) {
+*              _instance = new ExternalEventBus();
+*           }
+*           return _instance;
+*       }
+*
+*       public function send(event:Event<SakuraEventType>):Void {
+*           if (_eventsCallback.exists(event.type)) {
+*             dispatchEvent(event);
+*           }
+*       }
+*
+*     }
 * @class EventDispatcher[T]
 */
 class EventDispatcher<T:String> {
