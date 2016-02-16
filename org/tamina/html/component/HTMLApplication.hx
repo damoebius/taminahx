@@ -3,8 +3,36 @@ package org.tamina.html.component;
 import js.Browser;
 
 /**
- * HTMLApplication. Tamina defines a default, or Application, container that lets you start adding content to your application without explicitly defining another container.
+ * HTMLApplication.
+ * <br>
+ * Tamina defines a default, or Application, container that lets you start adding content to your application without explicitly defining another container.<br>
  * more info : http://happy-technologies.com/custom-elements-and-component-developement-en/
+*
+*     package ;
+*
+*     import org.tamina.html.component.HTMLApplication;
+*
+*     class Main extends HTMLApplication{
+*
+*       private static var _instance:Main;
+*
+*       public function new():Void {
+*           super();
+*           loadComponents();
+*       }
+*
+*       public static function main():Void {
+*
+*           _instance = new Main();
+*       }
+*
+*     }
+*
+* ## Polyfills
+* Browsers don’t support Custom Elements very well.<br>
+* ![Compatibility](http://happy-technologies.com/wp-content/uploads/2015/12/ce1-1024x256.jpg "Compatibility")<br>
+* To make them compatible we used [webcomponent.js](https://github.com/WebComponents/webcomponentsjs "webcomponent.js")<br>
+* An optimized and minified version of 15Kb is available on our CDN her [cdn](http://storage.sakuradesigner.microclimat.com/apps/html5/js/CustomElements.min.js "here").
  * @class HTMLApplication
  */
 class HTMLApplication {
@@ -15,11 +43,12 @@ class HTMLApplication {
     * @constructor
     * @method new
     * @example
-    *   package ;
     *
-    *   import org.tamina.html.component.HTMLApplication;
+    *     package ;
     *
-    *   class Main extends HTMLApplication{
+    *     import org.tamina.html.component.HTMLApplication;
+    *
+    *     class Main extends HTMLApplication{
     *
     *       private static var _instance:Main;
     *
@@ -33,7 +62,7 @@ class HTMLApplication {
     *           _instance = new Main();
     *       }
     *
-    *   }
+    *     }
     */
     public function new() {
 

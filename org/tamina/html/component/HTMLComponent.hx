@@ -11,7 +11,50 @@ import js.html.Element;
 @:autoBuild(org.tamina.html.component.HTMLComponentFactory.build())
 
 /**
- * HTMLComponent is the base class to build Custom Elements.
+ * HTMLComponent is the base class to build Custom Elements.<br>
+ * ## x-tag
+ * HTMLComponent now extends HTMLElement. That means we can deal with components in an easier way (like DOM elements).<br>
+ * The other change is it officially supports Custom Elements. It’s now possible to instantiate HTMLComponent in their view.
+ *
+ *     <html-view-othertestcomponent data-id="_otherComponent"></html-view-othertestcomponent>
+ *
+ * The tag name is made from your component namespace and classname. In the previous example, our component is *html.view.OtherTestComponent*<br>
+ * ## Life cycle
+ * Our component life cycle is the same as Custom Elements.
+*
+* public function  createdCallback() //Called after the element is created.
+*
+* public function  attachedCallback() //Called when the element is attached to the document
+*
+* public function  detachedCallback() //Called when the element is detached from the document.
+*
+* public function  attributeChangedCallback(attrName:String, oldVal:String, newVal:String) //Called when one of attributes of the element is changed.
+*
+* You can override them if you need it.<br>
+* ## Skin Parts
+* Another usefull feature is Skin Part support. This metadata is used to reference an element from his view. You don’t need to do it yourself anymore, A macro will automatically do it while compiling.<br>
+* This technique was inspired by Flex4 Spark components architecture.
+*
+*     \@view('html/view/TestComponent.html')
+*     class TestComponent extends HTMLComponent {
+*
+*         \@skinpart("")
+*         private var _otherComponent:OtherTestComponent;
+*
+*         override public function attachedCallback() {
+*             _otherComponent.displayHellWorld();
+*         }
+*
+*     }
+*
+* ## View
+* This metadata is used to link an HTML file as the view part of your component. In the previous exemple, TestComponent.html is used to describe the view structure.
+*
+*      <div>
+*         \{{title}}
+*     </div>
+*
+*     <html-view-othertestcomponent data-id="_otherComponent"></html-view-othertestcomponent>
  * more info : http://happy-technologies.com/custom-elements-and-component-developement-en/
  * @class HTMLComponent
  * @extends HTMLElement
