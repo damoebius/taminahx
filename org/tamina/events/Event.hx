@@ -14,6 +14,7 @@ package org.tamina.events;
 *
 *       ExternalEventBus.instance.send(new SakuraEvent(SakuraEventType.PROGRESS, new Progress(0, 0))) ;
 * @class Event[T]
+* @module Tamina
 */
 class Event<T> {
 

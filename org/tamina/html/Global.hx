@@ -4,6 +4,7 @@ import js.Browser;
 /**
  * Global object give an accès to Window element
  * @class Global
+ * @module Tamina
  */
 class Global {
 

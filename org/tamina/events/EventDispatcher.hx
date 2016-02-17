@@ -31,6 +31,7 @@ import haxe.ds.StringMap;
 *
 *     }
 * @class EventDispatcher[T]
+* @module Tamina
 */
 class EventDispatcher<T:String> {
 
