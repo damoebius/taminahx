@@ -38,9 +38,9 @@ class HTMLComponent {
 
     public function set_visible(value:Bool):Bool {
         _visible = value;
-        if(_defaultDisplayStyle == ""){
+        if(_defaultDisplayStyle == "" || _defaultDisplayStyle == "none"){
             _defaultDisplayStyle = parent.style.display;
-            if(_defaultDisplayStyle == ""){
+            if(_defaultDisplayStyle == "" || _defaultDisplayStyle == "none"){
                 _defaultDisplayStyle = "block";
             }
         }

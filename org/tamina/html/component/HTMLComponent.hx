@@ -138,9 +138,9 @@ class HTMLComponent extends HTMLElement {
 
     private function set_visible(value:Bool):Bool {
         _visible = value;
-        if(_defaultDisplayStyle == ""){
+        if(_defaultDisplayStyle == "" || _defaultDisplayStyle == "none"){
             _defaultDisplayStyle = this.style.display;
-            if(_defaultDisplayStyle == ""){
+            if(_defaultDisplayStyle == "" || _defaultDisplayStyle == "none"){
                 _defaultDisplayStyle = "block";
             }
         }
