@@ -31,6 +31,11 @@
     "type": "git",
     "url": "git://github.com/damoebius/taminahx.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "createjs-haxe": "^1.6.5",
+    "haxe": "^3.2.1",
+    "mconsole-npm": "^1.6.3",
+    "msignal": "^1.2.5"
+  },
   "readmeFilename": "README.md"
 }
