@@ -22,7 +22,7 @@ import org.tamina.display.ColorMatrix;
 import org.tamina.display.BitmapData;
 import org.tamina.i18n.LocalizationManager;
 import org.tamina.i18n.ITranslation;
-import html.view.TestComponent;
+import test.html.view.TestComponent;
 import org.tamina.html.component.HTMLApplication;
 /**
  * Tamina Haxe Library
