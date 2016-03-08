@@ -1,18 +1,18 @@
 package org.tamina.net;
 
 import js.html.ProgressEvent;
-import org.tamina.html.MimeType;
+import haxe.MimeType;
 import org.tamina.net.URL;
 import msignal.Signal;
 import org.tamina.utils.UID;
 import org.tamina.events.XMLHttpRequestEvent;
 import org.tamina.log.QuickLogger;
 import js.html.XMLHttpRequest;
+
 import haxe.Json;
+import haxe.HTTPMethod;
 
 class BaseRequest {
-
-    public static var endpoint:URL;
 
     private var _httpRequest:XMLHttpRequest;
 
@@ -24,7 +24,7 @@ class BaseRequest {
     public var id(get, null):Float;
 
 
-    public function new( remoteMethod:String, method:HTTPMethode = HTTPMethode.POST ) {
+    public function new( remoteMethod:String, method:HTTPMethod = HTTPMethod.POST ) {
         _id = UID.getUID();
         completeSignal = new Signal1<ProgressEvent>();
         errorSignal = new Signal0();
@@ -33,7 +33,7 @@ class BaseRequest {
         _httpRequest.addEventListener(XMLHttpRequestEvent.LOAD, successHandler);
         _httpRequest.addEventListener(XMLHttpRequestEvent.ERROR, errorHandler);
         _httpRequest.addEventListener(XMLHttpRequestEvent.PROGRESS, progressHandler);
-        _httpRequest.open(method, endpoint.path + '/' + remoteMethod, true);
+        _httpRequest.open(method, remoteMethod, true);
         _httpRequest.setRequestHeader("Content-Type", MimeType.JSON+"; charset=utf-8");
     }
 

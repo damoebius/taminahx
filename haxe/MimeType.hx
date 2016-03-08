@@ -1,4 +1,4 @@
-package org.tamina.html;
+package haxe;
 
 /**
  * Html MimeType Enum

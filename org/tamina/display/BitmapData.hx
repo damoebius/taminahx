@@ -1,5 +1,5 @@
 package org.tamina.display;
-import org.tamina.html.MimeType;
+import haxe.MimeType;
 import js.html.Image;
 import js.html.CanvasRenderingContext2D;
 import js.Browser;
