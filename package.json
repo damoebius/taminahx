@@ -12,7 +12,7 @@
   "author": {
     "name": "David Mouton"
   },
-  "version": "1.0.9",
+  "version": "1.0.10",
   "license": "MIT",
   "engines": {
     "node": ">=0.8.0"
@@ -21,6 +21,7 @@
   "preferGlobal": false,
   "files": [
     "org",
+    "haxe",
     "README.md"
   ],
   "homepage": "http://lib.tamina-online.com",
