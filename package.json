@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "createjs-haxe": "^1.6.5",
-    "haxe": "^3.2.1",
+    "haxe": "0.320.6",
     "mconsole-npm": "^1.6.3",
     "msignal": "^1.2.5"
   },
