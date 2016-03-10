@@ -180,6 +180,8 @@ package haxe;
     var JPG = 'image/jpeg';
     var JPS = 'image/x-jps';
     var JS = 'text/javascript';
+    var JSON = 'application/json';
+    var JSONP = 'application/javascript';
     var JUT = 'image/jutvision';
     var KAR = 'audio/midi';
     var KSH = 'application/x-ksh';
