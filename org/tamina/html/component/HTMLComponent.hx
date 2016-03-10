@@ -68,6 +68,13 @@ class HTMLComponent extends HTMLElement {
      */
     public var visible(get, set):Bool;
 
+    /**
+     * Whether or not the display object is initialized.
+     * @property initialized
+     * @type Bool
+     */
+    public var initialized(default, null):Bool;
+
     private var _visible:Bool = true;
     private var _tempElement:Element;
     private var _useExternalContent:Bool=false;
@@ -99,7 +106,6 @@ class HTMLComponent extends HTMLElement {
 	 */
     public function createdCallback():Void {
         trace('createdCallback---------------->');
-       // this();
         parseContent();
         initContent();
         displayContent();
@@ -111,6 +117,7 @@ class HTMLComponent extends HTMLElement {
 	 */
     public function attachedCallback():Void {
         trace('attachedCallback---------------->');
+        initialized = true;
     }
 
 /**
