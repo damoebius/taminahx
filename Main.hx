@@ -1,5 +1,8 @@
 package ;
 
+import js.Browser;
+import createjs.easeljs.Rectangle;
+import createjs.easeljs.Point;
 import createjs.easeljs.DisplayObject;
 import org.tamina.view.Group;
 import org.tamina.utils.UID;
@@ -42,7 +45,6 @@ typedef MainEvent=Event<String>;
 
     public function new():Void {
         super();
-        build();
     }
 
     public static function init(translations:Array<ITranslation>):Void{
@@ -52,9 +54,10 @@ typedef MainEvent=Event<String>;
 
     public static function main():Void {
         _instance = new Main();
+        _instance.build();
     }
 
-    private function build():Void{
+    public function build():Void{
         BitmapData.getMimeType('');
         ColorMatrix.BANDW_MATRIX.length;
         new EventDispatcher<String>();
@@ -64,14 +67,16 @@ typedef MainEvent=Event<String>;
         new XMLLoader();
         new ScriptLoader();
         ClassUtils.expose(null,'');
-        ColorUtils.invert('');
+        ColorUtils.invert('#FFFFFF');
         DateUtils.toFrenchString(Date.now());
-        GraphicUtils.isPointInsideRectangle(null,null);
-        HTMLUtils.getElementById(null,null);
+        GraphicUtils.isPointInsideRectangle(new Point(1,1),new Rectangle(0,0,1,1));
+        HTMLUtils.getElementById(Browser.document.body,'test');
         NumberUtils.toFixed(0,0);
-        ObjectUtils.merge(null,null);
+        ObjectUtils.merge({},{});
         UID.getUID();
         new Group<DisplayObject>();
+        var url = new URL("http://test.com");
+        trace(url.scheme);
     }
 }
 /**

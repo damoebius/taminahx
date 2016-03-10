@@ -5,6 +5,7 @@ package org.tamina.net;
  * @author David Mouton
  */
 
+import haxe.Scheme;
 import haxe.ds.StringMap;
 
 class URL 
@@ -13,6 +14,7 @@ class URL
 	
 	public var documentName(get, null):String;
 	public var extension(get, null):String;
+    public var scheme(get, null):Scheme;
 
     public var parameters(get, null):StringMap<String>;
     private var _parameters:StringMap<String>;
@@ -30,6 +32,15 @@ class URL
             }
         }
 	}
+
+    private function get_scheme():Scheme{
+        var result:String = "";
+        if ( path.indexOf( ":" ) > 0 )
+        {
+            result = path.substring( 0, path.indexOf( ":" ));
+        }
+        return result;
+    }
 
     private function get_parameters():StringMap<String>{
         return _parameters;
