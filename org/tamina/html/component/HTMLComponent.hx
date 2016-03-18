@@ -1,5 +1,7 @@
 package org.tamina.html.component;
 
+import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
+import js.html.Event;
 import js.html.HTMLElement;
 import org.tamina.i18n.LocalizationManager;
 import js.RegExp;
@@ -105,10 +107,11 @@ class HTMLComponent extends HTMLElement {
 	 * @method createdCallback
 	 */
     public function createdCallback():Void {
-        trace('createdCallback---------------->');
+        trace('createdCallback----------------> ' + this.localName);
         parseContent();
         initContent();
         displayContent();
+        this.dispatchEvent( new HTMLComponentEvent(HTMLComponentEventType.CREATION_COMPLETE));
     }
 
 /**
@@ -116,8 +119,9 @@ class HTMLComponent extends HTMLElement {
 	 * @method attachedCallback
 	 */
     public function attachedCallback():Void {
-        trace('attachedCallback---------------->');
+        trace('attachedCallback----------------> ' +  this.localName);
         initialized = true;
+        this.dispatchEvent( new HTMLComponentEvent(HTMLComponentEventType.INITIALIZE));
     }
 
 /**
@@ -225,3 +229,15 @@ class HTMLComponent extends HTMLElement {
         }
     }
 }
+
+/**
+ * Dispatched when the component has finished its construction and has all initialization properties set, at the end of createdCallback
+ * See the {{#crossLink "HTMLComponentEventType"}}{{/crossLink}} class for a listing of event properties.
+ * @event HTMLComponentEventType.CREATION_COMPLETE
+ */
+
+/**
+ * Dispatched when the component has finished its construction, property processing, measuring, layout, and drawing, at the end of attachedCallback
+ * See the {{#crossLink "HTMLComponentEventType"}}{{/crossLink}} class for a listing of event properties.
+ * @event HTMLComponentEventType.INITIALIZE
+ */

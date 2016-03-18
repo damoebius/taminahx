@@ -1,5 +1,7 @@
 package ;
 
+import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
+import org.tamina.html.component.HTMLComponent;
 import js.Browser;
 import createjs.easeljs.Rectangle;
 import createjs.easeljs.Point;
@@ -77,6 +79,12 @@ typedef MainEvent=Event<String>;
         new Group<DisplayObject>();
         var url = new URL("http://test.com");
         trace(url.scheme);
+        var myComponent:TestComponent = HTMLComponent.createInstance(TestComponent);
+        myComponent.addEventListener(HTMLComponentEventType.CREATION_COMPLETE, myComponent_creationCompleteHandler);
+    }
+
+    private function myComponent_creationCompleteHandler(evt:js.html.Event):Void{
+        trace('hophophop');
     }
 }
 /**
