@@ -79,6 +79,8 @@ typedef MainEvent=Event<String>;
         new Group<DisplayObject>();
         var url = new URL("http://test.com");
         trace(url.scheme);
+        var l = new ImageLoader();
+        l.load(url);
         var myComponent:TestComponent = HTMLComponent.createInstance(TestComponent);
         myComponent.addEventListener(HTMLComponentEventType.CREATION_COMPLETE, myComponent_creationCompleteHandler);
     }

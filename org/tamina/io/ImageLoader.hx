@@ -7,23 +7,71 @@ import msignal.Signal.Signal1;
 import js.html.Image;
 import org.tamina.net.URL;
 
+/**
+ * The ImageLoader class downloads image data from a URL. It is useful for downloading images files, to be used in a dynamic, data-driven application.<br>
+ *
+ * @module Tamina
+ * @class ImageLoader
+ */
 class ImageLoader {
 
+/**
+ * Dispatched after all the received data is decoded and placed in the src property of the Image object.
+ * @property complete
+ * @readOnly
+ * @type Signal1<{js.html.Image}>
+ */
     public var complete:Signal1<Image>;
 
+/**
+ * Returns a data URI containing a representation of the image
+ * @property dataURL
+ * @readOnly
+ * @type String
+ */
+    public var dataURL(get, null):String;
+
+/**
+ * The Image received from the load operation.
+ * @property image
+ * @readOnly
+ * @type js.html.Image
+ */
     public var image(get, null):Image;
+
+
     private var _image:Image;
 
     private function get_image():Image {
         return _image;
     }
+    private function get_dataURL():String {
+        var result = '';
+        if(_image != null){
+            result = _image.src;
+        }
+        return result;
+    }
 
+/**
+    * @constructor
+    * @method new
+    * @example
+     *      var l = new ImageLoader();
+     *      var img = l.image;
+     *      l.load(iconURL);
+    */
     public function new():Void {
         _image = new Image();
         _image.crossOrigin = "anonymous";
         complete = new Signal1<Image>();
     }
 
+/**
+	 * Sends and loads data from the specified URL.
+	 * @method load
+	 * @param	url {URL} A string representing the attribute's name
+	 */
     public function load(url:URL):Void {
         _image.addEventListener(ImageEvent.LOAD, imageLoadHandler, false);
         _image.src = url.path;

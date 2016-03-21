@@ -59,7 +59,7 @@ import js.html.Element;
 *     <html-view-othertestcomponent data-id="_otherComponent"></html-view-othertestcomponent>
  * more info : http://happy-technologies.com/custom-elements-and-component-developement-en/
  * @class HTMLComponent
- * @extends HTMLElement
+ * @extends js.html.HTMLElement
  */
 class HTMLComponent extends HTMLElement {
 

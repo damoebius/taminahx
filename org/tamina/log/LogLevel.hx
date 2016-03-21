@@ -1,7 +1,5 @@
 package org.tamina.log;
 /**
- * Tamina Lib
- * <br/>https://github.com/damoebius/taminahx
  * Enumeration des niveaux de logs
  * @class LogLevel
  */

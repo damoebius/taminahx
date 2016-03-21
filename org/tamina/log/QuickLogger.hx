@@ -2,10 +2,6 @@ package org.tamina.log;
 
 import mconsole.Console;
 
-/**
- * ...
- * @author David Mouton
- */
 
 class QuickLogger {
 
