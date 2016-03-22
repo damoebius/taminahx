@@ -2,7 +2,7 @@ package org.tamina.html.component;
 
 import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
 import js.html.Event;
-import js.html.HTMLElement;
+import js.html.HtmlElement;
 import org.tamina.i18n.LocalizationManager;
 import js.RegExp;
 import org.tamina.utils.HTMLUtils;
@@ -61,7 +61,7 @@ import js.html.Element;
  * @class HTMLComponent
  * @extends js.html.HTMLElement
  */
-class HTMLComponent extends HTMLElement {
+class HTMLComponent extends HtmlElement {
 
     /**
      * Whether or not the display object is visible.
