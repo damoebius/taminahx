@@ -34,6 +34,11 @@ class BaseRequest {
         _httpRequest.addEventListener(XMLHttpRequestEvent.ERROR, errorHandler);
         _httpRequest.addEventListener(XMLHttpRequestEvent.PROGRESS, progressHandler);
         _httpRequest.open(method, remoteMethod, true);
+
+        setHeaders();
+    }
+
+    public function setHeaders( ):Void {
         _httpRequest.setRequestHeader("Content-Type", MimeType.JSON+"; charset=utf-8");
     }
 
