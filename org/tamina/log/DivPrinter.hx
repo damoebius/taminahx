@@ -6,6 +6,13 @@ import haxe.PosInfos;
 import mconsole.LogLevel;
 import mconsole.Printer;
 
+/**
+ * The DivPrinter class is used by mconsole.Console to output logs into a DIV Element. This DIV must have the id='debugDiv' attribute <br>
+ *
+ * @module Tamina
+ * @class DivPrinter
+ * @extends mconsole.Printer
+ */
 class DivPrinter implements Printer {
     public function new() {
     }
