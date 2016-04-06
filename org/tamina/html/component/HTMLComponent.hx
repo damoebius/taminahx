@@ -63,14 +63,14 @@ import js.html.Element;
  */
 class HTMLComponent extends HtmlElement {
 
-    /**
+/**
      * Whether or not the display object is visible.
      * @property visible
      * @type Bool
      */
     public var visible(get, set):Bool;
 
-    /**
+/**
      * Whether or not the display object is initialized.
      * @property initialized
      * @type Bool
@@ -85,7 +85,7 @@ class HTMLComponent extends HtmlElement {
     private function new() {
     }
 
-    /**
+/**
 	 * To instantiate dynamically a component from your application, like an itemRenderer for example, you can use a Factory available in HTMLComponent.
 	 * @method createInstance
 	 * @static
@@ -102,7 +102,7 @@ class HTMLComponent extends HtmlElement {
         return cast Browser.document.createElement(className);
     }
 
-    /**
+/**
 	 * Called after the element is created.
 	 * @method createdCallback
 	 */
@@ -168,14 +168,16 @@ class HTMLComponent extends HtmlElement {
     }
 
     private function parseContent(useExternalContent:Bool=true):Void {
+        var content = "";
         if (this.childElementCount == 0 || !useExternalContent) {
+            content = translateContent(getContent());
             _tempElement = Browser.document.createDivElement();
-            _tempElement.innerHTML = getContent();
         } else {
             _useExternalContent=true;
             _tempElement = this;
+            content = translateContent(this.innerHTML);
         }
-        translateContent(_tempElement);
+        _tempElement.innerHTML = content;
         initSkinParts(_tempElement);
     }
 
@@ -192,14 +194,14 @@ class HTMLComponent extends HtmlElement {
         }
     }
 
-    private function translateContent(target:Element):Void {
-        var html = target.innerHTML;
+    private function translateContent(source:String):String {
+        var content = source;
         var stringToTranslate = new RegExp('\\{\\{(?!\\}\\})(.+)\\}\\}', 'gim');
         var results:Array<Array<String>> = new Array<Array<String>>();
         var result:Array<String> = new Array<String>();
         var i = 0;
 
-        while ((result = stringToTranslate.exec(html)) != null) {
+        while ((result = stringToTranslate.exec(content)) != null) {
             results[i] = result;
             i++;
         }
@@ -208,10 +210,10 @@ class HTMLComponent extends HtmlElement {
         for (result in results) {
             var totalString = result[0];
             var key = StringTools.trim(result[1]);
-            html = StringTools.replace(html, totalString, LocalizationManager.instance.getString(key));
+            content = StringTools.replace(content, totalString, LocalizationManager.instance.getString(key));
         }
 
-        target.innerHTML = html;
+        return content;
     }
 
     private function initContent():Void {
