@@ -77,10 +77,10 @@ class HTMLComponent extends HtmlElement {
      */
     public var initialized(default, null):Bool;
 
-    private var _visible:Bool = true;
+    private var _visible:Bool;
     private var _tempElement:Element;
-    private var _useExternalContent:Bool=false;
-    private var _defaultDisplayStyle:String="";
+    private var _useExternalContent:Bool;
+    private var _defaultDisplayStyle:String;
 
     private function new() {
     }
@@ -107,10 +107,12 @@ class HTMLComponent extends HtmlElement {
 	 * @method createdCallback
 	 */
     public function createdCallback():Void {
-        trace('createdCallback----------------> ' + this.localName);
+        // trace('createdCallback----------------> ' + this.localName);
+        initDefaultValues();
         parseContent();
         initContent();
         displayContent();
+
         this.dispatchEvent( new HTMLComponentEvent(HTMLComponentEventType.CREATION_COMPLETE));
     }
 
@@ -119,7 +121,7 @@ class HTMLComponent extends HtmlElement {
 	 * @method attachedCallback
 	 */
     public function attachedCallback():Void {
-        trace('attachedCallback----------------> ' +  this.localName);
+        // trace('attachedCallback----------------> ' +  this.localName);
         initialized = true;
         this.dispatchEvent( new HTMLComponentEvent(HTMLComponentEventType.INITIALIZE));
     }
@@ -129,7 +131,7 @@ class HTMLComponent extends HtmlElement {
 	 * @method detachedCallback
 	 */
     public function detachedCallback():Void {
-        trace('detachedCallback---------------->');
+        // trace('detachedCallback---------------->');
     }
 
 /**
@@ -140,7 +142,13 @@ class HTMLComponent extends HtmlElement {
 	 * @param	newVal {String} A string representing the new value.
 	 */
     public function attributeChangedCallback(attrName:String, oldVal:String, newVal:String):Void {
-        trace('attributeChangedCallback---------------->'+attrName);
+        // trace('attributeChangedCallback---------------->'+attrName);
+    }
+
+    private function initDefaultValues():Void {
+        _visible = true;
+        _useExternalContent = false;
+        _defaultDisplayStyle = "";
     }
 
     private function get_visible():Bool {
