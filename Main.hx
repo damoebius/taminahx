@@ -83,6 +83,7 @@ typedef MainEvent=Event<String>;
         l.load(url);
         var myComponent:TestComponent = HTMLComponent.createInstance(TestComponent);
         myComponent.addEventListener(HTMLComponentEventType.CREATION_COMPLETE, myComponent_creationCompleteHandler);
+        QL.info("log");
     }
 
     private function myComponent_creationCompleteHandler(evt:js.html.Event):Void{

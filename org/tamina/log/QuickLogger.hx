@@ -2,6 +2,7 @@ package org.tamina.log;
 
 import mconsole.Console;
 
+typedef QL = QuickLogger;
 
 class QuickLogger {
 
