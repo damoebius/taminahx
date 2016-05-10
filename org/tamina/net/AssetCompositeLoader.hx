@@ -1,7 +1,8 @@
 package org.tamina.net;
 import org.tamina.log.QuickLogger;
 import msignal.Signal.Signal0;
-class ScriptCompositeLoader {
+
+class AssetCompositeLoader {
 
     public var completeSignal:Signal0;
     public var errorSignal:Signal0;
@@ -25,28 +26,28 @@ class ScriptCompositeLoader {
     private function loadNextGroup():Void {
         if (_pool.length > 0) {
             var g = _pool.shift();
-            if(g.loadingType == ScriptLoadingType.SEQUENCE){
-                var loader = new ScriptListLoader();
-                loader.completeSignal.add(scriptCompleteHandler);
-                loader.errorSignal.add(scriptErrorHandler);
+            if(g.loadingType == AssetLoadingType.SEQUENCE){
+                var loader = new AssetListLoader();
+                loader.completeSignal.add(assetCompleteHandler);
+                loader.errorSignal.add(assetErrorHandler);
                 loader.load(g.toArray());
             } else {
-                var loader = new ScriptParallelLoader();
-                loader.completeSignal.add(scriptCompleteHandler);
-                loader.errorSignal.add(scriptErrorHandler);
+                var loader = new AssetParallelLoader();
+                loader.completeSignal.add(assetCompleteHandler);
+                loader.errorSignal.add(assetErrorHandler);
                 loader.load(g.toArray());
             }
         } else {
-            QuickLogger.info("ALL SCRIPTS LOADED");
+            QuickLogger.info("ALL ASSETS LOADED");
             completeSignal.dispatch();
         }
     }
 
-    private function scriptCompleteHandler():Void {
+    private function assetCompleteHandler():Void {
         loadNextGroup();
     }
 
-    private function scriptErrorHandler():Void {
+    private function assetErrorHandler():Void {
         loadNextGroup();
     }
 }

@@ -49,10 +49,21 @@ class URL
 	private function get_extension():String
 	{
 		var result:String = "";
-		if ( path.lastIndexOf( "." ) == path.length - 4 )
+
+        // Ignore url parameters
+        var pathWithoutParams:String = path;
+        if (path.indexOf("?") > -1)
+        {
+            pathWithoutParams = path.substring(0, path.indexOf("?"));
+        }
+
+        // Get extension (accept extensions of 2 to 4 characters)
+        var extensionSize:Int = pathWithoutParams.length - pathWithoutParams.lastIndexOf( "." ) - 1;
+		if ( extensionSize >= 2 && extensionSize <= 4 )
 		{
-			result = path.substring( path.length - 3 );
+			result = pathWithoutParams.substring( pathWithoutParams.length - extensionSize );
 		}
+
 		return result;
 	}
 

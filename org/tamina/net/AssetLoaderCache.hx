@@ -30,17 +30,19 @@ package org.tamina.net;
 /**
 * This is the description for my class.
 * @author d.mouton
-* @class ScriptLoaderCache
+* @class AssetLoaderCache
 * @constructor
 */
+import js.html.Element;
+import js.html.LinkElement;
 import js.html.ScriptElement;
 import js.Browser;
-class ScriptLoaderCache {
+class AssetLoaderCache {
 
     private var _cache(get, set):Cache;
 
 
-/**
+    /**
     * @constructor
     */
 
@@ -50,50 +52,62 @@ class ScriptLoaderCache {
         }
     }
 
-    public function getLoadingScript(url:URL):ScriptElement{
-        var result:ScriptElement = null;
-        for(i in 0..._cache.scriptsLoading.length){
-            var script = _cache.scriptsLoading[i];
-            if(script.src == url.path){
-                result = script;
-                break;
+    public function getLoadingAsset(url:AssetURL):Element {
+        var result:Element = null;
+
+        for (i in 0..._cache.assetsLoading.length) {
+            var asset = _cache.assetsLoading[i];
+            switch (url.assetType) {
+                case JS:
+                    var script:ScriptElement = cast asset;
+                    if (script.src == url.path) {
+                        result = asset;
+                        break;
+                    }
+
+                case CSS:
+                    var link:LinkElement = cast asset;
+                    if (link.href == url.path) {
+                        result = asset;
+                        break;
+                    }
             }
         }
         return result;
     }
 
-    public function isLoaded(scriptUrl:URL):Bool{
-        return _cache.scriptsLoaded.indexOf(scriptUrl.path) >= 0;
+    public function isLoaded(assetUrl:URL):Bool{
+        return _cache.assetsLoaded.indexOf(assetUrl.path) >= 0;
     }
 
-    public function addLoadedScript(scriptUrl:URL):Void{
-        _cache.scriptsLoaded.push(scriptUrl.path);
+    public function addLoadedAsset(assetUrl:URL):Void{
+        _cache.assetsLoaded.push(assetUrl.path);
     }
 
-    public function addLoadingScript(script:ScriptElement):Void{
-        _cache.scriptsLoading.push(script);
+    public function addLoadingAsset(asset:Element):Void{
+        _cache.assetsLoading.push(asset);
     }
 
-    public function removeLoadingScript(script:ScriptElement):Void{
-        _cache.scriptsLoading.remove(script);
+    public function removeLoadingAsset(asset:Element):Void{
+        _cache.assetsLoading.remove(asset);
     }
 
     private function set__cache(value:Cache):Cache {
-        Reflect.setField(Browser.window,'scriptLoaderCache',value);
+        Reflect.setField(Browser.window,'assetLoaderCache',value);
         return null;
     }
 
     private function get__cache():Cache {
-        return cast  Reflect.field(Browser.window,'scriptLoaderCache');
+        return cast Reflect.field(Browser.window,'assetLoaderCache');
     }
 }
 
 private class Cache {
-    public var scriptsLoaded:Array<String>;
-    public var scriptsLoading:Array<ScriptElement>;
+    public var assetsLoaded:Array<String>;
+    public var assetsLoading:Array<Element>;
 
     public function new() {
-        scriptsLoaded = new Array<String>();
-        scriptsLoading = new Array<ScriptElement>();
+        assetsLoaded = new Array<String>();
+        assetsLoading = new Array<Element>();
     }
 }
