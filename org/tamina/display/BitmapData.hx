@@ -1,4 +1,6 @@
 package org.tamina.display;
+
+import js.html.CanvasElement;
 import haxe.MimeType;
 import js.html.Image;
 import js.html.CanvasRenderingContext2D;
@@ -39,6 +41,33 @@ class BitmapData {
         }
 
 
+        return result;
+    }
+
+    public static function imageToCanvas(source:Image,width:Int=-1, height:Int=-1):CanvasElement{
+        var result = Browser.document.createCanvasElement();
+        if(width == -1){
+            width = source.width;
+            height = source.height;
+        }
+        result.width = width;
+        result.height = height;
+        var context = result.getContext2d();
+        context.drawImage(source,0,0,source.width,source.height,0,0,width,height); //slow
+        context = null;
+
+
+        return result;
+    }
+
+
+    public static function copyCanvas(source:CanvasElement,width:Int, height:Int):CanvasElement{
+        var result = Browser.document.createCanvasElement();
+        result.width = width;
+        result.height = height;
+        var context = result.getContext2d();
+        context.drawImage(source,0,0,source.width,source.height,0,0,width,height); //slow
+        context = null;
         return result;
     }
 
