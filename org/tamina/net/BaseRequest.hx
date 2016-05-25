@@ -15,6 +15,7 @@ import haxe.HTTPMethod;
 class BaseRequest {
 
     private var _httpRequest:XMLHttpRequest;
+    private var _contentType:MimeType;
 
     public var completeSignal:Signal1<ProgressEvent>;
     public var errorSignal:Signal0;
@@ -24,8 +25,9 @@ class BaseRequest {
     public var id(get, null):Float;
 
 
-    public function new( remoteMethod:String, method:HTTPMethod = HTTPMethod.POST ) {
+    public function new( remoteMethod:String, method:HTTPMethod = HTTPMethod.POST, ?contentType:MimeType = MimeType.JSON ) {
         _id = UID.getUID();
+        _contentType = contentType;
         completeSignal = new Signal1<ProgressEvent>();
         errorSignal = new Signal0();
         _httpRequest = new XMLHttpRequest();
@@ -39,7 +41,7 @@ class BaseRequest {
     }
 
     public function setHeaders( ):Void {
-        _httpRequest.setRequestHeader("Content-Type", MimeType.JSON+"; charset=utf-8");
+        _httpRequest.setRequestHeader("Content-Type", _contentType+"; charset=utf-8");
     }
 
     public function get_id( ):Float {
