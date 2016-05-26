@@ -15,4 +15,6 @@ class ImageEvent {
      * @readOnly
      */
     static public inline var LOAD:String='load';
+
+    static public inline var ERROR:String='error';
 }

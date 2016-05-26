@@ -3,6 +3,7 @@ package org.tamina.io;
 import org.tamina.events.html.ImageEvent;
 import haxe.Timer;
 import js.Browser;
+import msignal.Signal.Signal0;
 import msignal.Signal.Signal1;
 import js.html.Image;
 import org.tamina.net.URL;
@@ -23,6 +24,8 @@ class ImageLoader {
  */
     public var complete:Signal1<Image>;
 
+    public var error:Signal0;
+
 /**
  * Returns a data URI containing a representation of the image
  * @property dataURL
@@ -41,6 +44,7 @@ class ImageLoader {
 
 
     private var _image:Image;
+    private var _toDataURL:Bool;
 
     private function get_image():Image {
         return _image;
@@ -61,10 +65,11 @@ class ImageLoader {
      *      var img = l.image;
      *      l.load(iconURL);
     */
-    public function new():Void {
+    public function new(?toDataURL:Bool = true):Void {
         _image = new Image();
         _image.crossOrigin = "anonymous";
         complete = new Signal1<Image>();
+        error = new Signal0();
     }
 
 /**
@@ -74,20 +79,33 @@ class ImageLoader {
 	 */
     public function load(url:URL):Void {
         _image.addEventListener(ImageEvent.LOAD, imageLoadHandler, false);
+        _image.addEventListener(ImageEvent.ERROR, imageLoadErrorHandler, false);
         _image.src = url.path;
+    }
+
+    private function imageLoadErrorHandler(event:js.html.Event):Void {
+        _image.removeEventListener(ImageEvent.LOAD, imageLoadHandler);
+        _image.removeEventListener(ImageEvent.ERROR, imageLoadErrorHandler);
+
+        error.dispatch();
     }
 
     private function imageLoadHandler(event:js.html.Event):Void {
         _image.removeEventListener(ImageEvent.LOAD, imageLoadHandler);
-        var canvas = Browser.document.createCanvasElement();
-        canvas.width = _image.width;
-        canvas.height = _image.height;
-        var ctx = canvas.getContext2d();
-        ctx.drawImage(_image, 0, 0, _image.width, _image.height);
+        _image.removeEventListener(ImageEvent.ERROR, imageLoadErrorHandler);
 
-        var outputImage = new Image();
-        outputImage.src = canvas.toDataURL();
+        if (_toDataURL) {
+            var canvas = Browser.document.createCanvasElement();
+            canvas.width = _image.width;
+            canvas.height = _image.height;
+            var ctx = canvas.getContext2d();
+            ctx.drawImage(_image, 0, 0, _image.width, _image.height);
 
-        Timer.delay( function(){ complete.dispatch(outputImage);},200);
+            var outputImage = new Image();
+            outputImage.src = canvas.toDataURL();
+            complete.dispatch(outputImage);
+        } else {
+            complete.dispatch(_image);
+        }
     }
 }
