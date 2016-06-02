@@ -2,11 +2,11 @@ package org.tamina.display;
 
 class Align {
     private static inline var _LEFT:Int = 0x1;
-    private static inline var _CENTER:Int = 0x2;
-    private static inline var _RIGHT:Int = 0x3;
-    private static inline var _TOP:Int = 0x10;
-    private static inline var _MIDDLE:Int = 0x20;
-    private static inline var _BOTTOM:Int = 0x30;
+    private static inline var _CENTER:Int = 0x10;
+    private static inline var _RIGHT:Int = 0x100;
+    private static inline var _TOP:Int = 0x1000;
+    private static inline var _MIDDLE:Int = 0x10000;
+    private static inline var _BOTTOM:Int = 0x100000;
     
     public static inline var TOP_LEFT:Int = _TOP | _LEFT;
     public static inline var TOP:Int = _TOP | _CENTER;
