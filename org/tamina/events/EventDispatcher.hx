@@ -102,9 +102,11 @@ class EventDispatcher<T:String> {
 	 */
     public function dispatchEvent( event:Event<T> ):Void {
         if ( _eventsCallback.exists(event.type) ) {
-            var events = _eventsCallback.get(event.type);
+            var events = _eventsCallback.get(event.type).slice(0);
             for ( i in 0...events.length ) {
-                events[i](event);
+                if (_eventsCallback.get(event.type).indexOf(events[i]) > -1) {
+                    events[i](event);
+                }
             }
         }
     }
