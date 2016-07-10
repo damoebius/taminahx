@@ -32,15 +32,30 @@ class HTMLComponentFactory {
             }),
             pos : pos
         });
+
+        var tagExpr = className.toLowerCase().split('.').join('-');
+        if (cls.meta.has("tag")) {
+            var customTag:String = haxe.macro.ExprTools.getValue(cls.meta.extract("tag").pop().params[0]);
+            if (customTag.indexOf("-") > -1) {
+                tagExpr = customTag;
+            } else {
+                var tagPrefix = haxe.macro.Compiler.getDefine("tagPrefix");
+                if (tagPrefix != null) {
+                    tagExpr = tagPrefix + "-" + customTag;
+                }
+            }
+        }
+
         fields.push({
             name: '__registered',
             pos: cls.pos,
             access: [AStatic],
             kind: FVar(macro : Bool, macro @:pos(cls.pos) {
-            org.tamina.html.component.HTMLApplication.componentsClassList.push($v{className});
+            org.tamina.html.component.HTMLApplication.componentsTagList.set($v{tagExpr}, $v{className});
             true;
             })
         });
+
         return fields;
     }
 
@@ -49,8 +64,13 @@ class HTMLComponentFactory {
         if (cls.meta.has("view"))
         {
             var fileNameExpr = Lambda.filter(cls.meta.get(), function(meta) return meta.name == "view").pop().params[0];
-            var fileName:String = haxe.macro.ExprTools.getValue(fileNameExpr);
-            return fileName;
+
+            if (haxe.macro.ExprTools.getValue(fileNameExpr) == "") {
+                return cls.pack.join("/") + "/" + cls.name + ".html";
+            } else {
+                var fileName:String = haxe.macro.ExprTools.getValue(fileNameExpr);
+                return fileName;
+            }
         } else {
             return Context.error("Please specify @view metadata.", Context.currentPos());
         }

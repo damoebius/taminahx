@@ -37,7 +37,14 @@ import js.Browser;
  */
 class HTMLApplication {
 
-    public static var componentsClassList:Array<String> = [];
+    // public static var componentsClassList:Array<String> = [];
+    public static var componentsTagList(get, null):Map<String, String> = null;
+    private static function get_componentsTagList():Map<String, String> {
+        if (componentsTagList == null) {
+            componentsTagList = new Map<String, String>();
+        }
+        return componentsTagList;
+    }
 
 /**
     * @constructor
@@ -73,10 +80,9 @@ class HTMLApplication {
 	 * @method loadComponents
 	 */
     public function loadComponents():Void{
-        for(className in HTMLApplication.componentsClassList){
-            var componentName = className.toLowerCase().split('.').join('-');
-            var componentClass = Type.resolveClass(className);
-            Browser.document.registerElement(componentName, cast componentClass);
+        for(tag in HTMLApplication.componentsTagList.keys()){
+            var componentClass = Type.resolveClass(HTMLApplication.componentsTagList.get(tag));
+            Browser.document.registerElement(tag, cast componentClass);
         }
     }
 }
