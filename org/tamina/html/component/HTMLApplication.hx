@@ -37,16 +37,16 @@ import js.Browser;
  */
 class HTMLApplication {
 
-    // public static var componentsClassList:Array<String> = [];
-    public static var componentsTagList(get, null):Map<String, String> = null;
-    private static function get_componentsTagList():Map<String, String> {
-        if (componentsTagList == null) {
-            componentsTagList = new Map<String, String>();
+    public static var componentsXTagList(get, null):Map<String, String> = null;
+
+    private static function get_componentsXTagList():Map<String, String> {
+        if (componentsXTagList == null) {
+            componentsXTagList = new Map<String, String>();
         }
-        return componentsTagList;
+        return componentsXTagList;
     }
 
-/**
+    /**
     * @constructor
     * @method new
     * @example
@@ -75,14 +75,14 @@ class HTMLApplication {
 
     }
 
-/**
+    /**
 	 * HTMLApplication has a loadComponents() function that registers ALL components used by the application. Thanks to macros, components are automatically registered while compiling. So there’s no need to do it manually or with the Reflexion API at runtime.
 	 * @method loadComponents
 	 */
-    public function loadComponents():Void{
-        for(tag in HTMLApplication.componentsTagList.keys()){
-            var componentClass = Type.resolveClass(HTMLApplication.componentsTagList.get(tag));
-            Browser.document.registerElement(tag, cast componentClass);
+    public function loadComponents():Void {
+        for (xtag in HTMLApplication.componentsXTagList.keys()) {
+            var componentClass = Type.resolveClass(HTMLApplication.componentsXTagList.get(xtag));
+            Browser.document.registerElement(xtag, cast componentClass);
         }
     }
 }
