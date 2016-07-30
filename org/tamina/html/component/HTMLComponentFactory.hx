@@ -62,6 +62,21 @@ class HTMLComponentFactory {
             })
         });
 
+        // Create static function 'createInstance' on target Class
+        fields.push({
+            name: 'createInstance',
+            pos: cls.pos,
+            access: [AStatic, APublic],
+            kind: FFun({
+                params: [],
+                args: [],
+                ret: TypeTools.toComplexType(Context.getLocalType()),
+                expr: macro {
+                    return cast js.Browser.document.createElement($v{xtagExpr});
+                }
+            })
+        });
+
         return fields;
     }
 
