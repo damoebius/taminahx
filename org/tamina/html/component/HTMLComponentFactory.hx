@@ -1,38 +1,39 @@
 package org.tamina.html.component;
 
-import haxe.macro.TypeTools;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr.Field;
 import haxe.macro.ExprTools;
 import haxe.macro.Type;
+import haxe.macro.TypeTools;
+import sys.io.File;
 
 using Lambda;
 
 class HTMLComponentFactory {
-    public static function build():Array<Field>{
+    public static function build():Array<Field> {
         var cls = Context.getLocalClass().get();
         var className = cls.pack.join('.') + '.' + cls.name;
-       //registerComponent(className);
-        //Context.error("Debug : " + htmlApplicationClass.name, Context.currentPos());
+
         var p = Context.resolvePath(getViewPath(cls));
-        var content = sys.io.File.getContent(p);
+        var content = File.getContent(p);
         var pos = Context.currentPos();
         var fields = Context.getBuildFields();
+
         fields.push({
-            name : "getView",
-            doc : null,
-            meta : [],
-            access : [APublic],
-            kind : FFun({
-                args:[],
-                ret:null,
-                expr:macro {
+            name: "getView",
+            doc: null,
+            meta: [],
+            access: [APublic],
+            kind: FFun({
+                args: [],
+                params: [],
+                ret: null,
+                expr: macro {
                     return $v{content};
-                },
-                params:[]
+                }
             }),
-            pos : pos
+            pos: pos
         });
 
         // Default xtag is built from full path (package name + class name), using dashes instead of dots
@@ -46,7 +47,7 @@ class HTMLComponentFactory {
             if (viewParams.length > 1) {
                 var xtag:String = ExprTools.getValue(viewParams[1]);
                 isCustomXTag = true;
-
+                
                 // Use xtag prefix if defined
                 var xtagPrefix = Compiler.getDefine("XTAG_PREFIX");
                 if (xtagPrefix != null) {
@@ -57,7 +58,12 @@ class HTMLComponentFactory {
                 if (xtag.indexOf("-") > -1) {
                     xtagExpr = xtag;
                 } else {
-                    Context.fatalError('Cannot register a custom component named "$xtag".\nCustom components names must contain at least one dash. You can prefix all your custom tags by compiling with -D XTAG_PREFIX=myprefix', cls.pos);
+                    Context.fatalError(
+                        + 'Custom components names must contain at least one dash. '
+                        'Cannot register a custom component named "$xtag".\n'
+                        + 'You can prefix all your custom tags by compiling with -D XTAG_PREFIX=myprefix',
+                        cls.pos
+                    );
                 }
             }
         }
@@ -77,15 +83,30 @@ class HTMLComponentFactory {
             pos: cls.pos,
             access: [AStatic],
             kind: FVar(macro : Bool, macro @:pos(cls.pos) {
-            org.tamina.html.component.HTMLApplication.componentsXTagList.set($v{xtagExpr}, $v{className});
-            true;
+                org.tamina.html.component.HTMLApplication.componentsTagList.set($v{xtagExpr}, $v{className});
+                return true;
+            })
+        });
+
+        // Create static function 'createInstance' on target Class
+        fields.push({
+            name: 'createInstance',
+            pos: cls.pos,
+            access: [AStatic, APublic],
+            kind: FFun({
+                params: [],
+                args: [],
+                ret: TypeTools.toComplexType(Context.getLocalType()),
+                expr: macro {
+                    return cast js.Browser.document.createElement($v{xtagExpr});
+                }
             })
         });
 
         return fields;
     }
 
-    static function getViewPath(cls:ClassType):String {
+    private static function getViewPath(cls:ClassType):String {
         if (cls.meta.has("view")) {
             var fileNameExpr = Lambda.filter(cls.meta.get(), function(meta) return meta.name == "view").pop().params[0];
 
@@ -101,16 +122,24 @@ class HTMLComponentFactory {
         }
     }
 
-    static function updateField(name:String,value:String):Field{
-        var result:Field=null;
+    @:deprecated
+    // Not used any more?
+    private static function updateField(name:String, value:String):Field {
+        var result:Field = null;
         var fields = Context.getBuildFields();
-        for(i in 0...fields.length){
+
+        for (i in 0...fields.length) {
             var f = fields[i];
-            if(f.name == name){
-                switch( f.kind ){
-                    case FVar(t,e) : f.kind = FVar(t, Context.makeExpr( value, f.pos ));
-                    default : throw "invalid" ;
+
+            if (f.name == name) {
+                switch (f.kind) {
+                    case FVar(t, e):
+                    f.kind = FVar(t, Context.makeExpr(value, f.pos));
+
+                    default:
+                    throw "invalid";
                 }
+
                 break;
             }
         }
