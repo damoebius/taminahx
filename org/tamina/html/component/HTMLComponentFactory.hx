@@ -59,8 +59,8 @@ class HTMLComponentFactory {
                     xtagExpr = xtag;
                 } else {
                     Context.fatalError(
-                        + 'Custom components names must contain at least one dash. '
                         'Cannot register a custom component named "$xtag".\n'
+                        + 'Custom components names must contain at least one dash. '
                         + 'You can prefix all your custom tags by compiling with -D XTAG_PREFIX=myprefix',
                         cls.pos
                     );
@@ -83,7 +83,7 @@ class HTMLComponentFactory {
             pos: cls.pos,
             access: [AStatic],
             kind: FVar(macro : Bool, macro @:pos(cls.pos) {
-                org.tamina.html.component.HTMLApplication.componentsTagList.set($v{xtagExpr}, $v{className});
+                org.tamina.html.component.HTMLApplication.componentsXTagList.set($v{xtagExpr}, $v{className});
                 return true;
             })
         });

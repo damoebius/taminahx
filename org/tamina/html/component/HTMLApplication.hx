@@ -38,11 +38,11 @@ import js.Browser;
  */
 class HTMLApplication {
 
-    public static var componentsTagList(get, null):Map<String, String> = null;
+    public static var componentsXTagList(get, null):Map<String, String> = null;
 
-    private static function get_componentsTagList():Map<String, String> {
-        if (componentsTagList == null) {
-            componentsTagList = new Map<String, String>();
+    private static function get_componentsXTagList():Map<String, String> {
+        if (componentsXTagList == null) {
+            componentsXTagList = new Map<String, String>();
         }
         return componentsXTagList;
     }
@@ -81,8 +81,8 @@ class HTMLApplication {
      * @method loadComponents
      */
     public function loadComponents():Void {
-        for (tag in HTMLApplication.componentsTagList.keys()) {
-            var componentClass = Type.resolveClass(HTMLApplication.componentsTagList.get(tag));
+        for (tag in HTMLApplication.componentsXTagList.keys()) {
+            var componentClass = Type.resolveClass(HTMLApplication.componentsXTagList.get(tag));
             Browser.document.registerElement(tag, cast componentClass);
         }
     }
