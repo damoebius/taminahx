@@ -2,7 +2,7 @@ package org.tamina.html.component;
 
 import haxe.macro.Compiler;
 import haxe.macro.Context;
-import haxe.macro.Expr.Field;
+import haxe.macro.Expr;
 import haxe.macro.ExprTools;
 import haxe.macro.Type;
 import haxe.macro.TypeTools;
@@ -19,6 +19,8 @@ class HTMLComponentFactory {
         var content = File.getContent(p);
         var pos = Context.currentPos();
         var fields = Context.getBuildFields();
+
+        fields = initDataAttributes(fields);
 
         fields.push({
             name: "getView",
@@ -120,6 +122,76 @@ class HTMLComponentFactory {
         } else {
             return Context.error("Please specify @view metadata.", cls.pos);
         }
+    }
+
+    private static function initDataAttributes(fields:Array<Field>):Array<Field> {
+        var newFields:Array<Field> = new Array<Field>();
+
+        for (field in fields) {
+            var dataMetas = Lambda.filter(field.meta, function(meta) return meta.name == "data");
+
+            if (dataMetas.length > 0) {
+                var dataMeta = dataMetas.pop();
+                var attributeName:String = "data-" + ExprTools.getValue(dataMeta.params[0]);
+
+                switch (field.kind) {
+                    case FVar(fieldType):
+                        // Ensure String type
+                        switch (fieldType) {
+                            case TPath(path):
+                            if (path.name != "String" || path.pack.length > 0) {
+                                return Context.error("@data attributes must be of type 'String'.", field.pos);
+                            }
+
+                            default:
+                            return Context.error("@data attributes must be of type 'String'.", field.pos);
+                        }
+
+                        // Change field type from var to prop with getter/setter
+                        field.kind = FProp("get", "set", fieldType);
+
+                        // Bind getter to getAttribute()
+                        newFields.push({
+                            name: 'get_' + field.name,
+                            pos: field.pos,
+                            access: [APublic],
+                            kind: FFun({
+                                params: [],
+                                args: [],
+                                ret: fieldType,
+                                expr: macro {
+                                    return this.getAttribute($v{attributeName});
+                                }
+                            })
+                        });
+
+                        // Bind setter to setAttribute()
+                        newFields.push({
+                            name: 'set_' + field.name,
+                            pos: field.pos,
+                            access: [APublic],
+                            kind: FFun({
+                                params: [],
+                                args: [{
+                                    value: null,
+                                    type: fieldType,
+                                    opt: false,
+                                    name: "val"
+                                }],
+                                ret: fieldType,
+                                expr: macro {
+                                    this.setAttribute($v{attributeName}, val);
+                                    return val;
+                                }
+                            })
+                        });
+
+                    default:
+                }
+            }
+        }
+
+        return fields.concat(newFields);
     }
 
     @:deprecated
