@@ -20,6 +20,7 @@ class HTMLComponentFactory {
         var pos = Context.currentPos();
         var fields = Context.getBuildFields();
 
+        // Link @data("XXX") class attributes to data-XXX HTML attributes
         fields = initDataAttributes(fields);
 
         fields.push({
@@ -40,7 +41,9 @@ class HTMLComponentFactory {
 
         // Default xtag is built from full path (package name + class name), using dashes instead of dots
         var xtagExpr = className.toLowerCase().split('.').join('-');
+        #if DEBUG_COMPONENTS
         var isCustomXTag:Bool = false;
+        #end
 
         // Custom xtag expression can be defined with @view's second argument
         if (cls.meta.has("view")) {
@@ -48,7 +51,9 @@ class HTMLComponentFactory {
 
             if (viewParams.length > 1) {
                 var xtag:String = ExprTools.getValue(viewParams[1]);
+                #if DEBUG_COMPONENTS
                 isCustomXTag = true;
+                #end
                 
                 // Use xtag prefix if defined
                 var xtagPrefix = Compiler.getDefine("XTAG_PREFIX");
@@ -70,15 +75,14 @@ class HTMLComponentFactory {
             }
         }
 
+        #if DEBUG_COMPONENTS
         // Print custom components info (xtag + haxe class) if DEBUG_COMPONENTS is defined
-        var debugComponents = Compiler.getDefine("DEBUG_COMPONENTS");
-        if (debugComponents != null) {
             if (isCustomXTag) {
                 Context.warning('Registering custom component **$xtagExpr** from the class **$className**', cls.pos);
             } else {
                 Context.warning('Registering custom component **$xtagExpr**', cls.pos);
             }
-        }
+        #end
 
         fields.push({
             name: '__registered',
