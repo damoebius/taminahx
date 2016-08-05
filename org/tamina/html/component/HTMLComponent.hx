@@ -207,7 +207,7 @@ class HTMLComponent extends HtmlElement {
         for (i in 0...metaFields.length) {
             var field = Reflect.field(meta, metaFields[i]);
 
-            if (field.skinpart != null) {
+            if (Reflect.hasField(field, "skinpart")) {
                 var element = HTMLUtils.getElementByAttribute(target, 'data-id', metaFields[i]);
                 Reflect.setField(this, metaFields[i], element);
             }
