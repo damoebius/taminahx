@@ -11,6 +11,9 @@ import sys.io.File;
 using Lambda;
 
 class HTMLComponentFactory {
+
+    private static var _registeredXTags:Array<String> = null;
+
     public static function build():Array<Field> {
         var cls = Context.getLocalClass().get();
         var className = cls.pack.join('.') + '.' + cls.name;
@@ -67,6 +70,19 @@ class HTMLComponentFactory {
                 }
             }
         }
+
+        // Do not allow multiple class to define the same xtag
+        if (_registeredXTags == null) {
+            _registeredXTags = new Array<String>();
+        } else {
+            if (Lambda.has(_registeredXTags, xtagExpr)) {
+                Context.fatalError(
+                    'Cannot register a custom component named "$xtagExpr": this xtag has already been registered',
+                    cls.pos
+                );
+            }
+        }
+        _registeredXTags.push(xtagExpr);
 
         // Print custom components info (xtag + haxe class) if DEBUG_COMPONENTS is defined
         var debugComponents = Compiler.getDefine("DEBUG_COMPONENTS");
