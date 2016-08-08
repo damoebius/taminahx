@@ -4,11 +4,10 @@ package org.tamina.events.html;
  * FileReader API Events
  * <br>
  * DOM Events are sent to notify code of interesting things that have taken place.
- * @class FileReaderEvent
+ * @class FileReaderEventType
  * @static
  */
-@deprecated
-class FileReaderEvent {
+class FileReaderEventType {
 
     /**
      * The loadend event is fired when progression has stopped (after "error", "abort" or "load" have been dispatched).
