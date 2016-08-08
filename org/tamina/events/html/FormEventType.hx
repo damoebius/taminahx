@@ -10,7 +10,7 @@ package org.tamina.events.html;
  */
 class FormEventType {
 
-/**
+    /**
      * The submit event is fired when a form is submitted.
      * Note that submit is fired only on the form element, not the button or submit input. (Forms are submitted, not buttons.)
      * @property SUBMIT
