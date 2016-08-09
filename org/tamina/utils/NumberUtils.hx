@@ -55,17 +55,39 @@ class NumberUtils {
         }
     }
 
-/**
-		 * Arroudi à un nombre de chiffre apres la virgule
-		 * @param numIn
-		 * @param decimalPlaces
-		 * @return
-		 *
-		 */
-
+    /**
+	 * Arrondi à un nombre de chiffre apres la virgule
+	 * @param numIn
+	 * @param decimalPlaces
+	 * @return
+	 */
     inline public static function roundDec(numIn:Float, decimalPlaces:Int):Float {
         var nExp = Math.pow(10, decimalPlaces);
         var nRetVal = Math.round(numIn * nExp) / nExp;
+        return nRetVal;
+    }
+
+    /**
+     * Arrondi (inférieur) à un nombre de chiffre apres la virgule
+     * @param numIn
+     * @param decimalPlaces
+     * @return
+     */
+    inline public static function floorDec(numIn:Float, decimalPlaces:Int):Float {
+        var nExp = Math.pow(10, decimalPlaces);
+        var nRetVal = Math.floor(numIn * nExp) / nExp;
+        return nRetVal;
+    }
+
+    /**
+     * Arrondi (supérieur) à un nombre de chiffre apres la virgule
+     * @param numIn
+     * @param decimalPlaces
+     * @return
+     */
+    inline public static function ceilDec(numIn:Float, decimalPlaces:Int):Float {
+        var nExp = Math.pow(10, decimalPlaces);
+        var nRetVal = Math.ceil(numIn * nExp) / nExp;
         return nRetVal;
     }
 
