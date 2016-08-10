@@ -121,9 +121,9 @@ class HTMLComponent extends HtmlElement {
         // trace('createdCallback----------------> ' + this.localName);
         initDefaultValues();
         parseContent();
+        updateSkinPartsStatus();
         initContent();
         displayContent();
-        updateSkinPartsStatus();
 
         this.dispatchEvent(new HTMLComponentEvent(HTMLComponentEventType.CREATION_COMPLETE));
     }
@@ -261,7 +261,7 @@ class HTMLComponent extends HtmlElement {
         _skinPartsWaiting.remove(skinPart);
 
         _skinPartsAttached = _skinPartsWaiting.length == 0;
-        if (!_skinPartsAttached) {
+        if (_skinPartsAttached) {
             _skinPartsAttachedSignal.dispatch();
         }
     }
