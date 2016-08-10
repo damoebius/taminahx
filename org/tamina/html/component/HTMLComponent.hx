@@ -227,6 +227,10 @@ class HTMLComponent extends HtmlElement {
             if (Reflect.hasField(field, "skinpart")) {
                 var element = HTMLUtils.getElementByAttribute(target, 'data-id', metaFields[i]);
                 Reflect.setField(this, metaFields[i], element);
+
+                if (element == null) {
+                    trace("skinpart is null: " + metaFields[i] + " from " + this.nodeName);
+                }
                 _skinParts.push(cast element);
             }
         }
@@ -236,7 +240,7 @@ class HTMLComponent extends HtmlElement {
         _skinPartsWaiting = new Array<HTMLComponent>();
 
         for (skinPart in _skinParts) {
-            if (skinPart.initialized != true) {
+            if (HTMLApplication.isCustomElement(skinPart.nodeName) && skinPart.initialized != true) {
                 _skinPartsWaiting.push(skinPart);
             }
         }

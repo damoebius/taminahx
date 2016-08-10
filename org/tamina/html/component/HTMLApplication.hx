@@ -86,4 +86,8 @@ class HTMLApplication {
             Browser.document.registerElement(tag, cast componentClass);
         }
     }
+
+    public static function isCustomElement(nodeName:String):Bool {
+        return componentsXTagList.exists(nodeName.toLowerCase());
+    }
 }

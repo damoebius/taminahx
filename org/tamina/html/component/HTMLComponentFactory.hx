@@ -99,7 +99,7 @@ class HTMLComponentFactory {
             pos: cls.pos,
             access: [AStatic],
             kind: FVar(macro : Bool, macro @:pos(cls.pos) {
-                org.tamina.html.component.HTMLApplication.componentsXTagList.set($v{xtagExpr}, $v{className});
+                org.tamina.html.component.HTMLApplication.componentsXTagList.set($v{xtagExpr}.toLowerCase(), $v{className});
                 return true;
             })
         });
