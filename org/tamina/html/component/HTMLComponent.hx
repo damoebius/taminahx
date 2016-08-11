@@ -121,9 +121,9 @@ class HTMLComponent extends HtmlElement {
         // trace('createdCallback----------------> ' + this.localName);
         initDefaultValues();
         parseContent();
-        updateSkinPartsStatus();
         initContent();
         displayContent();
+        updateSkinPartsStatus();
 
         this.dispatchEvent(new HTMLComponentEvent(HTMLComponentEventType.CREATION_COMPLETE));
     }
