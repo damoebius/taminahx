@@ -7,6 +7,8 @@ import js.html.Element;
 import js.html.Event;
 import js.html.HtmlElement;
 
+import msignal.Signal;
+
 import org.tamina.display.CSSDisplayValue;
 import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
 import org.tamina.i18n.LocalizationManager;
@@ -85,6 +87,11 @@ class HTMLComponent extends HtmlElement {
     private var _useExternalContent:Bool;
     private var _defaultDisplayStyle:CSSDisplayValue;
 
+    private var _skinParts:Array<HTMLComponent>;
+    private var _skinPartsWaiting:Array<HTMLComponent>;
+    private var _skinPartsAttached:Bool = false;
+    private var _skinPartsAttachedSignal(get, null):Signal0;
+
     private function new() {
     }
 
@@ -114,6 +121,7 @@ class HTMLComponent extends HtmlElement {
         // trace('createdCallback----------------> ' + this.localName);
         initDefaultValues();
         parseContent();
+        updateSkinPartsStatus();
         initContent();
         displayContent();
 
@@ -199,10 +207,19 @@ class HTMLComponent extends HtmlElement {
         initSkinParts(_tempElement);
     }
 
+    private function get__skinPartsAttachedSignal():Signal0 {
+        if (_skinPartsAttachedSignal == null) {
+            _skinPartsAttachedSignal = new Signal0();
+        }
+
+        return _skinPartsAttachedSignal;
+    }
+
     private function initSkinParts(target:Element):Void {
         var meta = Meta.getFields(Type.getClass(this));
         var metaFields = Reflect.fields(meta);
         var classFields = Reflect.fields(this);
+        _skinParts = new Array<HTMLComponent>();
 
         for (i in 0...metaFields.length) {
             var field = Reflect.field(meta, metaFields[i]);
@@ -210,7 +227,42 @@ class HTMLComponent extends HtmlElement {
             if (Reflect.hasField(field, "skinpart")) {
                 var element = HTMLUtils.getElementByAttribute(target, 'data-id', metaFields[i]);
                 Reflect.setField(this, metaFields[i], element);
+
+                if (element == null) {
+                    trace("skinpart is null: " + metaFields[i] + " from " + this.nodeName);
+                }
+                _skinParts.push(cast element);
             }
+        }
+    }
+
+    private function updateSkinPartsStatus():Void {
+        _skinPartsWaiting = new Array<HTMLComponent>();
+
+        for (skinPart in _skinParts) {
+            if (HTMLApplication.isCustomElement(skinPart.nodeName) && skinPart.initialized != true) {
+                _skinPartsWaiting.push(skinPart);
+            }
+        }
+
+        _skinPartsAttached = _skinPartsWaiting.length == 0;
+
+        if (!_skinPartsAttached) {
+            for (skinPart in _skinPartsWaiting) {
+                skinPart.addEventListener(
+                    HTMLComponentEventType.INITIALIZE,
+                    skinPartReadyHandler.bind(skinPart)
+                );
+            }
+        }
+    }
+
+    private function skinPartReadyHandler(skinPart:HTMLComponent):Void {
+        _skinPartsWaiting.remove(skinPart);
+
+        _skinPartsAttached = _skinPartsWaiting.length == 0;
+        if (_skinPartsAttached) {
+            _skinPartsAttachedSignal.dispatch();
         }
     }
 
