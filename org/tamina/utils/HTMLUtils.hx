@@ -1,5 +1,8 @@
 package org.tamina.utils;
 
+import org.tamina.log.QuickLogger;
+import js.html.Exception;
+import js.html.Event;
 import js.html.Node;
 import js.html.Element;
 class HTMLUtils {
@@ -47,5 +50,37 @@ class HTMLUtils {
             }
         }
         return result;
+    }
+
+    public static function getEventPath(event:Event):Array<Element> {
+        var ret = new Array<Element>();
+
+        if (Reflect.hasField(event, 'target') && event.target != null) {
+            var element:Element = null;
+
+            try {
+                element = cast(event.target, Element);
+            } catch (e:Exception) {
+                QuickLogger.error('Event target is not a JS element');
+            }
+
+            if (element != null) {
+                ret = recursivelyFindParent(element);
+            }
+        }
+
+        return ret;
+    }
+
+    public static function recursivelyFindParent(element:Element):Array<Element> {
+        var ret = new Array<Element>();
+
+        ret.push(element);
+
+        if (Reflect.hasField(element, 'parentNode') && element.parentNode != null) {
+            ret = ret.concat(recursivelyFindParent(element));
+        }
+
+        return ret;
     }
 }
