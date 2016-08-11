@@ -55,7 +55,7 @@ class HTMLUtils {
     public static function getEventPath(event:Event):Array<Element> {
         var ret = new Array<Element>();
 
-        if (Reflect.hasField(event, 'target') && event.target != null) {
+        if (event.target != null) {
             var element:Element = null;
 
             try {
@@ -77,8 +77,8 @@ class HTMLUtils {
 
         ret.push(element);
 
-        if (Reflect.hasField(element, 'parentNode') && element.parentNode != null) {
-            ret = ret.concat(recursivelyFindParent(element));
+        if (element.nodeName.toLowerCase() != 'body' && element.parentNode != null) {
+            ret = ret.concat(recursivelyFindParent(cast element.parentNode));
         }
 
         return ret;
