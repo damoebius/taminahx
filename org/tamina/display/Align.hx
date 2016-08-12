@@ -53,4 +53,21 @@ class Align {
         return (flag & _BOTTOM) != 0;
     }
 
+    public static inline function fromString(alignStr:String):Int {
+        return switch(alignStr) {
+            case "TOP": TOP;
+            case "TOP_LEFT": TOP_LEFT;
+            case "TOP_RIGHT": TOP_RIGHT;
+            case "BOTTOM": BOTTOM;
+            case "BOTTOM_LEFT": BOTTOM_LEFT;
+            case "BOTTOM_RIGHT": BOTTOM_RIGHT;
+            case "LEFT": LEFT;
+            case "CENTER": CENTER;
+            case "RIGHT": RIGHT;
+
+            default:
+            null;
+        }
+    }
+
 }
