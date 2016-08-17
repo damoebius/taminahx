@@ -60,7 +60,7 @@ class HTMLUtils {
 
             try {
                 element = cast(event.target, Element);
-            } catch (e:Exception) {
+            } catch (e:Dynamic) {
                 QuickLogger.error('Event target is not a JS element');
             }
 
