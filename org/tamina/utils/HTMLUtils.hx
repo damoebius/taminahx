@@ -1,11 +1,25 @@
 package org.tamina.utils;
 
-import org.tamina.log.QuickLogger;
-import js.html.Exception;
 import js.html.Event;
 import js.html.Node;
 import js.html.Element;
+
+/**
+ * A class that provides useful tools to manipulate HTML components
+ *
+ * @class HTMLUtils
+ */
 class HTMLUtils {
+    /**
+     * Same as JavaScript's method from the Document object, but can be used on Element objects
+     *
+     * @method getElementById
+     *
+     * @param {Element} parent The parent element to search in
+     * @param {String} id The id to search for
+     *
+     * @return {Element} The found element
+     */
     public static function getElementById(parent:Element, id:String):Element {
         var result:Element = null;
         for (i in 0...parent.children.length) {
@@ -21,6 +35,17 @@ class HTMLUtils {
         return result;
     }
 
+    /**
+     * Find a child element from its parent by attribute value
+     *
+     * @method getElementByAttribute
+     *
+     * @param {Element} parent The parent element to search in
+     * @param {String} attribute The attribute name to search for
+     * @param {String} value The attribute value to search for
+     *
+     * @return {Element} The found element
+     */
     public static function getElementByAttribute(parent:Element, attribute:String, value:String):Element {
         var result:Element = null;
         for (i in 0...parent.children.length) {
@@ -40,6 +65,16 @@ class HTMLUtils {
         return result;
     }
 
+    /**
+     * Retrieves an element's attribute by name
+     *
+     * @method getAttribute
+     *
+     * @param {Element} element The element to search the attribute in
+     * @param {String} name The attribute
+     *
+     * @return {String} The attribute value
+     */
     public static function getAttribute(element:Element, name:String):String {
         var result:String = '';
         for (i in 0...element.attributes.length) {
@@ -52,35 +87,43 @@ class HTMLUtils {
         return result;
     }
 
+    /**
+     * Returns the path (an array containing the event target and all of its parents) of a javascript event
+     *
+     * @method getEventPath
+     *
+     * @param {Event} event The JavaScript event
+     *
+     * @return {Array<Element>} The event path
+     */
     public static function getEventPath(event:Event):Array<Element> {
-        var ret = new Array<Element>();
+        var result = new Array<Element>();
 
-        if (event.target != null) {
-            var element:Element = null;
-
-            try {
-                element = cast(event.target, Element);
-            } catch (e:Dynamic) {
-                QuickLogger.error('Event target is not a JS element');
-            }
-
-            if (element != null) {
-                ret = recursivelyFindParent(element);
-            }
+        if (event.target != null && Std.is(event.target, Element)) {
+            result = recursivelyFindParent(cast event.target);
         }
 
-        return ret;
+        return result;
     }
 
+    /**
+     * Returns an array containing the given element and all of its parents
+     *
+     * @method recursivelyFindParent
+     *
+     * @param {Element} element The element to find parents from
+     *
+     * @return {Array<Element>} The event path
+     */
     public static function recursivelyFindParent(element:Element):Array<Element> {
-        var ret = new Array<Element>();
+        var result = new Array<Element>();
 
-        ret.push(element);
+        result.push(element);
 
         if (element.nodeName.toLowerCase() != 'body' && element.parentNode != null) {
-            ret = ret.concat(recursivelyFindParent(cast element.parentNode));
+            result = result.concat(recursivelyFindParent(cast element.parentNode));
         }
 
-        return ret;
+        return result;
     }
 }
