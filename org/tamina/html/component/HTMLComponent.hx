@@ -90,27 +90,8 @@ class HTMLComponent extends HtmlElement {
     private var _skinParts:Array<HTMLComponent>;
     private var _skinPartsWaiting:Array<HTMLComponent>;
     private var _skinPartsAttached:Bool = false;
-    private var _skinPartsAttachedSignal(get, null):Signal0;
 
     private function new() {
-    }
-
-    /**
-     * To instantiate dynamically a component from your application, like an itemRenderer for example, you can use a Factory available in HTMLComponent.
-     * @method createInstance
-     * @static
-     * @param   type {Class<T>} A string representing the event type to listen for.
-     * @return listener {T} The function that's called when an event of the specified type occurs.
-     * @example
-     *      var myComponent = HTMLComponent.createInstance(TestComponent);
-     *      Browser.document.body.appendChild(myComponent);
-     */
-    @:deprecated
-    public static function createInstance<T>(type:Class<T>):T {
-        var className:String = Type.getClassName(type);
-        className = className.toLowerCase().split('.').join('-');
-
-        return cast Browser.document.createElement(className);
     }
 
     /**
@@ -125,6 +106,16 @@ class HTMLComponent extends HtmlElement {
         displayContent();
         updateSkinPartsStatus();
 
+        if (_skinPartsAttached) {
+            creationCompleteCallback();
+        }
+    }
+
+    /**
+     * Called when component creation is complete
+     * @method creationCompleteCallback
+     */
+    public function creationCompleteCallback():Void {
         this.dispatchEvent(new HTMLComponentEvent(HTMLComponentEventType.CREATION_COMPLETE));
     }
 
@@ -207,14 +198,6 @@ class HTMLComponent extends HtmlElement {
         initSkinParts(_tempElement);
     }
 
-    private function get__skinPartsAttachedSignal():Signal0 {
-        if (_skinPartsAttachedSignal == null) {
-            _skinPartsAttachedSignal = new Signal0();
-        }
-
-        return _skinPartsAttachedSignal;
-    }
-
     private function initSkinParts(target:Element):Void {
         var meta = Meta.getFields(Type.getClass(this));
         var metaFields = Reflect.fields(meta);
@@ -262,7 +245,7 @@ class HTMLComponent extends HtmlElement {
 
         _skinPartsAttached = _skinPartsWaiting.length == 0;
         if (_skinPartsAttached) {
-            _skinPartsAttachedSignal.dispatch();
+            creationCompleteCallback();
         }
     }
 

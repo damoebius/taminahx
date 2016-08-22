@@ -29,7 +29,6 @@ import org.tamina.i18n.LocalizationManager;
 import org.tamina.i18n.ITranslation;
 import org.tamina.html.component.HTMLApplication;
 
-import test.html.view.TestComponent;
 /**
  * Tamina Haxe Library
  *
@@ -43,7 +42,6 @@ typedef MainEvent=Event<String>;
 
     private static var _instance:Main;
 
-    private var _myComponent:TestComponent;
 
     public function new():Void {
         super();
@@ -81,9 +79,10 @@ typedef MainEvent=Event<String>;
         trace(url.scheme);
         var l = new ImageLoader();
         l.load(url);
-        var myComponent:TestComponent = HTMLComponent.createInstance(TestComponent);
+        HTMLApplication.createInstance(HTMLComponent);
+        /*var myComponent:TestComponent = HTMLComponent.createInstance(TestComponent);
         myComponent.addEventListener(HTMLComponentEventType.CREATION_COMPLETE, myComponent_creationCompleteHandler);
-        QL.info("log");
+        QL.info("log");*/
     }
 
     private function myComponent_creationCompleteHandler(evt:js.html.Event):Void{

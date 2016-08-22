@@ -87,7 +87,35 @@ class HTMLApplication {
         }
     }
 
+    /**
+     * To instantiate dynamically a component from your application, like an itemRenderer for example, you can use a Factory available in HTMLComponent.
+     * @method createInstance
+     * @static
+     * @param   type {Class<T>} A string representing the event type to listen for.
+     * @return listener {T} The function that's called when an event of the specified type occurs.
+     * @example
+     *      var myComponent = HTMLApplication.createInstance(TestComponent);
+     *      Browser.document.body.appendChild(myComponent);
+     */
+    public static function createInstance<T>(type:Class<T>):T {
+        var className:String = Type.getClassName(type);
+        var tag = getTagByClassName(className);
+        return cast Browser.document.createElement(tag);
+    }
+
     public static function isCustomElement(nodeName:String):Bool {
         return componentsXTagList.exists(nodeName.toLowerCase());
+    }
+
+    private static function getTagByClassName(className:String):String {
+        var result:String="";
+        for (tag in HTMLApplication.componentsXTagList.keys()) {
+            var value = HTMLApplication.componentsXTagList.get(tag);
+            if(value == className){
+                result = tag;
+                break;
+            }
+        }
+        return result;
     }
 }
