@@ -1,6 +1,6 @@
 package org.tamina.display;
 
-class Align {
+@:enum abstract Align(Int) from Int to Int {
     private static inline var _LEFT:Int = 0x1;
     private static inline var _CENTER:Int = 0x10;
     private static inline var _RIGHT:Int = 0x100;
@@ -8,52 +8,52 @@ class Align {
     private static inline var _MIDDLE:Int = 0x10000;
     private static inline var _BOTTOM:Int = 0x100000;
     
-    public static inline var TOP_LEFT:Int = _TOP | _LEFT;
-    public static inline var TOP:Int = _TOP | _CENTER;
-    public static inline var TOP_RIGHT:Int = _TOP | _RIGHT;
+    public static inline var TOP_LEFT:Align = _TOP | _LEFT;
+    public static inline var TOP:Align = _TOP | _CENTER;
+    public static inline var TOP_RIGHT:Align = _TOP | _RIGHT;
     
-    public static inline var BOTTOM_LEFT:Int = _BOTTOM | _LEFT;
-    public static inline var BOTTOM:Int = _BOTTOM | _CENTER;
-    public static inline var BOTTOM_RIGHT:Int = _BOTTOM | _RIGHT;
+    public static inline var BOTTOM_LEFT:Align = _BOTTOM | _LEFT;
+    public static inline var BOTTOM:Align = _BOTTOM | _CENTER;
+    public static inline var BOTTOM_RIGHT:Align = _BOTTOM | _RIGHT;
     
-    public static inline var LEFT:Int = _MIDDLE | _LEFT;
-    public static inline var CENTER:Int = _MIDDLE | _CENTER;
-    public static inline var RIGHT:Int = _MIDDLE | _RIGHT;
+    public static inline var LEFT:Align = _MIDDLE | _LEFT;
+    public static inline var CENTER:Align = _MIDDLE | _CENTER;
+    public static inline var RIGHT:Align = _MIDDLE | _RIGHT;
     
 
-    public static inline function isLeftAligned(flag:Int):Bool {
+    public static inline function isLeftAligned(flag:Align):Bool {
         return (flag & _LEFT) != 0;
     }
     
-    public static inline function isCenterAligned(flag:Int):Bool {
+    public static inline function isCenterAligned(flag:Align):Bool {
         return (flag & _CENTER) != 0;
     }
 
-    public static inline function isHCenterAligned(flag:Int):Bool {
+    public static inline function isHCenterAligned(flag:Align):Bool {
         return (flag & _CENTER) != 0;
     }
     
-    public static inline function isRightAligned(flag:Int):Bool {
+    public static inline function isRightAligned(flag:Align):Bool {
         return (flag & _RIGHT) != 0;
     }
 
-    public static inline function isTopAligned(flag:Int):Bool {
+    public static inline function isTopAligned(flag:Align):Bool {
         return (flag & _TOP) != 0;
     }
     
-    public static inline function isVCenterAligned(flag:Int):Bool {
+    public static inline function isVCenterAligned(flag:Align):Bool {
         return (flag & _MIDDLE) != 0;
     }
 
-    public static inline function isMiddleAligned(flag:Int):Bool {
+    public static inline function isMiddleAligned(flag:Align):Bool {
         return (flag & _MIDDLE) != 0;
     }
 
-    public static inline function isBottomAligned(flag:Int):Bool {
+    public static inline function isBottomAligned(flag:Align):Bool {
         return (flag & _BOTTOM) != 0;
     }
 
-    public static inline function fromString(alignStr:String):Int {
+    public static inline function fromString(alignStr:String):Align {
         return switch(alignStr) {
             case "TOP": TOP;
             case "TOP_LEFT": TOP_LEFT;
