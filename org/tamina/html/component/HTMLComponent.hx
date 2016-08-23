@@ -82,6 +82,13 @@ class HTMLComponent extends HtmlElement {
      */
     public var initialized(default, null):Bool;
 
+    /**
+     * Whether or not the display object has been created.
+     * @property created
+     * @type Bool
+     */
+    public var created(default, null):Bool;
+
     private var _visible:Bool;
     private var _tempElement:Element;
     private var _useExternalContent:Bool;
@@ -105,6 +112,8 @@ class HTMLComponent extends HtmlElement {
         initContent();
         displayContent();
         updateSkinPartsStatus();
+
+        created = true;
 
         if (_skinPartsAttached) {
             creationCompleteCallback();
