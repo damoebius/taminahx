@@ -8,17 +8,17 @@ package org.tamina.display;
     private static inline var _MIDDLE:Int = 0x10000;
     private static inline var _BOTTOM:Int = 0x100000;
     
-    public static inline var TOP_LEFT:Align = _TOP | _LEFT;
-    public static inline var TOP:Align = _TOP | _CENTER;
-    public static inline var TOP_RIGHT:Align = _TOP | _RIGHT;
+    var TOP_LEFT:Align = _TOP | _LEFT;
+    var TOP:Align = _TOP | _CENTER;
+    var TOP_RIGHT:Align = _TOP | _RIGHT;
     
-    public static inline var BOTTOM_LEFT:Align = _BOTTOM | _LEFT;
-    public static inline var BOTTOM:Align = _BOTTOM | _CENTER;
-    public static inline var BOTTOM_RIGHT:Align = _BOTTOM | _RIGHT;
+    var BOTTOM_LEFT:Align = _BOTTOM | _LEFT;
+    var BOTTOM:Align = _BOTTOM | _CENTER;
+    var BOTTOM_RIGHT:Align = _BOTTOM | _RIGHT;
     
-    public static inline var LEFT:Align = _MIDDLE | _LEFT;
-    public static inline var CENTER:Align = _MIDDLE | _CENTER;
-    public static inline var RIGHT:Align = _MIDDLE | _RIGHT;
+    var LEFT:Align = _MIDDLE | _LEFT;
+    var CENTER:Align = _MIDDLE | _CENTER;
+    var RIGHT:Align = _MIDDLE | _RIGHT;
     
 
     public static inline function isLeftAligned(flag:Align):Bool {

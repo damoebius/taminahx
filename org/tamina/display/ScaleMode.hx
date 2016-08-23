@@ -11,29 +11,29 @@ package org.tamina.display;
 @:enum abstract ScaleMode(String) from String to String {
 
     /**
- * @property LETTERBOX
- *  The bitmap fill is scaled while maintaining the aspect ratio of the original content.
- * @type ScaleMode
- * @static
- * @readOnly
- */
+	 * @property LETTERBOX
+	 *  The bitmap fill is scaled while maintaining the aspect ratio of the original content.
+	 * @type ScaleMode
+	 * @static
+	 * @readOnly
+	 */
     var LETTERBOX:String = 'letterbox';
 
-/**
- * @property STRETCH
- *  The bitmap fill stretches to fill the region.
- * @type ScaleMode
- * @static
- * @readOnly
- */
+	/**
+	 * @property STRETCH
+	 *  The bitmap fill stretches to fill the region.
+	 * @type ScaleMode
+	 * @static
+	 * @readOnly
+	 */
     var STRETCH:String = 'stretch';
 
     /**
- * @property ZOOM
- *  The bitmap fill is scaled and cropped such that the aspect ratio of the original content is maintained and no letterbox or pillar box is displayed.
- * @type ScaleMode
- * @static
- * @readOnly
- */
+	 * @property ZOOM
+	 *  The bitmap fill is scaled and cropped such that the aspect ratio of the original content is maintained and no letterbox or pillar box is displayed.
+	 * @type ScaleMode
+	 * @static
+	 * @readOnly
+	 */
     var ZOOM:String = 'zoom';
 }
