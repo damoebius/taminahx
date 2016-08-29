@@ -50,7 +50,7 @@ class HTMLComponentFactory {
             if (viewParams.length > 1) {
                 var xtag:String = ExprTools.getValue(viewParams[1]);
                 isCustomXTag = true;
-                
+
                 // Use xtag prefix if defined
                 var xtagPrefix = Compiler.getDefine("XTAG_PREFIX");
                 if (xtagPrefix != null) {
@@ -85,14 +85,29 @@ class HTMLComponentFactory {
         _registeredXTags.push(xtagExpr);
 
         // Print custom components info (xtag + haxe class) if DEBUG_COMPONENTS is defined
-        var debugComponents = Compiler.getDefine("DEBUG_COMPONENTS");
-        if (debugComponents != null) {
+        #if DEBUG_COMPONENTS
             if (isCustomXTag) {
                 Context.warning('Registering custom component **$xtagExpr** from the class **$className**', cls.pos);
             } else {
                 Context.warning('Registering custom component **$xtagExpr**', cls.pos);
             }
         }
+        #end
+
+        // Add a createInstance static method on target class
+        #if COMPONENTS_SELF_INSTANTIATE
+            fields.push({
+                name: 'createInstance',
+                pos: cls.pos,
+                access: [AStatic, APublic],
+                kind: FFun({
+                    params: [],
+                    args: [],
+                    ret: TypeTools.toComplexType(Context.getLocalType()),
+                    expr: macro { return cast js.Browser.document.createElement($v{xtagExpr}); }
+                })
+            });
+        #end
 
         fields.push({
             name: '__registered',
