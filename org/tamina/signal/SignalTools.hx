@@ -9,7 +9,7 @@ class SignalTools {
 
 	/**
 	 *
-     * @method buildSignals
+	 * @method buildSignals
 	 */
 	public static macro function buildSignals():Array<Field> {
 		var pos = Context.currentPos();
@@ -36,19 +36,21 @@ class SignalTools {
 
 		// Create a constructor
 		// In which every signal will be instantiated
-		fields.push({
-			name: "new",
-			doc: null,
-			meta: [],
-			access: [APrivate],
-			kind: FFun({
-				args: [],
-				params: [],
-				ret: null,
-				expr: macro $b{signalsInit}
-			}),
-			pos: pos
-		});
+		if (signalsInit.length > 0) {
+			fields.push({
+				name: "new",
+				doc: null,
+				meta: [],
+				access: [APrivate],
+				kind: FFun({
+					args: [],
+					params: [],
+					ret: null,
+					expr: macro $b{signalsInit}
+				}),
+				pos: pos
+			});
+		}
 
 		return fields;
 	}
