@@ -134,8 +134,10 @@ class HTMLComponent extends HtmlElement {
      */
     public function attachedCallback():Void {
         // trace('attachedCallback----------------> ' +  this.localName);
+        if (!initialized) {
+            this.dispatchEvent(new HTMLComponentEvent(HTMLComponentEventType.INITIALIZE));
+        }
         initialized = true;
-        this.dispatchEvent(new HTMLComponentEvent(HTMLComponentEventType.INITIALIZE));
     }
 
     /**
