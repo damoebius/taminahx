@@ -1,5 +1,6 @@
 package org.tamina.html.component;
 
+import js.Browser;
 import js.html.Event;
 import js.html.EventInit;
 
@@ -17,6 +18,14 @@ import js.html.EventInit;
 @:native("Event")
 extern class HTMLComponentEvent extends Event {
     public function new(type:HTMLComponentEventType, ?eventInitDict:EventInit):Void;
+}
+
+class HTMLComponentEventFactory{
+    public static function createEvent(type:HTMLComponentEventType):HTMLComponentEvent{
+        var result:HTMLComponentEvent = cast Browser.document.createEvent('HTMLComponentEvent');
+        result.initEvent(type,true,true);
+        return result;
+    }
 }
 
 /**

@@ -12,7 +12,7 @@
   "author": {
     "name": "David Mouton"
   },
-  "version": "1.0.40",
+  "version": "1.0.41",
   "license": "MIT",
   "engines": {
     "node": ">=0.8.0"

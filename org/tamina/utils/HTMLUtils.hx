@@ -1,5 +1,7 @@
 package org.tamina.utils;
 
+import js.html.DOMElement;
+import js.html.HtmlElement;
 import js.html.Event;
 import js.html.Node;
 import js.html.Element;
@@ -22,14 +24,16 @@ class HTMLUtils {
      */
     public static function getElementById(parent:Element, id:String):Element {
         var result:Element = null;
-        for (i in 0...parent.children.length) {
-            var el:Element = cast parent.children.item(i);
-            var elId = getAttribute(el, 'id');
-            if (elId == id) {
-                result = el;
-                break;
-            } else {
-                result = getElementById(el, id);
+        if (parent.children != null) {
+            for (i in 0...parent.children.length) {
+                var el:Element = cast parent.children.item(i);
+                var elId = getAttribute(el, 'id');
+                if (elId == id) {
+                    result = el;
+                    break;
+                } else {
+                    result = getElementById(el, id);
+                }
             }
         }
         return result;
@@ -46,20 +50,23 @@ class HTMLUtils {
      *
      * @return {Element} The found element
      */
+
     public static function getElementByAttribute(parent:Element, attribute:String, value:String):Element {
         var result:Element = null;
-        for (i in 0...parent.children.length) {
-            if (result == null) {
-                var el:Element = cast parent.children.item(i);
-                var elId = getAttribute(el, attribute);
-                if (elId == value) {
-                    result = el;
-                    return result;
+        if (parent.children != null) {
+            for (i in 0...parent.children.length) {
+                if (result == null) {
+                    var el:Element = cast parent.children.item(i);
+                    var elId = getAttribute(el, attribute);
+                    if (elId == value) {
+                        result = el;
+                        return result;
+                    } else {
+                        result = getElementByAttribute(el, attribute, value);
+                    }
                 } else {
-                    result = getElementByAttribute(el, attribute, value);
+                    return result;
                 }
-            } else {
-                return result;
             }
         }
         return result;
@@ -75,6 +82,7 @@ class HTMLUtils {
      *
      * @return {String} The attribute value
      */
+
     public static function getAttribute(element:Element, name:String):String {
         var result:String = '';
         for (i in 0...element.attributes.length) {
@@ -96,6 +104,7 @@ class HTMLUtils {
      *
      * @return {Array<Element>} The event path
      */
+
     public static function getEventPath(event:Event):Array<Element> {
         var result = new Array<Element>();
 
@@ -115,6 +124,7 @@ class HTMLUtils {
      *
      * @return {Array<Element>} The event path
      */
+
     public static function recursivelyFindParent(element:Element):Array<Element> {
         var result = new Array<Element>();
 
@@ -124,6 +134,18 @@ class HTMLUtils {
             result = result.concat(recursivelyFindParent(cast element.parentNode));
         }
 
+        return result;
+    }
+
+    public static function removeElement(element:DOMElement):Bool{
+        var result = true;
+        if(element.remove != null){
+            element.remove();
+        } else if(element.parentElement != null){
+            element.parentElement.removeChild(element);
+        } else {
+            result =false;
+        }
         return result;
     }
 }

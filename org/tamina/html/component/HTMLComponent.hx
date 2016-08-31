@@ -1,5 +1,6 @@
 package org.tamina.html.component;
 
+import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventFactory;
 import haxe.rtti.Meta;
 import js.Browser;
 import js.RegExp;
@@ -125,7 +126,7 @@ class HTMLComponent extends HtmlElement {
      * @method creationCompleteCallback
      */
     public function creationCompleteCallback():Void {
-        this.dispatchEvent(new HTMLComponentEvent(HTMLComponentEventType.CREATION_COMPLETE));
+        this.dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.CREATION_COMPLETE));
     }
 
     /**
@@ -135,7 +136,7 @@ class HTMLComponent extends HtmlElement {
     public function attachedCallback():Void {
         // trace('attachedCallback----------------> ' +  this.localName);
         if (!initialized) {
-            this.dispatchEvent(new HTMLComponentEvent(HTMLComponentEventType.INITIALIZE));
+            this.dispatchEvent( HTMLComponentEventFactory.createEvent(HTMLComponentEventType.INITIALIZE));
         }
         initialized = true;
     }
