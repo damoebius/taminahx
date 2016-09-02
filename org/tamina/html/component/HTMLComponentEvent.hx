@@ -22,7 +22,7 @@ extern class HTMLComponentEvent extends Event {
 
 class HTMLComponentEventFactory{
     public static function createEvent(type:HTMLComponentEventType):HTMLComponentEvent{
-        var result:HTMLComponentEvent = cast Browser.document.createEvent('HTMLComponentEvent');
+        var result:HTMLComponentEvent = cast Browser.document.createEvent('Event');
         result.initEvent(type,true,true);
         return result;
     }
