@@ -90,6 +90,13 @@ class HTMLComponent extends HtmlElement {
      */
     public var created(default, null):Bool;
 
+    /**
+     * Whether or not the display object and its children have been created.
+     * @property creationComplete
+     * @type Bool
+     */
+    public var creationComplete(default, null):Bool;
+
     private var _visible:Bool;
     private var _tempElement:Element;
     private var _useExternalContent:Bool;
@@ -126,6 +133,7 @@ class HTMLComponent extends HtmlElement {
      * @method creationCompleteCallback
      */
     public function creationCompleteCallback():Void {
+        creationComplete = true;
         this.dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.CREATION_COMPLETE));
     }
 
@@ -256,7 +264,7 @@ class HTMLComponent extends HtmlElement {
         _skinPartsWaiting.remove(skinPart);
 
         _skinPartsAttached = _skinPartsWaiting.length == 0;
-        if (_skinPartsAttached) {
+        if (!creationComplete && _skinPartsAttached) {
             creationCompleteCallback();
         }
     }
