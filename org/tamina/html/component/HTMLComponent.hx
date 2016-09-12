@@ -2,6 +2,7 @@ package org.tamina.html.component;
 
 import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventFactory;
 import haxe.rtti.Meta;
+import haxe.rtti.Rtti;
 import js.Browser;
 import js.RegExp;
 import js.html.Element;
@@ -15,6 +16,7 @@ import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
 import org.tamina.i18n.LocalizationManager;
 import org.tamina.utils.HTMLUtils;
 
+@:rtti
 @:autoBuild(org.tamina.html.component.HTMLComponentFactory.build())
 /**
  * HTMLComponent is the base class to build Custom Elements.<br>
@@ -219,23 +221,29 @@ class HTMLComponent extends HtmlElement {
     }
 
     private function initSkinParts(target:Element):Void {
-        var meta = Meta.getFields(Type.getClass(this));
-        var metaFields = Reflect.fields(meta);
-        var classFields = Reflect.fields(this);
+        var c:Class<HTMLComponent> = Type.getClass(this);
         _skinParts = new Array<HTMLComponent>();
 
-        for (i in 0...metaFields.length) {
-            var field = Reflect.field(meta, metaFields[i]);
+        while (c != HTMLComponent && c != null) {
+            var meta = Meta.getFields(c);
+            var metaFields = Reflect.fields(meta);
 
-            if (Reflect.hasField(field, "skinpart")) {
-                var element = HTMLUtils.getElementByAttribute(target, 'data-id', metaFields[i]);
-                Reflect.setField(this, metaFields[i], element);
+            for (i in 0...metaFields.length) {
+                var field = Reflect.field(meta, metaFields[i]);
 
-                if (element == null) {
-                    trace("skinpart is null: " + metaFields[i] + " from " + this.nodeName);
+                if (Reflect.hasField(field, "skinpart")) {
+                    var element = HTMLUtils.getElementByAttribute(target, 'data-id', metaFields[i]);
+                    Reflect.setField(this, metaFields[i], element);
+
+                    if (element == null) {
+                        trace("skinpart is null: " + metaFields[i] + " from " + this.nodeName);
+                    }
+
+                    _skinParts.push(cast element);
                 }
-                _skinParts.push(cast element);
             }
+
+            c = cast Type.getSuperClass(c);
         }
     }
 

@@ -2,6 +2,7 @@ package org.tamina.html.component;
 
 import haxe.macro.Compiler;
 import haxe.macro.Context;
+import haxe.macro.Expr.Access;
 import haxe.macro.Expr.Field;
 import haxe.macro.ExprTools;
 import haxe.macro.Type;
@@ -23,11 +24,16 @@ class HTMLComponentFactory {
         var pos = Context.currentPos();
         var fields = Context.getBuildFields();
 
+        var getViewAccess:Array<Access> = [APublic];
+        if (cls.superClass.t.get().name != "HTMLComponent") {
+            getViewAccess.unshift(AOverride);
+        }
+
         fields.push({
             name: "getView",
             doc: null,
             meta: [],
-            access: [APublic],
+            access: getViewAccess,
             kind: FFun({
                 args: [],
                 params: [],
