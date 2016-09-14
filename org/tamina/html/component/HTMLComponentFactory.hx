@@ -116,13 +116,18 @@ class HTMLComponentFactory {
     private static function getViewPath(cls:ClassType):String {
         if (cls.meta.has("view")) {
             var fileNameExpr = Lambda.filter(cls.meta.get(), function(meta) return meta.name == "view").pop().params[0];
+            var fileName:String =ExprTools.getValue(fileNameExpr);
 
             // Use current path + filename for the html file if @view's first argument is empty
-            if (ExprTools.getValue(fileNameExpr) == "") {
+            if (fileName == "") {
                 return cls.pack.join("/") + "/" + cls.name + ".html";
 
+            // Use current path if @view's first argument starts with "./"
+            } else if (fileName.indexOf("./") == 0) {
+                return cls.pack.join("/") + "/" + fileName;
+
             } else {
-                return ExprTools.getValue(fileNameExpr);
+                return fileName;
             }
         } else {
             return Context.error("Please specify @view metadata.", cls.pos);
