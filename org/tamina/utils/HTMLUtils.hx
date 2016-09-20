@@ -141,7 +141,7 @@ class HTMLUtils {
         var result = true;
         if(element.remove != null){
             element.remove();
-        } else if(element.parentElement != null){
+        } else if(element.parentElement != null && element.parentElement.contains(element)) {
             element.parentElement.removeChild(element);
         } else {
             result =false;
