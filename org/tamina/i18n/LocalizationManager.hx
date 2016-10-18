@@ -44,6 +44,11 @@ class LocalizationManager {
 
     private var _translations:StringMap<ITranslation>;
 
+
+    public static function add(manager:LocalizationManager):Void {
+        _instance = manager;
+    }
+
 /**
     * Initialize the ITransations dictionnary
     * @method setTranslations
