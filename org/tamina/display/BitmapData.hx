@@ -1,5 +1,6 @@
 package org.tamina.display;
 
+import org.tamina.net.URL;
 import js.html.CanvasElement;
 import haxe.MimeType;
 import js.html.Image;
@@ -79,5 +80,32 @@ class BitmapData {
 	 */
     public static function getMimeType(base64:String):MimeType{
         return base64.substring(base64.indexOf(':') + 1, base64.indexOf(';'));
+    }
+
+/**
+	 * Get the MimeType of an URL
+	 * @method getMimeTypeFromURL
+	 * @param	url {URL} the url
+	 * @return {MimeType}
+	 */
+    public static function getMimeTypeFromURL(url:URL):MimeType{
+        var result:MimeType="";
+        switch (url.extension.toLowerCase()){
+            case 'jpg':
+                result = MimeType.JPEG;
+            case 'jpeg':
+                result = MimeType.JPEG;
+            case 'gif':
+                result = MimeType.GIF;
+            case 'png':
+                result = MimeType.PNG;
+            case 'tiff':
+                result = MimeType.TIFF;
+            case 'bmp':
+                result = MimeType.BMP;
+            case 'webp':
+                result = MimeType.WEBP;
+        }
+        return result;
     }
 }
