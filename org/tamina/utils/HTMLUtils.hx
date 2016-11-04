@@ -141,6 +141,13 @@ class HTMLUtils {
         return result;
     }
 
+    public static function findParent(element:Element, doesMatch:Element->Bool, ?maxLevel:Int = 10, ?currLevel:Int = 0):Element {
+        if (doesMatch(element)) return element;
+        if (doesMatch(element.parentElement)) return element.parentElement;
+        if (++currLevel < maxLevel) return findParent(element.parentElement, doesMatch, maxLevel, currLevel);
+        return null;
+    }
+
     public static function removeElement(element:DOMElement):Bool {
         var result = true;
         if (element.remove != null) {
