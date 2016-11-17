@@ -1,4 +1,4 @@
-TAMINA [![NPM version][npm-image]][npm-url]
+<img align="left" src="http://tamina.io/tamina-white.png">TAMINA [![NPM version][npm-image]][npm-url]
 ========
 
 TAMINA IS A FAST, SMALL, AND FEATURE-RICH HAXE LIBRARY
