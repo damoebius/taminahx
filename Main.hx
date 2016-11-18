@@ -3,15 +3,10 @@ package ;
 import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
 import org.tamina.html.component.HTMLComponent;
 import js.Browser;
-import createjs.easeljs.Rectangle;
-import createjs.easeljs.Point;
-import createjs.easeljs.DisplayObject;
-import org.tamina.view.Group;
 import org.tamina.utils.UID;
 import org.tamina.utils.ObjectUtils;
 import org.tamina.utils.NumberUtils;
 import org.tamina.utils.HTMLUtils;
-import org.tamina.utils.GraphicUtils;
 import org.tamina.utils.DateUtils;
 import org.tamina.utils.ColorUtils;
 import org.tamina.utils.ClassUtils;
@@ -69,12 +64,10 @@ typedef MainEvent=Event<String>;
         ClassUtils.expose(null,'');
         ColorUtils.invert('#FFFFFF');
         DateUtils.toFrenchString(Date.now());
-        GraphicUtils.isPointInsideRectangle(new Point(1,1),new Rectangle(0,0,1,1));
         HTMLUtils.getElementById(Browser.document.body,'test');
         NumberUtils.toFixed(0,0);
         ObjectUtils.merge({},{});
         UID.getUID();
-        new Group<DisplayObject>();
         var url = new URL("http://test.com");
         trace(url.scheme);
         var l = new ImageLoader();
@@ -89,11 +82,3 @@ typedef MainEvent=Event<String>;
         trace('hophophop');
     }
 }
-/**
- * <br/>http://www.createjs.com/easeljs
- * <br/>To install easeljs external definition
- * @main
- * @module EaselJS
- * @example
- *      npm install createjs-haxe
-**/

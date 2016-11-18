@@ -4,8 +4,8 @@
   "license": "MIT",
   "tags": ["web", "js"],
   "description": "TAMINA IS A FAST, SMALL, AND FEATURE-RICH HAXE LIBRARY. It makes things like Web Components, Custom Elements, Event handling, Proxy, Assets Loading, i18n, and XHR much simpler.Inspired by AngularJS and Flex frameworks, Tamina is a low level toolset for building large scaled web applications. It is fully extensible and works well with other libraries. Every feature can be modified or replaced to suit your unique development workflow and feature needs",
-  "version": "1.0.52",
+  "version": "1.0.54",
   "classPath": ".",
-  "releasenote": "Initial release, everything is working correctly.",
+  "releasenote": "Remove createjs dependency",
   "contributors": ["damoebius","klabz"]
 }
