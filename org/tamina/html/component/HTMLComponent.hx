@@ -1,6 +1,5 @@
 package org.tamina.html.component;
 
-import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventFactory;
 import haxe.rtti.Meta;
 import js.Browser;
 import js.RegExp;
@@ -11,14 +10,16 @@ import js.html.HtmlElement;
 import msignal.Signal;
 
 import org.tamina.display.CSSDisplayValue;
-import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
+import org.tamina.html.component.HTMLComponentEvent;
 import org.tamina.i18n.LocalizationManager;
 import org.tamina.utils.HTMLUtils;
+
+using StringTools;
 
 #if !NO_HTMLCOMPONENT_KEEPSUB
 @:keepSub
 #end
-@:autoBuild(org.tamina.html.component.HTMLComponentFactory.build())
+@:autoBuild(org.tamina.html.component.HTMLComponentFactory.build("HTMLComponent"))
 /**
  * HTMLComponent is the base class to build Custom Elements.<br>
  * ## x-tag
@@ -94,14 +95,14 @@ class HTMLComponent extends HtmlElement {
     public var created(default, null):Bool;
 
     /**
-     * Whether or not the display object and its children have been created.
+     * Fires when the display object and its children have been created.
      * @property creationComplete
      * @type Bool
      */
     public var creationComplete(default, null):Bool;
 
     private var _visible:Bool;
-    private var _tempElement:Element;
+    private var _tempVirtualDOM:Element;
     private var _useExternalContent:Bool;
     private var _defaultDisplayStyle:CSSDisplayValue;
 
@@ -109,19 +110,15 @@ class HTMLComponent extends HtmlElement {
     private var _skinPartsWaiting:Array<HTMLComponent>;
     private var _skinPartsAttached:Bool = false;
 
-    private function new() {
-    }
+    private var _contentAdded:Bool;
+    private var observedAttributes:Array<String>;
 
-    /**
-     * Called after the element is created.
-     * @method createdCallback
-     */
-    public function createdCallback():Void {
-        // trace('createdCallback----------------> ' + this.localName);
+    public function new() {
+        _contentAdded = false;
+        observedAttributes = new Array<String>();
+
         initDefaultValues();
         parseContent();
-        initContent();
-        displayContent();
         updateSkinPartsStatus();
 
         created = true;
@@ -129,35 +126,26 @@ class HTMLComponent extends HtmlElement {
         if (_skinPartsAttached) {
             creationCompleteCallback();
         }
+
     }
 
-    /**
-     * Called when component creation is complete
-     * @method creationCompleteCallback
-     */
-    public function creationCompleteCallback():Void {
-        creationComplete = true;
-        this.dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.CREATION_COMPLETE));
-    }
+    public function connectedCallback():Void {
+        #if DEBUG_COMPONENTS
+        trace('connectedCallback----------------> ' +  this.localName);
+        #end
 
-    /**
-     * Called when the element is attached to the document
-     * @method attachedCallback
-     */
-    public function attachedCallback():Void {
-        // trace('attachedCallback----------------> ' +  this.localName);
+        displayContent();
+
         if (!initialized) {
-            this.dispatchEvent( HTMLComponentEventFactory.createEvent(HTMLComponentEventType.INITIALIZE));
+            initialized = true;
+            dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.INITIALIZE));
         }
-        initialized = true;
     }
-
-    /**
-     * Called when the element is detached from the document.
-     * @method detachedCallback
-     */
-    public function detachedCallback():Void {
-        // trace('detachedCallback---------------->');
+    
+    public function disconnectedCallback():Void {
+        #if DEBUG_COMPONENTS
+        trace('disconnectedCallback----------------> ' +  this.localName);
+        #end
     }
 
     /**
@@ -168,7 +156,19 @@ class HTMLComponent extends HtmlElement {
      * @param   newVal {String} A string representing the new value.
      */
     public function attributeChangedCallback(attrName:String, oldVal:String, newVal:String):Void {
-        // trace('attributeChangedCallback---------------->'+attrName);
+        #if DEBUG_COMPONENTS
+        trace('attributeChangedCallback----------------> ' +  this.localName);
+        trace(attrName + ": " + oldVal + " => " + newVal);
+        #end
+    }
+
+    /**
+     * Called when component creation is complete
+     * @method creationCompleteCallback
+     */
+    public function creationCompleteCallback():Void {
+        creationComplete = true;
+        this.dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.CREATION_COMPLETE));
     }
 
     private function initDefaultValues():Void {
@@ -201,27 +201,29 @@ class HTMLComponent extends HtmlElement {
         return _visible;
     }
 
-    private function getContent():String {
-        return untyped this.getView();
-    }
 
-    private function parseContent(?useExternalContent:Bool = true):Void {
+    // ==============================================
+    // Internal functions
+    // ==============================================
+
+    private function getView():String { return ""; }
+
+    private inline function parseContent(?useExternalContent:Bool = true):Void {
         var content = "";
+        _tempVirtualDOM = Browser.document.createDivElement();
 
-        if (this.childElementCount == 0 || !useExternalContent) {
-            content = translateContent(getContent());
-            _tempElement = Browser.document.createDivElement();
+        if (this.innerHTML.trim() == "" || !useExternalContent) {
+            content = translateContent(getView());
         } else {
             _useExternalContent = true;
-            _tempElement = this;
             content = translateContent(this.innerHTML);
         }
 
-        _tempElement.innerHTML = content;
-        initSkinParts(_tempElement);
+        _tempVirtualDOM.innerHTML = content;
+        initSkinParts(_tempVirtualDOM);
     }
 
-    private function initSkinParts(target:Element):Void {
+    private inline function initSkinParts(target:Element):Void {
         var c:Class<HTMLComponent> = Type.getClass(this);
         _skinParts = new Array<HTMLComponent>();
 
@@ -237,10 +239,10 @@ class HTMLComponent extends HtmlElement {
                     Reflect.setField(this, metaFields[i], element);
 
                     if (element == null) {
-                        trace("skinpart is null: " + metaFields[i] + " from " + this.nodeName);
+                        Browser.console.error("Skinpart is null: " + metaFields[i] + " from " + Type.getClassName(c));
+                    } else {
+                        _skinParts.push(cast element);
                     }
-
-                    _skinParts.push(cast element);
                 }
             }
 
@@ -248,7 +250,7 @@ class HTMLComponent extends HtmlElement {
         }
     }
 
-    private function updateSkinPartsStatus():Void {
+    private inline function updateSkinPartsStatus():Void {
         _skinPartsWaiting = new Array<HTMLComponent>();
 
         for (skinPart in _skinParts) {
@@ -269,16 +271,16 @@ class HTMLComponent extends HtmlElement {
         }
     }
 
-    private function skinPartReadyHandler(skinPart:HTMLComponent):Void {
+    private inline function skinPartReadyHandler(skinPart:HTMLComponent):Void {
         _skinPartsWaiting.remove(skinPart);
-
         _skinPartsAttached = _skinPartsWaiting.length == 0;
+
         if (!creationComplete && _skinPartsAttached) {
             creationCompleteCallback();
         }
     }
 
-    private function translateContent(source:String):String {
+    private inline function translateContent(source:String):String {
         var content = source;
         var stringToTranslate = new RegExp('\\{\\{(?!\\}\\})(.+)\\}\\}', 'gim');
         var results:Array<Array<String>> = new Array<Array<String>>();
@@ -300,30 +302,19 @@ class HTMLComponent extends HtmlElement {
         return content;
     }
 
-    private function initContent():Void {
+    private inline function displayContent():Void {
+        if (!_contentAdded) {
+            _contentAdded = true;
 
-    }
+            var numChildren = _tempVirtualDOM.childNodes.length;
 
-    private function displayContent():Void {
-        var numChildren = _tempElement.children.length;
-        if (!_useExternalContent) {
-            while (numChildren > 0) {
-                numChildren--;
-                var item:Element = cast _tempElement.children.item(0);
-                this.appendChild(item);
+            if (!_useExternalContent) {
+                while (numChildren > 0) {
+                    numChildren--;
+                    var item:Element = cast _tempVirtualDOM.childNodes.item(0);
+                    this.appendChild(item);
+                }
             }
         }
     }
 }
-
-/**
- * Dispatched when the component has finished its construction and has all initialization properties set, at the end of createdCallback
- * See the {{#crossLink "HTMLComponentEventType"}}{{/crossLink}} class for a listing of event properties.
- * @event HTMLComponentEventType.CREATION_COMPLETE
- */
-
-/**
- * Dispatched when the component has finished its construction, property processing, measuring, layout, and drawing, at the end of attachedCallback
- * See the {{#crossLink "HTMLComponentEventType"}}{{/crossLink}} class for a listing of event properties.
- * @event HTMLComponentEventType.INITIALIZE
- */

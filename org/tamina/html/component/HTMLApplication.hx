@@ -44,6 +44,7 @@ class HTMLApplication {
         if (componentsXTagList == null) {
             componentsXTagList = new Map<String, String>();
         }
+
         return componentsXTagList;
     }
 
@@ -72,31 +73,21 @@ class HTMLApplication {
     *
     *     }
     */
-    public function new() {
-
-    }
+    public function new() {}
 
     /**
      * HTMLApplication has a loadComponents() function that registers ALL components used by the application. Thanks to macros, components are automatically registered while compiling. So there’s no need to do it manually or with the Reflexion API at runtime.
      * @method loadComponents
      */
     public function loadComponents():Void {
+        var customElements = untyped Browser.window.customElements;
+
         for (tag in HTMLApplication.componentsXTagList.keys()) {
             var componentClass = Type.resolveClass(HTMLApplication.componentsXTagList.get(tag));
-            Browser.document.registerElement(tag, cast componentClass);
+            customElements.define(tag, componentClass);
         }
     }
 
-    /**
-     * To instantiate dynamically a component from your application, like an itemRenderer for example, you can use a Factory available in HTMLComponent.
-     * @method createInstance
-     * @static
-     * @param   type {Class<T>} A string representing the event type to listen for.
-     * @return listener {T} The function that's called when an event of the specified type occurs.
-     * @example
-     *      var myComponent = HTMLApplication.createInstance(TestComponent);
-     *      Browser.document.body.appendChild(myComponent);
-     */
     public static function createInstance<T>(type:Class<T>):T {
         var className:String = Type.getClassName(type);
         var tag = getTagByClassName(className);
@@ -108,14 +99,16 @@ class HTMLApplication {
     }
 
     private static function getTagByClassName(className:String):String {
-        var result:String="";
+        var result:String = "";
+
         for (tag in HTMLApplication.componentsXTagList.keys()) {
             var value = HTMLApplication.componentsXTagList.get(tag);
-            if(value == className){
+            if (value == className) {
                 result = tag;
                 break;
             }
         }
+
         return result;
     }
 }
