@@ -30,6 +30,7 @@ class HTMLComponentFactory {
         checkDisconnectedCallback(fields);
         checkAttributeChangedCallback(fields);
         // checkAdoptedCallback(fields);
+        checkCreationCompleteCallback(fields);
 
         // Register component
         var xtagExpr = getXTag(cls);
@@ -121,6 +122,16 @@ class HTMLComponentFactory {
         if (callback != null) {
             if (!BuildTools.hasSuperCall(callback)) {
                 Context.error('Custom Elements: attributeChangedCallback must call super.attributeChangedCallback()', callback.pos);
+            }
+        }
+    }
+
+    private static function checkCreationCompleteCallback(fields:Array<Field>):Void {
+        var callback:Field = BuildTools.getFieldByName(fields, "creationCompleteCallback");
+
+        if (callback != null) {
+            if (!BuildTools.hasSuperCall(callback)) {
+                Context.error('Custom Elements: creationCompleteCallback must call super.creationCompleteCallback()', callback.pos);
             }
         }
     }
