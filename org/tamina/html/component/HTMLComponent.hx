@@ -49,7 +49,7 @@ using StringTools;
  *     \@view('html/view/TestComponent.html')
  *     class TestComponent extends HTMLComponent {
  *
- *         \@skinpart("")
+ *         \ @skinpart
  *         private var _otherComponent:OtherTestComponent;
  *
  *         override public function attachedCallback() {
