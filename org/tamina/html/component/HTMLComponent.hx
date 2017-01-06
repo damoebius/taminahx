@@ -49,7 +49,7 @@ using StringTools;
  *     \@view('html/view/TestComponent.html')
  *     class TestComponent extends HTMLComponent {
  *
- *         \ @skinpart
+ *         \@skinpart
  *         private var _otherComponent:OtherTestComponent;
  *
  *         override public function attachedCallback() {
@@ -110,8 +110,9 @@ class HTMLComponent extends HtmlElement {
     private var _skinPartsWaiting:Array<HTMLComponent>;
     private var _skinPartsAttached:Bool = false;
 
-    private var _contentAdded:Bool;
-
+    /**
+     * Only attributes in this array will trigger attributeChangedCallback
+     */
     @:native("observedAttributes")
     private var _observedAttributes:Array<String>;
 
@@ -120,10 +121,10 @@ class HTMLComponent extends HtmlElement {
      * Useful for initializing state, settings up event listeners, or creating shadow dom.
      * See the spec [2] for restrictions on what you can do in the constructor.
      *
-     * In general, work should be deferred to connectedCallback as much as possible —
-     * especially work involving fetching resources or rendering.
+     * In general, work should be deferred to firstConnectionCallback or connectedCallback
+     * as much as possible — especially work involving fetching resources or rendering.
      * However, note that connectedCallback can be called more than once, 
-     * so any initialization work that is truly one-time will need a guard to prevent it from running twice.
+     * so any initialization work that is truly one-time should go into firstConnectionCallback.
      * 
      * In general, the constructor should be used to set up initial state and default values, 
      * and to set up event listeners and possibly a shadow root.
@@ -132,7 +133,6 @@ class HTMLComponent extends HtmlElement {
      * [2]: https://html.spec.whatwg.org/multipage/scripting.html#custom-element-conformance
      */
     private function new() {
-        _contentAdded = false;
         _observedAttributes = new Array<String>();
 
         initDefaultValues();
@@ -147,9 +147,18 @@ class HTMLComponent extends HtmlElement {
     }
 
     /**
+     * Called by connectedCallback the first time this component is connected.
+     * Useful for running setup code that needs access to the DOM of the element
+     * and/or its children.
+     * Generally, you should try to delay work until this time.
+     *
+     * @method firstConnectionCallback
+     */
+    private function firstConnectionCallback():Void {}
+
+    /**
      * Called every time the element is inserted into the DOM.
      * Useful for running setup code, such as fetching resources or rendering.
-     * Generally, you should try to delay work until this time.
      *
      * Note: most of the constructor's restrictions apply here until you call super.connectedCallback()
      *
@@ -160,10 +169,9 @@ class HTMLComponent extends HtmlElement {
         trace('connectedCallback----------------> ' +  this.localName);
         #end
 
-        displayContent();
-
         if (!initialized) {
-            initialized = true;
+            displayContent();
+            firstConnectionCallback();
             dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.INITIALIZE));
         }
     }
@@ -350,9 +358,9 @@ class HTMLComponent extends HtmlElement {
     }
 
     private inline function displayContent():Void {
-        if (!_contentAdded) {
-            _contentAdded = true;
-            
+        if (!initialized) {
+            initialized = true;
+
             var numChildren = _tempVirtualDOM.childNodes.length;
 
             if (!_useExternalContent) {
