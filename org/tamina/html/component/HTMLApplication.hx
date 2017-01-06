@@ -76,15 +76,24 @@ class HTMLApplication {
     public function new() {}
 
     /**
-     * HTMLApplication has a loadComponents() function that registers ALL components used by the application. Thanks to macros, components are automatically registered while compiling. So there’s no need to do it manually or with the Reflexion API at runtime.
+     * HTMLApplication has a loadComponents() function that registers ALL components used by the application.
+     * Thanks to macros, components are automatically registered while compiling.
+     * So there’s no need to do it manually or with the Reflexion API at runtime.
+     *
      * @method loadComponents
      */
-    public function loadComponents():Void {
+    public inline function loadComponents():Void {
         var customElements = untyped Browser.window.customElements;
 
         for (tag in HTMLApplication.componentsXTagList.keys()) {
             var componentClass = Type.resolveClass(HTMLApplication.componentsXTagList.get(tag));
             customElements.define(tag, componentClass);
+        }
+
+        // Issue a warning for any custom element present on the DOM without being defined
+        var unknownCustomElements = Browser.document.querySelectorAll(":not(:defined)");
+        for (el in unknownCustomElements) {
+            Browser.console.warn("Custom element not defined: " + el.nodeName);
         }
     }
 

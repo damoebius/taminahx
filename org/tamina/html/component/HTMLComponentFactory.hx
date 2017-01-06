@@ -16,21 +16,21 @@ class HTMLComponentFactory {
 
     private static var _registeredXTags:Array<String> = null;
 
-    public static function build(rootClassName:String):Array<Field> {
+    public static function build():Array<Field> {
         var fields = Context.getBuildFields();
         var cls = Context.getLocalClass().get();
         var className = cls.pack.join('.') + '.' + cls.name;
 
         // Inject fields
-        fields = injectViewGetter(cls, rootClassName, fields);
+        fields = injectViewGetter(cls, fields);
 
         // Check fields
         checkConstructor(fields);
-        checkConnectedCallback(fields);
-        checkDisconnectedCallback(fields);
-        checkAttributeChangedCallback(fields);
-        // checkAdoptedCallback(fields);
-        checkCreationCompleteCallback(fields);
+        checkCallback("connectedCallback", fields);
+        checkCallback("disconnectedCallback", fields);
+        checkCallback("adoptedCallback", fields);
+        checkCallback("attributeChangedCallback", fields);
+        checkCallback("creationCompleteCallback", fields);
 
         // Register component
         var xtagExpr = getXTag(cls);
@@ -47,7 +47,7 @@ class HTMLComponentFactory {
         return fields;
     }
 
-    private static function injectViewGetter(cls:ClassType, rootClassName:String, fields:Array<Field>):Array<Field> {
+    private static function injectViewGetter(cls:ClassType, fields:Array<Field>):Array<Field> {
         var pos = Context.currentPos();
         var content = File.getContent(Context.resolvePath(getViewPath(cls)));
 
@@ -80,58 +80,51 @@ class HTMLComponentFactory {
 
             // Constructor should not have arguments
             switch (constructor.kind) {
-                case FFun(f):
-                if (f.args.length > 0) {
-                    Context.error('Custom Elements: constructor cannot have arguments.', constructor.pos);
-                }
+                case FFun(f) if (f.args.length > 0):
+                Context.error('Custom Elements: constructor cannot have arguments.', constructor.pos);
 
                 default:
             }
 
-            // Constructor should have super() as first instruction
-            BuildTools.ensureSuperIsFirstInstruction(constructor, 'Custom Elements: constructor must call super(). first');
+            // Enforce custom elements v1 specs
+            // See https://html.spec.whatwg.org/multipage/scripting.html#custom-element-conformance
 
-            // The component should not try to alter its html in its constructor
-            // TODO: block or redirect to _tempVirtualDOM
-        }
-    }
-
-    private static function checkConnectedCallback(fields:Array<Field>):Void {
-        var callback:Field = BuildTools.getFieldByName(fields, "connectedCallback");
-
-        if (callback != null) {
-            if (!BuildTools.hasSuperCall(callback)) {
-                Context.error('Custom Elements: connectedCallback must call super.connectedCallback()', callback.pos);
+            // A parameter-less call to super() must be the first statement in the constructor body,
+            // to establish the correct prototype chain and this value before any further code is run.
+            if (!BuildTools.superIsFirstInstruction(constructor)) {
+                Context.error('Custom Elements: constructor must call super() first.', constructor.pos);
             }
+
+            // A return statement must not appear anywhere inside the constructor body,
+            // unless it is a simple early-return (return or return this).
+            // Nothing to do; haxe already checks this.
+
+            // The constructor must not use the document.write() or document.open() methods.
+            // TODO (nearly impossible?)
+
+            // The element's attributes and children must not be inspected,
+            // as in the non-upgrade case none will be present,
+            // and relying on upgrades makes the element less usable.
+            // TODO (nearly impossible?)
+
+            // The element must not gain any attributes or children,
+            // as this violates the expectations of consumers who use the createElement or createElementNS methods.
+            // TODO (nearly impossible?)
         }
     }
 
-    private static function checkDisconnectedCallback(fields:Array<Field>):Void {
-        var callback:Field = BuildTools.getFieldByName(fields, "disconnectedCallback");
+    private static function checkCallback(callbackName:String, fields:Array<Field>):Void {
+        var callback:Field = BuildTools.getFieldByName(fields, callbackName);
 
         if (callback != null) {
-            if (!BuildTools.hasSuperCall(callback)) {
-                Context.error('Custom Elements: disconnectedCallback must call super.disconnectedCallback()', callback.pos);
+            // Callback should be private
+            if (callback.access.has(Access.APublic)) {
+                Context.warning('Custom elements: $callbackName should be private.', callback.pos);
             }
-        }
-    }
 
-    private static function checkAttributeChangedCallback(fields:Array<Field>):Void {
-        var callback:Field = BuildTools.getFieldByName(fields, "attributeChangedCallback");
-
-        if (callback != null) {
+            // Callback must call parent at some point
             if (!BuildTools.hasSuperCall(callback)) {
-                Context.error('Custom Elements: attributeChangedCallback must call super.attributeChangedCallback()', callback.pos);
-            }
-        }
-    }
-
-    private static function checkCreationCompleteCallback(fields:Array<Field>):Void {
-        var callback:Field = BuildTools.getFieldByName(fields, "creationCompleteCallback");
-
-        if (callback != null) {
-            if (!BuildTools.hasSuperCall(callback)) {
-                Context.error('Custom Elements: creationCompleteCallback must call super.creationCompleteCallback()', callback.pos);
+                Context.error('Custom Elements: $callbackName must call super.$callbackName().', callback.pos);
             }
         }
     }

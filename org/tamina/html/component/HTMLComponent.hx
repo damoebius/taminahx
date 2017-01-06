@@ -19,7 +19,7 @@ using StringTools;
 #if !NO_HTMLCOMPONENT_KEEPSUB
 @:keepSub
 #end
-@:autoBuild(org.tamina.html.component.HTMLComponentFactory.build("HTMLComponent"))
+@:autoBuild(org.tamina.html.component.HTMLComponentFactory.build())
 /**
  * HTMLComponent is the base class to build Custom Elements.<br>
  * ## x-tag
@@ -111,11 +111,29 @@ class HTMLComponent extends HtmlElement {
     private var _skinPartsAttached:Bool = false;
 
     private var _contentAdded:Bool;
-    private var observedAttributes:Array<String>;
 
-    public function new() {
+    @:native("observedAttributes")
+    private var _observedAttributes:Array<String>;
+
+    /**
+     * An instance of the element is created or upgraded [1].
+     * Useful for initializing state, settings up event listeners, or creating shadow dom.
+     * See the spec [2] for restrictions on what you can do in the constructor.
+     *
+     * In general, work should be deferred to connectedCallback as much as possible —
+     * especially work involving fetching resources or rendering.
+     * However, note that connectedCallback can be called more than once, 
+     * so any initialization work that is truly one-time will need a guard to prevent it from running twice.
+     * 
+     * In general, the constructor should be used to set up initial state and default values, 
+     * and to set up event listeners and possibly a shadow root.
+     *
+     * [1]: https://developers.google.com/web/fundamentals/getting-started/primers/customelements#upgrades
+     * [2]: https://html.spec.whatwg.org/multipage/scripting.html#custom-element-conformance
+     */
+    private function new() {
         _contentAdded = false;
-        observedAttributes = new Array<String>();
+        _observedAttributes = new Array<String>();
 
         initDefaultValues();
         parseContent();
@@ -126,10 +144,18 @@ class HTMLComponent extends HtmlElement {
         if (_skinPartsAttached) {
             creationCompleteCallback();
         }
-
     }
 
-    public function connectedCallback():Void {
+    /**
+     * Called every time the element is inserted into the DOM.
+     * Useful for running setup code, such as fetching resources or rendering.
+     * Generally, you should try to delay work until this time.
+     *
+     * Note: most of the constructor's restrictions apply here until you call super.connectedCallback()
+     *
+     * @method connectedCallback
+     */
+    private function connectedCallback():Void {
         #if DEBUG_COMPONENTS
         trace('connectedCallback----------------> ' +  this.localName);
         #end
@@ -142,20 +168,40 @@ class HTMLComponent extends HtmlElement {
         }
     }
     
-    public function disconnectedCallback():Void {
+    /**
+     * Called every time the element is removed from the DOM.
+     * Useful for running clean up code (removing event listeners, etc.).
+     *
+     * @method disconnectedCallback
+     */
+    private function disconnectedCallback():Void {
         #if DEBUG_COMPONENTS
         trace('disconnectedCallback----------------> ' +  this.localName);
         #end
     }
 
     /**
-     * Called when one of attributes of the element is changed.
-     * @method attributeChangedCallback
-     * @param   attrName {String} A string representing the attribute's name
-     * @param   oldVal {String} A string representing the old value.
-     * @param   newVal {String} A string representing the new value.
+     * The custom element has been moved into a new document (e.g. someone called document.adoptNode(el)).
+     *
+     * @method adoptedCallback
      */
-    public function attributeChangedCallback(attrName:String, oldVal:String, newVal:String):Void {
+    private function adoptedCallback():Void {
+    }
+
+    /**
+     * Called when an attribute was added, removed, updated, or replaced.
+     * Also called for initial values when an element is created by the parser, or upgraded.
+     * Note: only attributes listed in the observedAttributes property will receive this callback.
+     *
+     * Note: Reaction callbacks are synchronous.
+     * If someone calls el.setAttribute(...) on your element, the browser will immediately call attributeChangedCallback().
+     *
+     * @method attributeChangedCallback
+     * @param   attrName {String} The attribute's name
+     * @param   oldVal {String} The old value
+     * @param   newVal {String} The new value
+     */
+    private function attributeChangedCallback(attrName:String, oldVal:String, newVal:String):Void {
         #if DEBUG_COMPONENTS
         trace('attributeChangedCallback----------------> ' +  this.localName);
         trace(attrName + ": " + oldVal + " => " + newVal);
@@ -164,11 +210,12 @@ class HTMLComponent extends HtmlElement {
 
     /**
      * Called when component creation is complete
+     *
      * @method creationCompleteCallback
      */
-    public function creationCompleteCallback():Void {
+    private function creationCompleteCallback():Void {
         creationComplete = true;
-        this.dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.CREATION_COMPLETE));
+        dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.CREATION_COMPLETE));
     }
 
     private function initDefaultValues():Void {
@@ -305,14 +352,14 @@ class HTMLComponent extends HtmlElement {
     private inline function displayContent():Void {
         if (!_contentAdded) {
             _contentAdded = true;
-
+            
             var numChildren = _tempVirtualDOM.childNodes.length;
 
             if (!_useExternalContent) {
                 while (numChildren > 0) {
                     numChildren--;
                     var item:Element = cast _tempVirtualDOM.childNodes.item(0);
-                    this.appendChild(item);
+                    appendChild(item);
                 }
             }
         }
