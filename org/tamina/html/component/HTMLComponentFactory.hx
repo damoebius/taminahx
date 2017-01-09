@@ -51,6 +51,12 @@ class HTMLComponentFactory {
         var pos = Context.currentPos();
         var content = File.getContent(Context.resolvePath(getViewPath(cls)));
 
+        // Try to add the method at the end of the class
+        // To avoid having methods above attributes
+        if (fields.length > 0) {
+            pos = fields[fields.length - 1].pos;
+        }
+
         // Add field
         fields.push({
             name: "getView",
