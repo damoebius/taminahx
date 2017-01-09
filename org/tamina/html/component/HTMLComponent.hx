@@ -46,7 +46,7 @@ using StringTools;
  * You don’t need to do it yourself anymore, A macro will automatically do it while compiling.<br>
  * This technique was inspired by Flex4 Spark components architecture.
  *
- *     \@view('html/view/TestComponent.html')
+ *     \@view('')
  *     class TestComponent extends HTMLComponent {
  *
  *         \@skinpart
