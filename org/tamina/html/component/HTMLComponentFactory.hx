@@ -49,28 +49,32 @@ class HTMLComponentFactory {
 
     private static function injectViewGetter(cls:ClassType, fields:Array<Field>):Array<Field> {
         var pos = Context.currentPos();
-        var content = File.getContent(Context.resolvePath(getViewPath(cls)));
+        var viewPath = getViewPath(cls);
 
-        // Try to add the method at the end of the class
-        // To avoid having methods above attributes
-        if (fields.length > 0) {
-            pos = fields[fields.length - 1].pos;
+        if (viewPath != null) {
+            var content = File.getContent(Context.resolvePath(viewPath));
+
+            // Try to add the method at the end of the class
+            // To avoid having methods above attributes
+            if (fields.length > 0) {
+                pos = fields[fields.length - 1].pos;
+            }
+
+            // Add field
+            fields.push({
+                name: "getView",
+                doc: null,
+                meta: [],
+                access: [APublic, AOverride],
+                kind: FFun({
+                    args: [],
+                    params: [],
+                    ret: null,
+                    expr: macro { return $v{content}; }
+                }),
+                pos: pos
+            });
         }
-
-        // Add field
-        fields.push({
-            name: "getView",
-            doc: null,
-            meta: [],
-            access: [APublic, AOverride],
-            kind: FFun({
-                args: [],
-                params: [],
-                ret: null,
-                expr: macro { return $v{content}; }
-            }),
-            pos: pos
-        });
 
         return fields;
     }
@@ -204,8 +208,12 @@ class HTMLComponentFactory {
             var fileNameExpr = Lambda.filter(cls.meta.get(), function(meta) return meta.name == "view").pop().params[0];
             var fileName:String = ExprTools.getValue(fileNameExpr);
 
+            // No html view for this component
+            if (fileName == "null") {
+                return null;
+
             // Use current path + filename for the html file if @view's first argument is empty
-            if (fileName == "") {
+            } else if (fileName == "") {
                 return cls.pack.join("/") + "/" + cls.name + ".html";
 
             // Use current path if @view's first argument starts with "./"

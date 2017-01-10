@@ -7,8 +7,6 @@ import js.html.Element;
 import js.html.Event;
 import js.html.HtmlElement;
 
-import msignal.Signal;
-
 import org.tamina.display.CSSDisplayValue;
 import org.tamina.html.component.HTMLComponentEvent;
 import org.tamina.i18n.LocalizationManager;
@@ -111,12 +109,6 @@ class HTMLComponent extends HtmlElement {
     private var _skinPartsAttached:Bool = false;
 
     /**
-     * Only attributes in this array will trigger attributeChangedCallback
-     */
-    @:native("observedAttributes")
-    private var _observedAttributes:Array<String>;
-
-    /**
      * An instance of the element is created or upgraded [1].
      * Useful for initializing state, settings up event listeners, or creating shadow dom.
      * See the spec [2] for restrictions on what you can do in the constructor.
@@ -133,17 +125,8 @@ class HTMLComponent extends HtmlElement {
      * [2]: https://html.spec.whatwg.org/multipage/scripting.html#custom-element-conformance
      */
     private function new() {
-        _observedAttributes = new Array<String>();
-
         initDefaultValues();
-        parseContent();
-        updateSkinPartsStatus();
-
         created = true;
-
-        if (_skinPartsAttached) {
-            creationCompleteCallback();
-        }
     }
 
     /**
@@ -170,8 +153,15 @@ class HTMLComponent extends HtmlElement {
         #end
 
         if (!initialized) {
+            parseContent();
+            updateSkinPartsStatus();
             displayContent();
             firstConnectionCallback();
+
+            if (_skinPartsAttached) {
+                creationCompleteCallback();
+            }
+
             dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.INITIALIZE));
         }
     }
@@ -199,7 +189,10 @@ class HTMLComponent extends HtmlElement {
     /**
      * Called when an attribute was added, removed, updated, or replaced.
      * Also called for initial values when an element is created by the parser, or upgraded.
+     *
      * Note: only attributes listed in the observedAttributes property will receive this callback.
+     * To list the attributes you want your component to watch, add a static getter to your component:
+     * private static function getObservedAttributes():Array<String> { return ["disabled"]; }
      *
      * Note: Reaction callbacks are synchronous.
      * If someone calls el.setAttribute(...) on your element, the browser will immediately call attributeChangedCallback().
