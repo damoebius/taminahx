@@ -38,11 +38,11 @@ import js.Browser;
  */
 class HTMLApplication {
 
-    public static var componentsXTagList(get, null):Map<String, String> = null;
+    public static var componentsXTagList(get, null):Dynamic<String> = null;
 
-    private static function get_componentsXTagList():Map<String, String> {
+    private static function get_componentsXTagList():Dynamic<String> {
         if (componentsXTagList == null) {
-            componentsXTagList = new Map<String, String>();
+            componentsXTagList = {};
         }
 
         return componentsXTagList;
@@ -85,8 +85,8 @@ class HTMLApplication {
     public inline function loadComponents():Void {
         var customElements = untyped Browser.window.customElements;
 
-        for (tag in HTMLApplication.componentsXTagList.keys()) {
-            var componentClass = Type.resolveClass(HTMLApplication.componentsXTagList.get(tag));
+        for (tag in Reflect.fields(componentsXTagList)) {
+            var componentClass = Type.resolveClass(Reflect.field(componentsXTagList, tag));
             customElements.define(tag, componentClass);
         }
 
@@ -104,14 +104,14 @@ class HTMLApplication {
     }
 
     public static function isCustomElement(nodeName:String):Bool {
-        return componentsXTagList.exists(nodeName.toLowerCase());
+        return Reflect.hasField(componentsXTagList, nodeName.toLowerCase());
     }
 
     private static function getTagByClassName(className:String):String {
         var result:String = "";
 
-        for (tag in HTMLApplication.componentsXTagList.keys()) {
-            var value = HTMLApplication.componentsXTagList.get(tag);
+        for (tag in Reflect.fields(componentsXTagList)) {
+            var value = Reflect.field(componentsXTagList, tag);
             if (value == className) {
                 result = tag;
                 break;
