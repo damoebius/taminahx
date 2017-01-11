@@ -6,6 +6,7 @@ import haxe.macro.Expr;
 import haxe.macro.ExprTools;
 import haxe.macro.Type;
 import haxe.macro.TypeTools;
+import sys.FileSystem;
 import sys.io.File;
 
 import org.tamina.macro.BuildTools;
@@ -14,9 +15,13 @@ using Lambda;
 
 class HTMLComponentFactory {
 
-    private static var _registeredXTags:Array<String> = null;
+    private static var _hasBuiltXTags:Bool = false;
+    private static var _registeredOnGenerate:Bool = false;
 
-    public static function build():Array<Field> {
+    private static var _registeredXTags:Array<String> = null;
+    private static var _xtagsClasses:Map<String, String>;
+
+    public static function buildComponent():Array<Field> {
         var fields = Context.getBuildFields();
         var cls = Context.getLocalClass().get();
         var className = cls.pack.join('.') + '.' + cls.name;
@@ -33,18 +38,50 @@ class HTMLComponentFactory {
         checkCallback("creationCompleteCallback", fields);
 
         // Register component
-        var xtagExpr = getXTag(cls);
-        fields.push({
-            name: '__registered',
-            pos: cls.pos,
-            access: [AStatic],
-            kind: FVar(macro : Bool, macro @:pos(cls.pos) {
-                Reflect.setField(org.tamina.html.component.HTMLApplication.componentsXTagList, $v{xtagExpr}.toLowerCase(), $v{className});
-                true;
-            })
-        });
+        var xtagExpr = registerXTag(cls);
+
+        // Post-compilation stuff
+        if (!_registeredOnGenerate) {
+            _registeredOnGenerate = true;
+            Context.onGenerate(populateXTags);
+        }
 
         return fields;
+    }
+
+    private static function populateXTags(types:Array<Type>):Void {
+        if (!_hasBuiltXTags) {
+            _hasBuiltXTags = true;
+
+            // Include native shim
+            Compiler.includeFile("native-shim.js", Top);
+
+            if (_registeredXTags != null) {
+                var topScript:Array<String> = [
+                    'var XTags = {};',
+                    'var CustomElements = {};'
+                ];
+
+                for (tag in _registeredXTags) {
+                    var className:String = _xtagsClasses.get(tag);
+                    topScript.push('XTags["$className"] = "$tag";');
+                    topScript.push('CustomElements["$tag"] = "$className";');
+                }
+
+                // Write script to temp file
+                var file = File.write("top-script.js");
+                file.writeString(topScript.join('\n'));
+                file.close();
+
+                // Include custom scripts
+                Compiler.includeFile("top-script.js", Closure);
+
+                // Remove temp file after compilation
+                Context.onAfterGenerate(function() {
+                    FileSystem.deleteFile("top-script.js");
+                });
+            }
+        }
     }
 
     private static function injectViewGetter(cls:ClassType, fields:Array<Field>):Array<Field> {
@@ -139,7 +176,7 @@ class HTMLComponentFactory {
         }
     }
 
-    private static function getXTag(cls:ClassType):String {
+    private static function registerXTag(cls:ClassType):String {
         // Default xtag is built from full path (package name + class name), using dashes instead of dots
         var className = cls.pack.join('.') + '.' + cls.name;
         var xtagExpr = className.toLowerCase().split('.').join('-');
@@ -173,7 +210,7 @@ class HTMLComponentFactory {
             }
         }
 
-        registerXTag(xtagExpr, cls.pos);
+        saveXTag(xtagExpr, className, cls.pos);
 
         // Print custom components info (xtag + haxe class) if DEBUG_COMPONENTS is defined
         #if DEBUG_COMPONENTS
@@ -187,7 +224,7 @@ class HTMLComponentFactory {
         return xtagExpr;
     }
 
-    private static function registerXTag(xtagExpr:String, pos:Position):Void {
+    private static function saveXTag(xtagExpr:String, className:String, pos:Position):Void {
         // Do not allow multiple class to define the same xtag
         if (_registeredXTags == null) {
             _registeredXTags = new Array<String>();
@@ -200,7 +237,12 @@ class HTMLComponentFactory {
             }
         }
 
+        if (_xtagsClasses == null) {
+            _xtagsClasses = new Map<String, String>();
+        }
+
         _registeredXTags.push(xtagExpr);
+        _xtagsClasses.set(xtagExpr, className);
     }
 
     private static function getViewPath(cls:ClassType):String {

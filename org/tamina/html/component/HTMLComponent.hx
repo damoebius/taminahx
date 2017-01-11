@@ -17,7 +17,7 @@ using StringTools;
 #if !NO_HTMLCOMPONENT_KEEPSUB
 @:keepSub
 #end
-@:autoBuild(org.tamina.html.component.HTMLComponentFactory.build())
+@:autoBuild(org.tamina.html.component.HTMLComponentFactory.buildComponent())
 /**
  * HTMLComponent is the base class to build Custom Elements.<br>
  * ## x-tag
@@ -127,6 +127,34 @@ class HTMLComponent extends HtmlElement {
     private function new() {
         initDefaultValues();
         created = true;
+    }
+
+    public static function __init__():Void {
+        var customElements = untyped Browser.window.customElements;
+        var customElementsList = untyped CustomElements;
+
+        for (tag in Reflect.fields(customElementsList)) {
+            customElements.define(tag, Type.resolveClass(Reflect.field(customElementsList, tag)));
+        }
+
+        #if WARN_FOR_MISSING_COMPONENTS
+        Browser.document.addEventListener("DOMContentLoaded", function() {
+            // Issue a warning for any custom element present on the DOM without being defined
+            var unknownCustomElements = Browser.document.querySelectorAll(":not(:defined)");
+            for (el in unknownCustomElements) {
+                Browser.console.warn("Custom element not defined: " + el.nodeName);
+            }
+        });
+        #end
+    }
+
+    public static function createInstance<T:HTMLComponent>(type:Class<T>):T {
+        var className:String = Type.getClassName(type);
+        return cast Browser.document.createElement(untyped XTags[className]);
+    }
+
+    public static function isCustomElement(nodeName:String):Bool {
+        return Reflect.hasField(untyped customElementTags, nodeName.toLowerCase());
     }
 
     /**
@@ -302,7 +330,7 @@ class HTMLComponent extends HtmlElement {
         _skinPartsWaiting = new Array<HTMLComponent>();
 
         for (skinPart in _skinParts) {
-            if (HTMLApplication.isCustomElement(skinPart.nodeName) && skinPart.initialized != true) {
+            if (HTMLComponent.isCustomElement(skinPart.nodeName) && skinPart.initialized != true) {
                 _skinPartsWaiting.push(skinPart);
             }
         }
