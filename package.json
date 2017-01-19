@@ -1,6 +1,6 @@
 {
   "name": "taminahx",
-  "description": "tamina library for haxe",
+  "description": "TAMINA IS A FAST, SMALL, AND FEATURE-RICH HAXE LIBRARY",
   "keywords": [
     "tamina",
     "web components",
@@ -24,13 +24,16 @@
     "haxe",
     "README.md"
   ],
-  "homepage": "http://lib.tamina-online.com",
+  "homepage": "https://developers.heidi.tech",
   "bugs": {
     "url": "https://github.com/damoebius/taminahx/issues"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/damoebius/taminahx.git"
+  },
+  "scripts": {
+    "build:doc": "yuidoc -c yuidoc.json -e .hx -p haxe org"
   },
   "config": {
     "haxe:version": "3.2.1"

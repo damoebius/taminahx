@@ -1,0 +1,13 @@
+{
+    "name": "taminahx",
+    "description": "TAMINA IS A FAST, SMALL, AND FEATURE-RICH HAXE LIBRARY",
+    "version": "0.0.1",
+    "url": "https://developers.heidi.tech",
+    "options": {
+        "linkNatives": "true",        
+        "attributesEmit": "true",
+        "selleck": "true",
+        "paths": ["haxe,org"],
+        "outdir": "doc"
+    }
+}
