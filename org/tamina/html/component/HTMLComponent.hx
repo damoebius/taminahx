@@ -15,6 +15,9 @@ import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
 import org.tamina.i18n.LocalizationManager;
 import org.tamina.utils.HTMLUtils;
 
+#if !NO_HTMLCOMPONENT_KEEPSUB
+@:keepSub
+#end
 @:autoBuild(org.tamina.html.component.HTMLComponentFactory.build())
 /**
  * HTMLComponent is the base class to build Custom Elements.<br>

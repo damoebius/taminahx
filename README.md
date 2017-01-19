@@ -24,7 +24,7 @@ $ haxelib install taminahx
 
 ## Html Applications and web components
 Tamina defines a default, or Application, container that lets you start adding content to your application without explicitly defining another container.
-```javascript
+```haxe
 package ;
  
 import org.tamina.html.component.HTMLApplication;
@@ -67,13 +67,13 @@ The other change is it officially supports Custom Elements. It’s now possible 
 
 Our component life cycle is the same as Custom Elements.
 
-* public function  createdCallback() //Called after the element is created.
+* `public function createdCallback() // Called after the element is created.`
 
-* public function  attachedCallback() //Called when the element is attached to the document
+* `public function attachedCallback() // Called when the element is attached to the document.`
 
-* public function  detachedCallback() //Called when the element is detached from the document.
+* `public function detachedCallback() // Called when the element is detached from the document.`
 
-* public function  attributeChangedCallback(attrName:String, oldVal:String, newVal:String) //Called when one of attributes of the element is changed.
+* `public function attributeChangedCallback(attrName:String, oldVal:String, newVal:String) // Called when one of attributes of the element is changed.`
 
 You can override them if you need it.
 
@@ -81,7 +81,7 @@ You can override them if you need it.
 
 Another usefull feature is Skin Part support. This metadata is used to reference an element from his view. You don’t need to do it yourself anymore, A macro will automatically do it while compiling.
 This technique was inspired by Flex4 Spark components architecture.
-```javascript
+```haxe
 @view('html/view/TestComponent.html')
 class TestComponent extends HTMLComponent {
  
@@ -98,11 +98,11 @@ class TestComponent extends HTMLComponent {
 ### Instance Factory
 
 To instantiate dynamically a component from your application, like an itemRenderer for example, you can use a Factory available in HTMLComponent.
-```javascript
+```haxe
 public static function createInstance<T>(type:Class<T>):T;
 ```
 
-```javascript
+```haxe
 var myComponent = HTMLComponent.createInstance(TestComponent);
 Browser.document.body.appendChild(myComponent);
 ```
@@ -128,8 +128,7 @@ You can manage your translation using the [LocalizationManager](http://tamina.io
 
 You can initialize the LocalizationManager using an array of ITranslation.
 
-
-```javascript
+```haxe
 interface ITranslation {
     public var fieldName:String;
     public var locale:Locale;
@@ -139,7 +138,7 @@ interface ITranslation {
 ```
 The Json data :
 
-```javascript
+```json
 {
     "translations": [{
  
@@ -157,14 +156,14 @@ The Json data :
 }
 ```
 And an example of initialization :
-```javascript
+```haxe
 LocalizationManager.instance.setTranslations(translations);
 ```
 ### Utilization
 
 To use a translation from your application, you just have to call the LocalizationManager.
 
-```javascript
+```haxe
 var myTitle = LocalizationManager.instance.getString("title");
 ```
 Or from the view :
@@ -177,7 +176,7 @@ Or from the view :
 </div>
 ```
 
-# Full Exemple
+# Full Example
 
 The main page : main.html
 
@@ -203,8 +202,8 @@ The main page : main.html
 The main application, Main.hx, compiles main.js
 
 
-```javascript
-package ;
+```haxe
+package;
  
 import org.tamina.i18n.LocalizationManager;
 import org.tamina.i18n.ITranslation;
@@ -233,7 +232,7 @@ import org.tamina.html.component.HTMLApplication;
 ```
 TestComponent.hx with a typed SkinPart , and an override of attachedCallback.
 
-```javascript
+```haxe
 package html.view;
 import org.tamina.html.component.HTMLComponent;
  
@@ -269,7 +268,7 @@ OtherTestComponent.hx and OtherTestComponent.html
 </div>
 ```
 
-```javascript
+```haxe
 package html.view;
 import org.tamina.html.component.HTMLComponent;
  
