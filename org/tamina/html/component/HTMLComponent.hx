@@ -1,6 +1,5 @@
 package org.tamina.html.component;
 
-import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventFactory;
 import haxe.rtti.Meta;
 import js.Browser;
 import js.RegExp;
@@ -8,17 +7,17 @@ import js.html.Element;
 import js.html.Event;
 import js.html.HtmlElement;
 
-import msignal.Signal;
-
 import org.tamina.display.CSSDisplayValue;
-import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
+import org.tamina.html.component.HTMLComponentEvent;
 import org.tamina.i18n.LocalizationManager;
 import org.tamina.utils.HTMLUtils;
+
+using StringTools;
 
 #if !NO_HTMLCOMPONENT_KEEPSUB
 @:keepSub
 #end
-@:autoBuild(org.tamina.html.component.HTMLComponentFactory.build())
+@:autoBuild(org.tamina.html.component.HTMLComponentFactory.buildComponent())
 /**
  * HTMLComponent is the base class to build Custom Elements.<br>
  * ## x-tag
@@ -45,10 +44,10 @@ import org.tamina.utils.HTMLUtils;
  * You don’t need to do it yourself anymore, A macro will automatically do it while compiling.<br>
  * This technique was inspired by Flex4 Spark components architecture.
  *
- *     \@view('html/view/TestComponent.html')
+ *     \@view('')
  *     class TestComponent extends HTMLComponent {
  *
- *         \@skinpart("")
+ *         \@skinpart
  *         private var _otherComponent:OtherTestComponent;
  *
  *         override public function attachedCallback() {
@@ -94,14 +93,14 @@ class HTMLComponent extends HtmlElement {
     public var created(default, null):Bool;
 
     /**
-     * Whether or not the display object and its children have been created.
+     * Fires when the display object and its children have been created.
      * @property creationComplete
      * @type Bool
      */
     public var creationComplete(default, null):Bool;
 
     private var _visible:Bool;
-    private var _tempElement:Element;
+    private var _tempVirtualDOM:Element;
     private var _useExternalContent:Bool;
     private var _defaultDisplayStyle:CSSDisplayValue;
 
@@ -109,66 +108,143 @@ class HTMLComponent extends HtmlElement {
     private var _skinPartsWaiting:Array<HTMLComponent>;
     private var _skinPartsAttached:Bool = false;
 
+    /**
+     * An instance of the element is created or upgraded [1].
+     * Useful for initializing state, settings up event listeners, or creating shadow dom.
+     * See the spec [2] for restrictions on what you can do in the constructor.
+     *
+     * In general, work should be deferred to firstConnectionCallback or connectedCallback
+     * as much as possible — especially work involving fetching resources or rendering.
+     * However, note that connectedCallback can be called more than once, 
+     * so any initialization work that is truly one-time should go into firstConnectionCallback.
+     * 
+     * In general, the constructor should be used to set up initial state and default values, 
+     * and to set up event listeners and possibly a shadow root.
+     *
+     * [1]: https://developers.google.com/web/fundamentals/getting-started/primers/customelements#upgrades
+     * [2]: https://html.spec.whatwg.org/multipage/scripting.html#custom-element-conformance
+     */
     private function new() {
+        initDefaultValues();
+        created = true;
+    }
+
+    public static function __init__():Void {
+        var customElements = untyped Browser.window.customElements;
+        var customElementsList = untyped CustomElements;
+
+        for (tag in Reflect.fields(customElementsList)) {
+            customElements.define(tag, Type.resolveClass(Reflect.field(customElementsList, tag)));
+        }
+
+        #if WARN_FOR_MISSING_COMPONENTS
+        Browser.document.addEventListener("DOMContentLoaded", function() {
+            // Issue a warning for any custom element present on the DOM without being defined
+            var unknownCustomElements = Browser.document.querySelectorAll(":not(:defined)");
+            for (el in unknownCustomElements) {
+                Browser.console.warn("Custom element not defined: " + el.nodeName);
+            }
+        });
+        #end
+    }
+
+    public static function createInstance<T:HTMLComponent>(type:Class<T>):T {
+        var className:String = Type.getClassName(type);
+        return cast Browser.document.createElement(untyped XTags[className]);
+    }
+
+    public static function isCustomElement(nodeName:String):Bool {
+        return Reflect.hasField(untyped customElementTags, nodeName.toLowerCase());
     }
 
     /**
-     * Called after the element is created.
-     * @method createdCallback
+     * Called by connectedCallback the first time this component is connected.
+     * Useful for running setup code that needs access to the DOM of the element
+     * and/or its children.
+     * Generally, you should try to delay work until this time.
+     *
+     * @method firstConnectionCallback
      */
-    public function createdCallback():Void {
-        // trace('createdCallback----------------> ' + this.localName);
-        initDefaultValues();
-        parseContent();
-        initContent();
-        displayContent();
-        updateSkinPartsStatus();
+    private function firstConnectionCallback():Void {}
 
-        created = true;
+    /**
+     * Called every time the element is inserted into the DOM.
+     * Useful for running setup code, such as fetching resources or rendering.
+     *
+     * Note: most of the constructor's restrictions apply here until you call super.connectedCallback()
+     *
+     * @method connectedCallback
+     */
+    private function connectedCallback():Void {
+        #if DEBUG_COMPONENTS
+        trace('connectedCallback----------------> ' +  this.localName);
+        #end
 
-        if (_skinPartsAttached) {
-            creationCompleteCallback();
+        if (!initialized) {
+            parseContent();
+            updateSkinPartsStatus();
+            displayContent();
+            firstConnectionCallback();
+
+            if (_skinPartsAttached) {
+                creationCompleteCallback();
+            }
+
+            dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.INITIALIZE));
         }
+    }
+    
+    /**
+     * Called every time the element is removed from the DOM.
+     * Useful for running clean up code (removing event listeners, etc.).
+     *
+     * @method disconnectedCallback
+     */
+    private function disconnectedCallback():Void {
+        #if DEBUG_COMPONENTS
+        trace('disconnectedCallback----------------> ' +  this.localName);
+        #end
+    }
+
+    /**
+     * The custom element has been moved into a new document (e.g. someone called document.adoptNode(el)).
+     *
+     * @method adoptedCallback
+     */
+    private function adoptedCallback():Void {
+    }
+
+    /**
+     * Called when an attribute was added, removed, updated, or replaced.
+     * Also called for initial values when an element is created by the parser, or upgraded.
+     *
+     * Note: only attributes listed in the observedAttributes property will receive this callback.
+     * To list the attributes you want your component to watch, add a static getter to your component:
+     * private static function getObservedAttributes():Array<String> { return ["disabled"]; }
+     *
+     * Note: Reaction callbacks are synchronous.
+     * If someone calls el.setAttribute(...) on your element, the browser will immediately call attributeChangedCallback().
+     *
+     * @method attributeChangedCallback
+     * @param   attrName {String} The attribute's name
+     * @param   oldVal {String} The old value
+     * @param   newVal {String} The new value
+     */
+    private function attributeChangedCallback(attrName:String, oldVal:String, newVal:String):Void {
+        #if DEBUG_COMPONENTS
+        trace('attributeChangedCallback----------------> ' +  this.localName);
+        trace(attrName + ": " + oldVal + " => " + newVal);
+        #end
     }
 
     /**
      * Called when component creation is complete
+     *
      * @method creationCompleteCallback
      */
-    public function creationCompleteCallback():Void {
+    private function creationCompleteCallback():Void {
         creationComplete = true;
-        this.dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.CREATION_COMPLETE));
-    }
-
-    /**
-     * Called when the element is attached to the document
-     * @method attachedCallback
-     */
-    public function attachedCallback():Void {
-        // trace('attachedCallback----------------> ' +  this.localName);
-        if (!initialized) {
-            this.dispatchEvent( HTMLComponentEventFactory.createEvent(HTMLComponentEventType.INITIALIZE));
-        }
-        initialized = true;
-    }
-
-    /**
-     * Called when the element is detached from the document.
-     * @method detachedCallback
-     */
-    public function detachedCallback():Void {
-        // trace('detachedCallback---------------->');
-    }
-
-    /**
-     * Called when one of attributes of the element is changed.
-     * @method attributeChangedCallback
-     * @param   attrName {String} A string representing the attribute's name
-     * @param   oldVal {String} A string representing the old value.
-     * @param   newVal {String} A string representing the new value.
-     */
-    public function attributeChangedCallback(attrName:String, oldVal:String, newVal:String):Void {
-        // trace('attributeChangedCallback---------------->'+attrName);
+        dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.CREATION_COMPLETE));
     }
 
     private function initDefaultValues():Void {
@@ -201,27 +277,29 @@ class HTMLComponent extends HtmlElement {
         return _visible;
     }
 
-    private function getContent():String {
-        return untyped this.getView();
-    }
 
-    private function parseContent(?useExternalContent:Bool = true):Void {
+    // ==============================================
+    // Internal functions
+    // ==============================================
+
+    private function getView():String { return ""; }
+
+    private inline function parseContent(?useExternalContent:Bool = true):Void {
         var content = "";
+        _tempVirtualDOM = Browser.document.createDivElement();
 
-        if (this.childElementCount == 0 || !useExternalContent) {
-            content = translateContent(getContent());
-            _tempElement = Browser.document.createDivElement();
+        if (this.innerHTML.trim() == "" || !useExternalContent) {
+            content = translateContent(getView());
         } else {
             _useExternalContent = true;
-            _tempElement = this;
             content = translateContent(this.innerHTML);
         }
 
-        _tempElement.innerHTML = content;
-        initSkinParts(_tempElement);
+        _tempVirtualDOM.innerHTML = content;
+        initSkinParts(_tempVirtualDOM);
     }
 
-    private function initSkinParts(target:Element):Void {
+    private inline function initSkinParts(target:Element):Void {
         var c:Class<HTMLComponent> = Type.getClass(this);
         _skinParts = new Array<HTMLComponent>();
 
@@ -237,10 +315,10 @@ class HTMLComponent extends HtmlElement {
                     Reflect.setField(this, metaFields[i], element);
 
                     if (element == null) {
-                        trace("skinpart is null: " + metaFields[i] + " from " + this.nodeName);
+                        Browser.console.error("Skinpart is null: " + metaFields[i] + " from " + Type.getClassName(c));
+                    } else {
+                        _skinParts.push(cast element);
                     }
-
-                    _skinParts.push(cast element);
                 }
             }
 
@@ -248,11 +326,11 @@ class HTMLComponent extends HtmlElement {
         }
     }
 
-    private function updateSkinPartsStatus():Void {
+    private inline function updateSkinPartsStatus():Void {
         _skinPartsWaiting = new Array<HTMLComponent>();
 
         for (skinPart in _skinParts) {
-            if (HTMLApplication.isCustomElement(skinPart.nodeName) && skinPart.initialized != true) {
+            if (HTMLComponent.isCustomElement(skinPart.nodeName) && skinPart.initialized != true) {
                 _skinPartsWaiting.push(skinPart);
             }
         }
@@ -269,16 +347,16 @@ class HTMLComponent extends HtmlElement {
         }
     }
 
-    private function skinPartReadyHandler(skinPart:HTMLComponent):Void {
+    private inline function skinPartReadyHandler(skinPart:HTMLComponent):Void {
         _skinPartsWaiting.remove(skinPart);
-
         _skinPartsAttached = _skinPartsWaiting.length == 0;
+
         if (!creationComplete && _skinPartsAttached) {
             creationCompleteCallback();
         }
     }
 
-    private function translateContent(source:String):String {
+    private inline function translateContent(source:String):String {
         var content = source;
         var stringToTranslate = new RegExp('\\{\\{(?!\\}\\})(.+)\\}\\}', 'gim');
         var results:Array<Array<String>> = new Array<Array<String>>();
@@ -300,30 +378,19 @@ class HTMLComponent extends HtmlElement {
         return content;
     }
 
-    private function initContent():Void {
+    private inline function displayContent():Void {
+        if (!initialized) {
+            initialized = true;
 
-    }
+            var numChildren = _tempVirtualDOM.childNodes.length;
 
-    private function displayContent():Void {
-        var numChildren = _tempElement.children.length;
-        if (!_useExternalContent) {
-            while (numChildren > 0) {
-                numChildren--;
-                var item:Element = cast _tempElement.children.item(0);
-                this.appendChild(item);
+            if (!_useExternalContent) {
+                while (numChildren > 0) {
+                    numChildren--;
+                    var item:Element = cast _tempVirtualDOM.childNodes.item(0);
+                    appendChild(item);
+                }
             }
         }
     }
 }
-
-/**
- * Dispatched when the component has finished its construction and has all initialization properties set, at the end of createdCallback
- * See the {{#crossLink "HTMLComponentEventType"}}{{/crossLink}} class for a listing of event properties.
- * @event HTMLComponentEventType.CREATION_COMPLETE
- */
-
-/**
- * Dispatched when the component has finished its construction, property processing, measuring, layout, and drawing, at the end of attachedCallback
- * See the {{#crossLink "HTMLComponentEventType"}}{{/crossLink}} class for a listing of event properties.
- * @event HTMLComponentEventType.INITIALIZE
- */
