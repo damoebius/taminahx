@@ -137,7 +137,7 @@ class HTMLComponent extends HtmlElement {
      */
     public function creationCompleteCallback():Void {
         creationComplete = true;
-        this.dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.CREATION_COMPLETE));
+        this.dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.CREATION_COMPLETE, false));
     }
 
     /**
@@ -147,7 +147,7 @@ class HTMLComponent extends HtmlElement {
     public function attachedCallback():Void {
         // trace('attachedCallback----------------> ' +  this.localName);
         if (!initialized) {
-            this.dispatchEvent( HTMLComponentEventFactory.createEvent(HTMLComponentEventType.INITIALIZE));
+            this.dispatchEvent( HTMLComponentEventFactory.createEvent(HTMLComponentEventType.INITIALIZE, false));
         }
         initialized = true;
     }
