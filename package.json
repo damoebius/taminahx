@@ -12,7 +12,7 @@
   "author": {
     "name": "David Mouton"
   },
-  "version": "1.2.0",
+  "version": "1.2.2",
   "license": "MIT",
   "engines": {
     "node": ">=0.8.0"
@@ -38,7 +38,7 @@
   "config": {
     "haxe:version": "3.2.1"
   },
-  "dependencies": {
+  "devDependencies": {
     "haxe": "4.0.0",
     "mconsole-npm": ">=1.6.1",
     "createjs-haxe": "^1.6.5",
