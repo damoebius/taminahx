@@ -1,17 +1,11 @@
 package org.tamina.net;
 import org.tamina.log.QuickLogger;
-import msignal.Signal.Signal0;
 
 class AssetCompositeLoader {
-
-    public var completeSignal:Signal0;
-    public var errorSignal:Signal0;
 
     private var _pool:Array<GroupURL>;
 
     public function new() {
-        completeSignal = new Signal0();
-        errorSignal = new Signal0();
         _pool = new Array<GroupURL>();
     }
 
@@ -39,7 +33,7 @@ class AssetCompositeLoader {
             }
         } else {
             QuickLogger.info("ALL ASSETS LOADED");
-            completeSignal.dispatch();
+            //completeSignal.dispatch();
         }
     }
 

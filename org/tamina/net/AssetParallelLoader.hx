@@ -1,17 +1,13 @@
 package org.tamina.net;
-import org.tamina.log.QuickLogger;
-import msignal.Signal.Signal0;
-class AssetParallelLoader {
 
-    public var completeSignal:Signal0;
-    public var errorSignal:Signal0;
+import org.tamina.log.QuickLogger;
+
+class AssetParallelLoader {
 
     private var _pool:Array<AssetURL>;
     private var _remainingAssetNumber:Int=0;
 
     public function new() {
-        completeSignal = new Signal0();
-        errorSignal = new Signal0();
         _pool = new Array<AssetURL>();
     }
 
@@ -33,7 +29,7 @@ class AssetParallelLoader {
     private function assetCompleteHandler():Void {
         _remainingAssetNumber--;
         if(_remainingAssetNumber == 0){
-            completeSignal.dispatch();
+            //completeSignal.dispatch();
         }
     }
 
@@ -41,7 +37,7 @@ class AssetParallelLoader {
         QuickLogger.error('error while loading asset');
         _remainingAssetNumber--;
         if(_remainingAssetNumber == 0){
-            completeSignal.dispatch();
+            //completeSignal.dispatch();
         }
     }
 }

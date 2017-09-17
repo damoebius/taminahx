@@ -1,5 +1,6 @@
 package org.tamina.net;
 
+import js.Promise;
 import haxe.ds.Either;
 import js.Browser;
 import js.html.Element;
@@ -7,12 +8,8 @@ import js.html.ScriptElement;
 import js.html.LinkElement;
 
 import org.tamina.log.QuickLogger;
-import msignal.Signal.Signal0;
 
 class AssetLoader {
-
-    public var completeSignal:Signal0;
-    public var errorSignal:Signal0;
 
     private var _header:Element;
     private var _url:AssetURL;
@@ -20,14 +17,14 @@ class AssetLoader {
     private var _cache:AssetLoaderCache;
 
     public function new() {
-        completeSignal = new Signal0();
-        errorSignal = new Signal0();
         _cache = new AssetLoaderCache();
     }
 
-    public function load(url:AssetURL):Void {
+    public function load(url:AssetURL):Promise {
         _url = url;
         _asset = _cache.getLoadingAsset(_url);
+
+        return new Promise(){}
 
         if ( _cache.isLoaded(_url) ) {
             QuickLogger.info('Asset déja chargé : ' + _url.documentName);
@@ -74,11 +71,11 @@ class AssetLoader {
         QuickLogger.info('asset loaded');
         _cache.addLoadedAsset(_url);
         _cache.removeLoadingAsset(_asset);
-        completeSignal.dispatch();
+        //completeSignal.dispatch();
     }
 
     private function loadErrorHandler(event:Dynamic):Void {
         _cache.removeLoadingAsset(_asset);
-        errorSignal.dispatch();
+        //errorSignal.dispatch();
     }
 }

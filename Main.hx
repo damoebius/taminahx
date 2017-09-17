@@ -1,5 +1,6 @@
 package ;
 
+import org.tamina.net.AssetCompositeLoader;
 import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
 import test.html.view.TestComponent;
 import js.Error;
@@ -59,25 +60,28 @@ typedef MainEvent = Event<String>;
     }
 
     public function build( ):Void {
-         BitmapData.getMimeType('');
-         ColorMatrix.BANDW_MATRIX.length;
-         new EventDispatcher<String>();
-         new Junction();
-         new ImageLoader();
-         QuickLogger.debug("");
-         new XMLLoader();
-         new AssetLoader();
-         ClassUtils.expose(null,'');
-         ColorUtils.invert('#FFFFFF');
-         DateUtils.toFrenchString(Date.now());
-         HTMLUtils.getElementById(Browser.document.body,'test');
-         NumberUtils.toFixed(0,0);
-         ObjectUtils.merge({},{});
-         UID.getUID();
-         var url = new URL("http://test.com");
-         trace(url.scheme);
-         var l = new ImageLoader();
-         l.load(url);
+        BitmapData.getMimeType('');
+        ColorMatrix.BANDW_MATRIX.length;
+        new EventDispatcher<String>();
+        new Junction();
+        new ImageLoader();
+        QuickLogger.debug("");
+        new XMLLoader();
+        new AssetLoader();
+        ClassUtils.expose(null, '');
+        ColorUtils.invert('#FFFFFF');
+        DateUtils.toFrenchString(Date.now());
+        HTMLUtils.getElementById(Browser.document.body, 'test');
+        NumberUtils.toFixed(0, 0);
+        ObjectUtils.merge({}, {});
+        UID.getUID();
+        var url = new URL("http://test.com");
+        trace(url.scheme);
+        var l = new ImageLoader();
+        l.load(url);
+        new XMLLoader();
+        new AssetCompositeLoader();
+        new AssetLoader();
 
         var myComponent:TestComponent = HTMLApplication.createInstance(TestComponent);
         myComponent.addEventListener(HTMLComponentEventType.CREATION_COMPLETE, myComponent_creationCompleteHandler);

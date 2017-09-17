@@ -3,8 +3,6 @@ package org.tamina.io;
 import org.tamina.events.html.ImageEvent;
 import haxe.Timer;
 import js.Browser;
-import msignal.Signal.Signal0;
-import msignal.Signal.Signal1;
 import js.html.Image;
 import org.tamina.net.URL;
 
@@ -16,15 +14,6 @@ import org.tamina.net.URL;
  */
 class ImageLoader {
 
-/**
- * Dispatched after all the received data is decoded and placed in the src property of the Image object.
- * @property complete
- * @readOnly
- * @type Signal1<{js.html.Image}>
- */
-    public var complete:Signal1<Image>;
-
-    public var error:Signal0;
 
 /**
  * Returns a data URI containing a representation of the image
@@ -68,8 +57,6 @@ class ImageLoader {
     public function new(?toDataURL:Bool = true):Void {
         _image = new Image();
         _image.crossOrigin = "anonymous";
-        complete = new Signal1<Image>();
-        error = new Signal0();
     }
 
 /**
@@ -87,7 +74,7 @@ class ImageLoader {
         _image.removeEventListener(ImageEvent.LOAD, imageLoadHandler);
         _image.removeEventListener(ImageEvent.ERROR, imageLoadErrorHandler);
 
-        error.dispatch();
+        //error.dispatch();
     }
 
     private function imageLoadHandler(event:js.html.Event):Void {
@@ -103,9 +90,9 @@ class ImageLoader {
 
             var outputImage = new Image();
             outputImage.src = canvas.toDataURL();
-            complete.dispatch(outputImage);
+            //complete.dispatch(outputImage);
         } else {
-            complete.dispatch(_image);
+            //complete.dispatch(_image);
         }
     }
 }
