@@ -1,5 +1,6 @@
 package org.tamina.net;
 
+import haxe.HTTPStatus;
 import haxe.HTTPMethod;
 import haxe.Json;
 import haxe.MimeType;
@@ -45,13 +46,20 @@ class BaseRequest<Header, Response> {
         return new Promise(function(resolve, reject){
             _httpRequest.addEventListener(XMLHttpRequestEvent.LOAD, function( result:ProgressEvent ):Void {
                 var req:XMLHttpRequest = cast result.target;
-                try {
-                    var p:Response = Json.parse(req.response);
-                    resolve(p);
-                } catch ( e:Error ) {
-                    QuickLogger.error(e.message);
-                    reject(new Error("Class Mapping Error : Unexpected response Class " + req.response ));
+
+                if(req.status == HTTPStatus.OK){
+                    try {
+                        var p:Response = Json.parse(req.response);
+                        resolve(p);
+                    } catch ( e:Error ) {
+                        QuickLogger.error(e.message);
+                        reject(new Error("Class Mapping Error : Unexpected response Class " + req.response ));
+                    }
+                } else {
+                    reject(new Error("HTTP Error : Unexpected status code " + req.status ));
                 }
+
+
             });
 
             _httpRequest.addEventListener(XMLHttpRequestEvent.ERROR, function( error:Error ):Void {
