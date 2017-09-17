@@ -1,9 +1,10 @@
 package ;
 
+import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
+import test.html.view.TestComponent;
 import js.Error;
 import haxe.MimeType;
 import haxe.HTTPMethod;
-import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
 import org.tamina.html.component.HTMLComponent;
 import js.Browser;
 import org.tamina.utils.UID;
@@ -59,31 +60,32 @@ typedef MainEvent = Event<String>;
     }
 
     public function build( ):Void {
-        // BitmapData.getMimeType('');
-        // ColorMatrix.BANDW_MATRIX.length;
-        // new EventDispatcher<String>();
-        // new Junction();
-        // new ImageLoader();
-        // QuickLogger.debug("");
-        // new XMLLoader();
-        // new AssetLoader();
-        // ClassUtils.expose(null,'');
-        // ColorUtils.invert('#FFFFFF');
-        // DateUtils.toFrenchString(Date.now());
-        // HTMLUtils.getElementById(Browser.document.body,'test');
-        // NumberUtils.toFixed(0,0);
-        // ObjectUtils.merge({},{});
-        // UID.getUID();
-        // var url = new URL("http://test.com");
-        // trace(url.scheme);
-        // var l = new ImageLoader();
-        // l.load(url);
-        // HTMLApplication.createInstance(HTMLComponent);
-        /*var myComponent:TestComponent = HTMLComponent.createInstance(TestComponent);
+         BitmapData.getMimeType('');
+         ColorMatrix.BANDW_MATRIX.length;
+         new EventDispatcher<String>();
+         new Junction();
+         new ImageLoader();
+         QuickLogger.debug("");
+         new XMLLoader();
+         new AssetLoader();
+         ClassUtils.expose(null,'');
+         ColorUtils.invert('#FFFFFF');
+         DateUtils.toFrenchString(Date.now());
+         HTMLUtils.getElementById(Browser.document.body,'test');
+         NumberUtils.toFixed(0,0);
+         ObjectUtils.merge({},{});
+         UID.getUID();
+         var url = new URL("http://test.com");
+         trace(url.scheme);
+         var l = new ImageLoader();
+         l.load(url);
+
+        var myComponent:TestComponent = HTMLApplication.createInstance(TestComponent);
         myComponent.addEventListener(HTMLComponentEventType.CREATION_COMPLETE, myComponent_creationCompleteHandler);
-        QL.info("log");*/
+        Browser.document.body.appendChild(myComponent);
+        QL.info("log");
         var request = new GetAlbumsRequest();
-        request.setHeaders(new GetAlbumsRequestHeader("fr_FR", "lalala F7CF4DD5-ECBF-4CD6-9E7D-29C513C17401"));
+        request.setHeaders(new GetAlbumsRequestHeader("fr_FR", "F7CF4DD5-ECBF-4CD6-9E7D-29C513C17401"));
         request.send().then(function( response:GetAlbumsRequestResponse ) {
             trace(response.ResponseHeader);
         }).catchError(function( error:Error ) {

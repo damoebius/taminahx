@@ -62,7 +62,9 @@ class BaseRequest<Header, Response> {
 
             });
 
-            _httpRequest.addEventListener(XMLHttpRequestEvent.ERROR, function( error:Error ):Void {
+            _httpRequest.addEventListener(XMLHttpRequestEvent.ERROR, function( event:ProgressEvent ):Void {
+                var req:XMLHttpRequest = cast event.target;
+                var error = new Error(Type.getClassName( Type.getClass(this)) + " Request Error");
                 QuickLogger.error(error.message);
                 reject(error);
             });
