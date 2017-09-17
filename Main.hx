@@ -5,7 +5,6 @@ import test.html.view.TestComponent;
 import js.Error;
 import haxe.MimeType;
 import haxe.HTTPMethod;
-import org.tamina.html.component.HTMLComponent;
 import js.Browser;
 import org.tamina.utils.UID;
 import org.tamina.utils.ObjectUtils;
@@ -83,7 +82,7 @@ typedef MainEvent = Event<String>;
         var myComponent:TestComponent = HTMLApplication.createInstance(TestComponent);
         myComponent.addEventListener(HTMLComponentEventType.CREATION_COMPLETE, myComponent_creationCompleteHandler);
         Browser.document.body.appendChild(myComponent);
-        QL.info("log");
+        L.warn("log");
         var request = new GetAlbumsRequest();
         request.setHeaders(new GetAlbumsRequestHeader("fr_FR", "F7CF4DD5-ECBF-4CD6-9E7D-29C513C17401"));
         request.send().then(function( response:GetAlbumsRequestResponse ) {

@@ -4,5 +4,4 @@
 -main Main
 -cp .
 -cp node_modules/msignal
--cp node_modules/mconsole-npm
 -js main.js

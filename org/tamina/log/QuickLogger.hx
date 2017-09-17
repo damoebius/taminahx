@@ -1,8 +1,6 @@
 package org.tamina.log;
 
-import mconsole.Console;
-
-typedef QL = QuickLogger;
+typedef L = QuickLogger;
 
 class QuickLogger {
 
@@ -12,25 +10,25 @@ class QuickLogger {
 
     public static function info(message:String, ?source:Dynamic):Void {
         if (level <= LogLevel.INFO) {
-            Console.info(Date.now().toString() + ' [ INFO ] ' + message);
+            log(LogLevel.INFO,message) ;
         }
     }
 
     public static function debug(message:String, ?source:Dynamic):Void {
         if (level <= LogLevel.DEBUG) {
-            Console.debug(Date.now().toString() + ' [ DEBUG ] ' + message);
+            log(LogLevel.DEBUG,message);
         }
     }
 
     public static function warn(message:String, ?source:Dynamic):Void {
         if (level <= LogLevel.WARN) {
-            Console.warn(Date.now().toString() + ' [ WARN ] ' + message);
+            log(LogLevel.WARN, message);
         }
     }
 
     public static function error(message:String, ?source:Dynamic):Void {
         if (level <= LogLevel.ERROR) {
-            Console.error(Date.now().toString() + ' [ ERROR ] ' + message);
+            log(LogLevel.ERROR, message);
         }
 
     }
@@ -40,6 +38,24 @@ class QuickLogger {
             debug('profling result : ' + ( Date.now().getTime() - _startProfilingDate.getTime() ) + ' ms');
         }
         _startProfilingDate = Date.now();
+    }
+
+    private static function log(level:LogLevel,message:String):Void{
+        var prefix = Date.now().toString();
+
+
+        #if (js && !nodejs)
+        var console = js.Browser.console;
+        #else
+        var console  = nodejs.Console ;
+         #end
+        switch(level){
+            case LogLevel.INFO: console.info(prefix +  " [INFO] " + message);
+            case LogLevel.DEBUG: console.debug(prefix +  " [DEBUG] " + message);
+            case LogLevel.WARN: console.warn(prefix +  " [WARN] " + message);
+            case LogLevel.ERROR: console.error(prefix +  " [ERROR] " + message);
+            case LogLevel.NONE: console.log(prefix +  " [NONE] " + message);
+        }
     }
 
 
