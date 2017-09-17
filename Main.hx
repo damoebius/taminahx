@@ -1,5 +1,6 @@
 package ;
 
+import js.Error;
 import haxe.MimeType;
 import haxe.HTTPMethod;
 import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
@@ -36,28 +37,28 @@ import org.tamina.net.BaseRequest;
  * @main
  */
 
-typedef MainEvent=Event<String>;
+typedef MainEvent = Event<String>;
 
-@:expose class Main extends HTMLApplication{
+@:expose class Main extends HTMLApplication {
 
     private static var _instance:Main;
 
 
-    public function new():Void {
+    public function new( ):Void {
         super();
     }
 
-    public static function init(translations:Array<ITranslation>):Void{
+    public static function init( translations:Array<ITranslation> ):Void {
         LocalizationManager.instance.setTranslations(translations);
         _instance.loadComponents();
     }
 
-    public static function main():Void {
+    public static function main( ):Void {
         _instance = new Main();
         _instance.build();
     }
 
-    public function build():Void{
+    public function build( ):Void {
         // BitmapData.getMimeType('');
         // ColorMatrix.BANDW_MATRIX.length;
         // new EventDispatcher<String>();
@@ -83,29 +84,31 @@ typedef MainEvent=Event<String>;
         QL.info("log");*/
         var request = new GetAlbumsRequest();
         request.setHeaders(new GetAlbumsRequestHeader("fr_FR", "lalala F7CF4DD5-ECBF-4CD6-9E7D-29C513C17401"));
-        request.send().then(function(response:GetAlbumsRequestResponse){trace(response.ResponseHeader);}).catchError(function(error:Dynamic){trace('ddddd');});
+        request.send().then(function( response:GetAlbumsRequestResponse ) {
+            trace(response.ResponseHeader);
+        }).catchError(function( error:Error ) {
+            trace(error.message);
+        });
     }
 
-    private function myComponent_creationCompleteHandler(evt:js.html.Event):Void{
+    private function myComponent_creationCompleteHandler( evt:js.html.Event ):Void {
         trace('hophophop');
     }
 }
 
-class GetAlbumsRequest extends org.tamina.net.BaseRequest<GetAlbumsRequestHeader, GetAlbumsRequestResponse>
-{
-    public function new() {
+class GetAlbumsRequest extends org.tamina.net.BaseRequest<GetAlbumsRequestHeader, GetAlbumsRequestResponse> {
+    public function new( ) {
         super("http://api.heidi.tech/Api.svc/GetAlbums", HTTPMethod.POST, MimeType.JSON);
     }
 
 
 }
 
-class GetAlbumsRequestHeader 
-{
+class GetAlbumsRequestHeader {
     public var Locale:String;
     public var Token:String;
 
-    public function new(locale:String, token:String) {
+    public function new( locale:String, token:String ) {
         Locale = locale;
         Token = token;
     }

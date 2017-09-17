@@ -1,17 +1,15 @@
 package org.tamina.net;
 
+import haxe.HTTPMethod;
+import haxe.Json;
+import haxe.MimeType;
+import js.Error;
 import js.Promise;
 import js.html.ProgressEvent;
-import haxe.MimeType;
-import org.tamina.net.URL;
-import org.tamina.utils.UID;
+import js.html.XMLHttpRequest;
 import org.tamina.events.XMLHttpRequestEvent;
 import org.tamina.log.QuickLogger;
-import js.html.XMLHttpRequest;
-import js.Error;
-
-import haxe.Json;
-import haxe.HTTPMethod;
+import org.tamina.utils.UID;
 
 class BaseRequest<Header, Response> {
 
@@ -26,12 +24,8 @@ class BaseRequest<Header, Response> {
     public function new( remoteMethod:String, method:HTTPMethod = HTTPMethod.POST, ?contentType:MimeType = MimeType.JSON ) {
         _id = UID.getUID();
         _contentType = contentType;
-        // completeSignal = new Signal1<ProgressEvent>();
-        // errorSignal = new Signal0();
         _httpRequest = new XMLHttpRequest();
         _httpRequest.upload.addEventListener(XMLHttpRequestEvent.PROGRESS, uploadHandler) ;
-        
-        _httpRequest.addEventListener(XMLHttpRequestEvent.ERROR, errorHandler);
         _httpRequest.addEventListener(XMLHttpRequestEvent.PROGRESS, progressHandler);
         _httpRequest.open(method, remoteMethod, true);
 
@@ -54,10 +48,15 @@ class BaseRequest<Header, Response> {
                 try {
                     var p:Response = Json.parse(req.response);
                     resolve(p);
-                } catch ( e:Dynamic ) {
-                    QuickLogger.error(e);
-                    reject(new Error("lalalal"));
+                } catch ( e:Error ) {
+                    QuickLogger.error(e.message);
+                    reject(new Error("Class Mapping Error : Unexpected response Class " + req.response ));
                 }
+            });
+
+            _httpRequest.addEventListener(XMLHttpRequestEvent.ERROR, function( error:Error ):Void {
+                QuickLogger.error(error.message);
+                reject(error);
             });
 
             _httpRequest.send(Json.stringify(getRequestContent()));            
@@ -79,9 +78,5 @@ class BaseRequest<Header, Response> {
     private function progressHandler( progress:ProgressEvent ):Void {
         QuickLogger.info('downloading ' + progress.loaded + "/" + progress.total);
 
-    }
-
-    private function errorHandler( error:Dynamic ):Void {
-        QuickLogger.error(error);
     }
 }
