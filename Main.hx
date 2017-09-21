@@ -1,6 +1,6 @@
 package ;
 
-import org.tamina.net.AssetCompositeLoader;
+import org.tamina.net.AssetURL;
 import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
 import test.html.view.TestComponent;
 import js.Error;
@@ -79,9 +79,10 @@ typedef MainEvent = Event<String>;
         trace(url.scheme);
         var l = new ImageLoader();
         l.load(url);
-        new XMLLoader();
-        new AssetCompositeLoader();
-        new AssetLoader();
+        /*new XMLLoader();
+        new AssetCompositeLoader();*/
+        var assetLoader = new AssetLoader();
+        assetLoader.load(new AssetURL("toto.js")).then(function(value){trace(value);}).catchError(function(value){trace(value);});
 
         var myComponent:TestComponent = HTMLApplication.createInstance(TestComponent);
         myComponent.addEventListener(HTMLComponentEventType.CREATION_COMPLETE, myComponent_creationCompleteHandler);

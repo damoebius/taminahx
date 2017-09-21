@@ -42,7 +42,7 @@ class BaseRequest<Header, Response> {
         return _id;
     }
 
-    public function send( ):Promise<Response> {
+    public function send():Promise<Response> {
         return new Promise(function(resolve, reject){
             _httpRequest.addEventListener(XMLHttpRequestEvent.LOAD, function( result:ProgressEvent ):Void {
                 var req:XMLHttpRequest = cast result.target;
