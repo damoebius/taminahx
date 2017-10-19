@@ -1,5 +1,8 @@
 package ;
 
+import js.html.Image;
+import org.tamina.net.AssetCompositeLoader;
+import org.tamina.net.AssetsSequenceLoader;
 import org.tamina.net.AssetURL;
 import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
 import test.html.view.TestComponent;
@@ -75,14 +78,25 @@ typedef MainEvent = Event<String>;
         NumberUtils.toFixed(0, 0);
         ObjectUtils.merge({}, {});
         UID.getUID();
-        var url = new URL("http://test.com");
+        var url = new URL("https://cdn.heidi.tech/partners/6/designs/1844052/249990b2-51f5-4d3a-89d6-5796ee87d402.png");
         trace(url.scheme);
         var l = new ImageLoader();
-        l.load(url);
-        /*new XMLLoader();
-        new AssetCompositeLoader();*/
+        l.load(url).then(function(image:Image){
+            Browser.document.body.appendChild(image);
+        }).catchError(function(error:Error){
+            trace(error.message);
+        });
+
+        var xmlLoader = new XMLLoader();
+        xmlLoader.load(new URL("https://raw.githubusercontent.com/bryanlittlefield/Magento-local.xml-Template/master/local.xml")).then(function(value){trace(value);}).catchError(function(value){trace(value);});
+
         var assetLoader = new AssetLoader();
-        assetLoader.load(new AssetURL("toto.js")).then(function(value){trace(value);}).catchError(function(value){trace(value);});
+        assetLoader.load(new AssetURL("toto.js")).then(function(value){trace(value);}).catchError(function(value){trace(value.message);});
+
+        var assetListLoader = new AssetsSequenceLoader();
+        assetListLoader.load([new AssetURL("https://code.jquery.com/jquery-3.2.1.slim.min.js"),new AssetURL("https://code.createjs.com/easeljs-0.8.2.min.js")]).then(function(value){trace(value);}).catchError(function(value){trace(value);});
+
+        var compositeLoader = new AssetCompositeLoader();
 
         var myComponent:TestComponent = HTMLApplication.createInstance(TestComponent);
         myComponent.addEventListener(HTMLComponentEventType.CREATION_COMPLETE, myComponent_creationCompleteHandler);

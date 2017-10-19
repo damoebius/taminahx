@@ -1,13 +1,13 @@
 package org.tamina.net;
 
-import org.tamina.net.AssetType;
+import js.html.Event;
 import org.tamina.net.AssetType;
 import js.Promise;
-import haxe.ds.Either;
 import js.Browser;
 import js.html.Element;
 import js.html.ScriptElement;
 import js.html.LinkElement;
+import js.Error;
 
 import org.tamina.log.QuickLogger;
 
@@ -18,7 +18,7 @@ class AssetLoader {
     private var _asset:Element;
     private var _cache:AssetLoaderCache;
     private var _resolve:Bool->Void;
-    private var _reject:Bool->Void;
+    private var _reject:Error->Void;
 
     public function new() {
         _cache = new AssetLoaderCache();
@@ -31,7 +31,7 @@ class AssetLoader {
         return new Promise(loadPromise);
     }
 
-    private function loadPromise(resolve:Bool->Void,reject:Bool->Void):Void{
+    private function loadPromise(resolve:Bool->Void,reject:Error->Void):Void{
         _resolve = resolve;
         _reject = reject;
         if ( _cache.isLoaded(_url) ) {
@@ -69,15 +69,15 @@ class AssetLoader {
         }
     }
 
-    private function loadCompleteHandler(?event:Dynamic):Void {
+    private function loadCompleteHandler(?event:Event):Void {
         QuickLogger.info('asset loaded');
         _cache.addLoadedAsset(_url);
         _cache.removeLoadingAsset(_asset);
         _resolve(true);
     }
 
-    private function loadErrorHandler(event:Dynamic):Void {
+    private function loadErrorHandler(event:Event):Void {
         _cache.removeLoadingAsset(_asset);
-        _reject(false);
+        _reject(new Error("Error while loading " + _url.path));
     }
 }

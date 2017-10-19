@@ -1,43 +1,45 @@
 package org.tamina.net;
 
+import js.Promise;
+import js.Error;
 import org.tamina.log.QuickLogger;
 
-class AssetParallelLoader {
+class AssetParallelLoader extends BaseAssetsLoader{
 
-    private var _pool:Array<AssetURL>;
     private var _remainingAssetNumber:Int=0;
 
     public function new() {
-        _pool = new Array<AssetURL>();
+        super();
     }
 
-    public function load(assets:Array<AssetURL>):Void {
+    override public function load(assets:Array<AssetURL>):Promise<Bool> {
         _pool = assets;
         _remainingAssetNumber = _pool.length;
-        start();
+        return new Promise(start);
     }
 
-    private function start():Void{
+    private function start(resolve:Bool->Void,reject:Array<Error>->Void):Void{
+        _resolve = resolve;
+        _reject = reject;
         for(i in 0..._pool.length){
             var l = new AssetLoader();
-            l.completeSignal.add(assetCompleteHandler);
-            l.errorSignal.add(assetErrorHandler);
-            l.load(_pool[i]);
+            l.load(_pool[i]).then(assetCompleteHandler).catchError(assetErrorHandler);
         }
     }
 
-    private function assetCompleteHandler():Void {
+    private function assetCompleteHandler(value:Bool):Void {
         _remainingAssetNumber--;
         if(_remainingAssetNumber == 0){
-            //completeSignal.dispatch();
+            end();
         }
     }
 
-    private function assetErrorHandler():Void {
-        QuickLogger.error('error while loading asset');
+    private function assetErrorHandler(error:Error):Void {
+        L.error('error while loading asset');
         _remainingAssetNumber--;
+        _errors.push(error);
         if(_remainingAssetNumber == 0){
-            //completeSignal.dispatch();
+            end();
         }
     }
 }
