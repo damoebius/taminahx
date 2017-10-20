@@ -1,14 +1,12 @@
 package org.tamina.html.component;
 
-import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventFactory;
 import haxe.rtti.Meta;
 import js.Browser;
-import js.RegExp;
 import js.html.Element;
 import js.html.HtmlElement;
-
-
+import js.RegExp;
 import org.tamina.display.CSSDisplayValue;
+import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventFactory;
 import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
 import org.tamina.i18n.LocalizationManager;
 import org.tamina.utils.HTMLUtils;
@@ -145,7 +143,7 @@ class HTMLComponent extends HtmlElement {
     public function attachedCallback():Void {
         // trace('attachedCallback----------------> ' +  this.localName);
         if (!initialized) {
-            this.dispatchEvent( HTMLComponentEventFactory.createEvent(HTMLComponentEventType.INITIALIZE, false));
+            this.dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.INITIALIZE, false));
         }
         initialized = true;
     }
@@ -216,6 +214,15 @@ class HTMLComponent extends HtmlElement {
         }
 
         _tempElement.innerHTML = content;
+
+        var children = _tempElement.getElementsByTagName("*");
+
+        for (child in children) {
+            if (!Reflect.hasField(child, "host")) {
+                Reflect.setField(child, "host", this);
+            }
+        }
+
         initSkinParts(_tempElement);
     }
 
