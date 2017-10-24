@@ -1,12 +1,11 @@
 package org.tamina.io;
 
+import js.Promise;
 import org.tamina.events.html.ImageEvent;
-import haxe.Timer;
 import js.Browser;
-import msignal.Signal.Signal0;
-import msignal.Signal.Signal1;
 import js.html.Image;
 import org.tamina.net.URL;
+import js.Error;
 
 /**
  * The ImageLoader class downloads image data from a URL. It is useful for downloading images files, to be used in a dynamic, data-driven application.<br>
@@ -16,15 +15,6 @@ import org.tamina.net.URL;
  */
 class ImageLoader {
 
-/**
- * Dispatched after all the received data is decoded and placed in the src property of the Image object.
- * @property complete
- * @readOnly
- * @type Signal1<{js.html.Image}>
- */
-    public var complete:Signal1<Image>;
-
-    public var error:Signal0;
 
 /**
  * Returns a data URI containing a representation of the image
@@ -45,6 +35,9 @@ class ImageLoader {
 
     private var _image:Image;
     private var _toDataURL:Bool;
+    private var _url:URL;
+    private var _resolve:Image->Void;
+    private var _reject:Error->Void;
 
     private function get_image():Image {
         return _image;
@@ -68,8 +61,6 @@ class ImageLoader {
     public function new(?toDataURL:Bool = true):Void {
         _image = new Image();
         _image.crossOrigin = "anonymous";
-        complete = new Signal1<Image>();
-        error = new Signal0();
     }
 
 /**
@@ -77,17 +68,24 @@ class ImageLoader {
 	 * @method load
 	 * @param	url {URL} A string representing the attribute's name
 	 */
-    public function load(url:URL):Void {
+    public function load(url:URL):Promise<Image> {
+        _url = url;
         _image.addEventListener(ImageEvent.LOAD, imageLoadHandler, false);
         _image.addEventListener(ImageEvent.ERROR, imageLoadErrorHandler, false);
-        _image.src = url.path;
+        return new Promise<Image>(start);
+    }
+
+    private function start(resolve:Image->Void,reject:Error->Void):Void{
+        _resolve = resolve;
+        _reject = reject;
+        _image.src = _url.path;
     }
 
     private function imageLoadErrorHandler(event:js.html.Event):Void {
         _image.removeEventListener(ImageEvent.LOAD, imageLoadHandler);
         _image.removeEventListener(ImageEvent.ERROR, imageLoadErrorHandler);
 
-        error.dispatch();
+        _reject(new Error("Error while loading : " + _url.path));
     }
 
     private function imageLoadHandler(event:js.html.Event):Void {
@@ -103,9 +101,9 @@ class ImageLoader {
 
             var outputImage = new Image();
             outputImage.src = canvas.toDataURL();
-            complete.dispatch(outputImage);
+            _resolve(outputImage);
         } else {
-            complete.dispatch(_image);
+            _resolve(_image);
         }
     }
 }

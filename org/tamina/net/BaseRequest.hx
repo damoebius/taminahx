@@ -1,25 +1,22 @@
 package org.tamina.net;
 
-import js.html.ProgressEvent;
+import haxe.HTTPStatus;
+import haxe.HTTPMethod;
+import haxe.Json;
 import haxe.MimeType;
-import org.tamina.net.URL;
-import msignal.Signal;
-import org.tamina.utils.UID;
+import js.Error;
+import js.Promise;
+import js.html.ProgressEvent;
+import js.html.XMLHttpRequest;
 import org.tamina.events.XMLHttpRequestEvent;
 import org.tamina.log.QuickLogger;
-import js.html.XMLHttpRequest;
+import org.tamina.utils.UID;
 
-import haxe.Json;
-import haxe.HTTPMethod;
-
-class BaseRequest {
+class BaseRequest<Header, Response> {
 
     private var _httpRequest:XMLHttpRequest;
     private var _contentType:MimeType;
-
-    public var completeSignal:Signal1<ProgressEvent>;
-    public var errorSignal:Signal0;
-
+    private var _header:Header;
 
     private var _id:Float;
     public var id(get, null):Float;
@@ -28,29 +25,52 @@ class BaseRequest {
     public function new( remoteMethod:String, method:HTTPMethod = HTTPMethod.POST, ?contentType:MimeType = MimeType.JSON ) {
         _id = UID.getUID();
         _contentType = contentType;
-        completeSignal = new Signal1<ProgressEvent>();
-        errorSignal = new Signal0();
         _httpRequest = new XMLHttpRequest();
         _httpRequest.upload.addEventListener(XMLHttpRequestEvent.PROGRESS, uploadHandler) ;
-        _httpRequest.addEventListener(XMLHttpRequestEvent.LOAD, successHandler);
-        _httpRequest.addEventListener(XMLHttpRequestEvent.ERROR, errorHandler);
         _httpRequest.addEventListener(XMLHttpRequestEvent.PROGRESS, progressHandler);
         _httpRequest.open(method, remoteMethod, true);
 
-        setHeaders();
+        _httpRequest.setRequestHeader("Content-Type", _contentType+"; charset=utf-8");
     }
 
-    public function setHeaders( ):Void {
-        _httpRequest.setRequestHeader("Content-Type", _contentType+"; charset=utf-8");
+    public function setHeaders(header:Header ):Void {
+
+        _header = header;
     }
 
     public function get_id( ):Float {
         return _id;
     }
 
-    public function send( ):Void {
-        QuickLogger.debug(getRequestContent());
-        _httpRequest.send(Json.stringify(getRequestContent()));
+    public function send():Promise<Response> {
+        return new Promise(function(resolve, reject){
+            _httpRequest.addEventListener(XMLHttpRequestEvent.LOAD, function( result:ProgressEvent ):Void {
+                var req:XMLHttpRequest = cast result.target;
+
+                if(req.status == HTTPStatus.OK){
+                    try {
+                        var p:Response = Json.parse(req.response);
+                        resolve(p);
+                    } catch ( e:Error ) {
+                        QuickLogger.error(e.message);
+                        reject(new Error("Class Mapping Error : Unexpected response Class " + req.response ));
+                    }
+                } else {
+                    reject(new Error("HTTP Error : Unexpected status code " + req.status ));
+                }
+
+
+            });
+
+            _httpRequest.addEventListener(XMLHttpRequestEvent.ERROR, function( event:ProgressEvent ):Void {
+                var req:XMLHttpRequest = cast event.target;
+                var error = new Error(Type.getClassName( Type.getClass(this)) + " Request Error");
+                QuickLogger.error(error.message);
+                reject(error);
+            });
+
+            _httpRequest.send(Json.stringify(getRequestContent()));            
+        });
     }
 
     public function abort( ):Void {
@@ -61,28 +81,12 @@ class BaseRequest {
         QuickLogger.info('uploading ' + progress.loaded + "/" + progress.total);
     }
 
-    private function getRequestContent( ):Dynamic {
-        var data:Dynamic = { };
-        return data;
-    }
-
-    private function successHandler( result:ProgressEvent ):Void {
-        var req:XMLHttpRequest = cast result.target;
-        try {
-            var p = Json.parse(req.response);
-            completeSignal.dispatch(result);
-        } catch ( e:Dynamic ) {
-            QuickLogger.error('la reponse pas json : ' + req.response);
-            errorSignal.dispatch();
-        }
+    private function getRequestContent( ):Header {
+        return _header;
     }
 
     private function progressHandler( progress:ProgressEvent ):Void {
         QuickLogger.info('downloading ' + progress.loaded + "/" + progress.total);
 
-    }
-
-    private function errorHandler( error:Dynamic ):Void {
-        QuickLogger.error(error);
     }
 }

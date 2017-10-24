@@ -5,10 +5,8 @@ import haxe.rtti.Meta;
 import js.Browser;
 import js.RegExp;
 import js.html.Element;
-import js.html.Event;
 import js.html.HtmlElement;
 
-import msignal.Signal;
 
 import org.tamina.display.CSSDisplayValue;
 import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
