@@ -12,7 +12,7 @@
   "author": {
     "name": "David Mouton"
   },
-  "version": "1.2.3",
+  "version": "2.0.1",
   "license": "MIT",
   "engines": {
     "node": ">=0.8.0"
@@ -39,10 +39,7 @@
     "haxe:version": "3.2.1"
   },
   "devDependencies": {
-    "haxe": "4.0.0",
-    "mconsole-npm": ">=1.6.1",
-    "createjs-haxe": "^1.6.5",
-    "msignal": ">=1.2.3"
+    "haxe": "4.0.0"
   },
   "readmeFilename": "README.md"
 }

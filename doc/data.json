@@ -289,6 +289,15 @@
             "fors": {},
             "namespaces": {}
         },
+      "org/tamina/html/VerticalTextAlign.hx": {
+        "name": "org/tamina/html/VerticalTextAlign.hx",
+        "modules": {},
+        "classes": {
+          "VerticalTextAlign": 1
+        },
+        "fors": {},
+        "namespaces": {}
+      },
         "org/tamina/i18n/ITranslation.hx": {
             "name": "org/tamina/i18n/ITranslation.hx",
             "modules": {},
@@ -334,15 +343,6 @@
             "fors": {},
             "namespaces": {}
         },
-        "org/tamina/log/DivPrinter.hx": {
-            "name": "org/tamina/log/DivPrinter.hx",
-            "modules": {},
-            "classes": {
-                "DivPrinter": 1
-            },
-            "fors": {},
-            "namespaces": {}
-        },
         "org/tamina/log/LogLevel.hx": {
             "name": "org/tamina/log/LogLevel.hx",
             "modules": {},
@@ -370,13 +370,6 @@
         },
         "org/tamina/net/URL.hx": {
             "name": "org/tamina/net/URL.hx",
-            "modules": {},
-            "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "org/tamina/signal/Signal3.hx": {
-            "name": "org/tamina/signal/Signal3.hx",
             "modules": {},
             "classes": {},
             "fors": {},
@@ -470,12 +463,12 @@
                 "HTMLComponentEventType": 1,
                 "Global": 1,
                 "TextAlign": 1,
+              "VerticalTextAlign": 1,
                 "ITranslation": 1,
                 "Locale": 1,
                 "LocalizationManager": 1,
                 "Translation": 1,
                 "ImageLoader": 1,
-                "DivPrinter": 1,
                 "LogLevel": 1,
                 "AssetLoaderCache": 1,
                 "DateUtils": 1,
@@ -487,8 +480,7 @@
             "tag": "module",
             "file": "org/tamina/utils/NumberUtils.hx",
             "line": 30,
-            "description": "The Exif Data of an image.\nSee : https://en.wikipedia.org/wiki/Exchangeable_image_file_format",
-            "extends": "mconsole.Printer"
+          "description": "The Exif Data of an image.\nSee : https://en.wikipedia.org/wiki/Exchangeable_image_file_format"
         }
     },
     "classes": {
@@ -914,7 +906,7 @@
             "module": "Tamina",
             "namespace": "",
             "file": "org/tamina/html/component/HTMLComponent.hx",
-            "line": 19,
+          "line": 20,
             "description": "HTMLComponent is the base class to build Custom Elements.<br>\n## x-tag\nHTMLComponent now extends HTMLElement. That means we can deal with components in an easier way (like DOM elements).<br>\nThe other change is it officially supports Custom Elements. It’s now possible to instantiate HTMLComponent in their view.\n\n    <html-view-othertestcomponent data-id=\"_otherComponent\"></html-view-othertestcomponent>\n\nThe tag name is made from your component namespace and classname. In the previous example, our component is *html.view.OtherTestComponent*<br>\n## Life cycle\nOur component life cycle is the same as Custom Elements.\n\npublic function  createdCallback() //Called after the element is created.\n\npublic function  attachedCallback() //Called when the element is attached to the document\n\npublic function  detachedCallback() //Called when the element is detached from the document.\n\npublic function  attributeChangedCallback(attrName:String, oldVal:String, newVal:String) //Called when one of attributes of the element is changed.\n\nYou can override them if you need it.<br>\n## Skin Parts\nAnother usefull feature is Skin Part support. This metadata is used to reference an element from his view.\nYou don’t need to do it yourself anymore, A macro will automatically do it while compiling.<br>\nThis technique was inspired by Flex4 Spark components architecture.\n\n    \\@view('html/view/TestComponent.html')\n    class TestComponent extends HTMLComponent {\n\n        \\@skinpart(\"\")\n        private var _otherComponent:OtherTestComponent;\n\n        override public function attachedCallback() {\n            _otherComponent.displayHellWorld();\n        }\n\n    }\n\n## View\nThis metadata is used to link an HTML file as the view part of your component. In the previous exemple,\nTestComponent.html is used to describe the view structure.\n\n     <div>\n        \\{{title}}\n    </div>\n\n    <html-view-othertestcomponent data-id=\"_otherComponent\"></html-view-othertestcomponent>\nmore info : http://happy-technologies.com/custom-elements-and-component-developement-en/",
             "extends": "js.html.HTMLElement"
         },
@@ -975,6 +967,20 @@
             "line": 3,
             "description": "Enum for TextAlign values"
         },
+      "VerticalTextAlign": {
+        "name": "VerticalTextAlign",
+        "shortname": "VerticalTextAlign",
+        "classitems": [],
+        "plugins": [],
+        "extensions": [],
+        "plugin_for": [],
+        "extension_for": [],
+        "module": "Tamina",
+        "namespace": "",
+        "file": "org/tamina/html/VerticalTextAlign.hx",
+        "line": 3,
+        "description": "Enum for Vertical Text Align values"
+      },
         "ITranslation": {
             "name": "ITranslation",
             "shortname": "ITranslation",
@@ -1044,22 +1050,8 @@
             "module": "Tamina",
             "namespace": "",
             "file": "org/tamina/io/ImageLoader.hx",
-            "line": 11,
+          "line": 10,
             "description": "The ImageLoader class downloads image data from a URL. It is useful for downloading images files, to be used in a dynamic, data-driven application.<br>"
-        },
-        "DivPrinter": {
-            "name": "DivPrinter",
-            "shortname": "DivPrinter",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "module": "Tamina",
-            "namespace": "",
-            "file": "org/tamina/log/DivPrinter.hx",
-            "line": 9,
-            "description": "The DivPrinter class is used by mconsole.Console to output logs into a DIV Element. This DIV must have the id='debugDiv' attribute <br>"
         },
         "LogLevel": {
             "name": "LogLevel",
@@ -6751,7 +6743,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-            "line": 72,
+          "line": 73,
             "description": "Whether or not the display object is visible.",
             "itemtype": "property",
             "name": "visible",
@@ -6761,7 +6753,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-            "line": 79,
+          "line": 80,
             "description": "Whether or not the display object is initialized.",
             "itemtype": "property",
             "name": "initialized",
@@ -6771,7 +6763,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-            "line": 86,
+          "line": 87,
             "description": "Whether or not the display object has been created.",
             "itemtype": "property",
             "name": "created",
@@ -6781,7 +6773,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-            "line": 93,
+          "line": 94,
             "description": "Whether or not the display object and its children have been created.",
             "itemtype": "property",
             "name": "creationComplete",
@@ -6791,7 +6783,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-            "line": 112,
+          "line": 113,
             "description": "Called after the element is created.",
             "itemtype": "method",
             "name": "createdCallback",
@@ -6800,7 +6792,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-            "line": 131,
+          "line": 132,
             "description": "Called when component creation is complete",
             "itemtype": "method",
             "name": "creationCompleteCallback",
@@ -6809,7 +6801,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-            "line": 140,
+          "line": 141,
             "description": "Called when the element is attached to the document",
             "itemtype": "method",
             "name": "attachedCallback",
@@ -6818,7 +6810,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-            "line": 152,
+          "line": 153,
             "description": "Called when the element is detached from the document.",
             "itemtype": "method",
             "name": "detachedCallback",
@@ -6827,7 +6819,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-            "line": 160,
+          "line": 161,
             "description": "Called when one of attributes of the element is changed.",
             "itemtype": "method",
             "name": "attributeChangedCallback",
@@ -6853,7 +6845,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-            "line": 316,
+          "line": 317,
             "description": "Dispatched when the component has finished its construction and has all initialization properties set, at the end of createdCallback\nSee the {{#crossLink \"HTMLComponentEventType\"}}{{/crossLink}} class for a listing of event properties.",
             "itemtype": "event",
             "name": "HTMLComponentEventType.CREATION_COMPLETE",
@@ -6862,7 +6854,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-            "line": 322,
+          "line": 323,
             "description": "Dispatched when the component has finished its construction, property processing, measuring, layout, and drawing, at the end of attachedCallback\nSee the {{#crossLink \"HTMLComponentEventType\"}}{{/crossLink}} class for a listing of event properties.",
             "itemtype": "event",
             "name": "HTMLComponentEventType.INITIALIZE",
@@ -7001,6 +6993,39 @@
             "module": "Tamina"
         },
         {
+          "file": "org/tamina/html/VerticalTextAlign.hx",
+          "line": 8,
+          "itemtype": "property",
+          "name": "TOP",
+          "type": "String",
+          "static": 1,
+          "readonly": "",
+          "class": "VerticalTextAlign",
+          "module": "Tamina"
+        },
+      {
+        "file": "org/tamina/html/VerticalTextAlign.hx",
+        "line": 17,
+        "itemtype": "property",
+        "name": "BOTTOM",
+        "type": "String",
+        "static": 1,
+        "readonly": "",
+        "class": "VerticalTextAlign",
+        "module": "Tamina"
+      },
+      {
+        "file": "org/tamina/html/VerticalTextAlign.hx",
+        "line": 27,
+        "itemtype": "property",
+        "name": "CENTER",
+        "type": "String",
+        "static": 1,
+        "readonly": "",
+        "class": "VerticalTextAlign",
+        "module": "Tamina"
+      },
+      {
             "file": "org/tamina/i18n/ITranslation.hx",
             "line": 9,
             "description": "The translation's Id",
@@ -8311,17 +8336,6 @@
         {
             "file": "org/tamina/io/ImageLoader.hx",
             "line": 19,
-            "description": "Dispatched after all the received data is decoded and placed in the src property of the Image object.",
-            "itemtype": "property",
-            "name": "complete",
-            "readonly": "",
-            "type": "Signal1<{js.html.Image}>",
-            "class": "ImageLoader",
-            "module": "Tamina"
-        },
-        {
-            "file": "org/tamina/io/ImageLoader.hx",
-            "line": 29,
             "description": "Returns a data URI containing a representation of the image",
             "itemtype": "property",
             "name": "dataURL",
@@ -8332,7 +8346,7 @@
         },
         {
             "file": "org/tamina/io/ImageLoader.hx",
-            "line": 37,
+          "line": 27,
             "description": "The Image received from the load operation.",
             "itemtype": "property",
             "name": "image",
@@ -8343,7 +8357,7 @@
         },
         {
             "file": "org/tamina/io/ImageLoader.hx",
-            "line": 60,
+          "line": 53,
             "is_constructor": 1,
             "itemtype": "method",
             "name": "new",
@@ -8355,7 +8369,7 @@
         },
         {
             "file": "org/tamina/io/ImageLoader.hx",
-            "line": 75,
+          "line": 66,
             "description": "Sends and loads data from the specified URL.",
             "itemtype": "method",
             "name": "load",
@@ -8513,34 +8527,6 @@
             "line": 3,
             "description": "...",
             "author": "David Mouton",
-            "class": "DateUtils",
-            "module": "Tamina"
-        },
-        {
-            "file": "org/tamina/signal/Signal3.hx",
-            "line": 37,
-            "is_constructor": 1,
-            "class": "DateUtils",
-            "module": "Tamina"
-        },
-        {
-            "file": "org/tamina/signal/Signal3.hx",
-            "line": 63,
-            "description": "Allows the slot to inject the first argument to dispatch.",
-            "class": "DateUtils",
-            "module": "Tamina"
-        },
-        {
-            "file": "org/tamina/signal/Signal3.hx",
-            "line": 68,
-            "description": "Allows the slot to inject the second argument to dispatch.",
-            "class": "DateUtils",
-            "module": "Tamina"
-        },
-        {
-            "file": "org/tamina/signal/Signal3.hx",
-            "line": 80,
-            "description": "Executes a listener with two arguments.\nIf <code>param1</code> or <code>param2</code> is set,\nthey override the values provided.",
             "class": "DateUtils",
             "module": "Tamina"
         },
@@ -8866,22 +8852,6 @@
         {
             "message": "Missing item type\n...",
             "line": " org/tamina/net/URL.hx:3"
-        },
-        {
-            "message": "Missing item type",
-            "line": " org/tamina/signal/Signal3.hx:37"
-        },
-        {
-            "message": "Missing item type\nAllows the slot to inject the first argument to dispatch.",
-            "line": " org/tamina/signal/Signal3.hx:63"
-        },
-        {
-            "message": "Missing item type\nAllows the slot to inject the second argument to dispatch.",
-            "line": " org/tamina/signal/Signal3.hx:68"
-        },
-        {
-            "message": "Missing item type\nExecutes a listener with two arguments.\nIf <code>param1</code> or <code>param2</code> is set,\nthey override the values provided.",
-            "line": " org/tamina/signal/Signal3.hx:80"
         },
         {
             "message": "Missing item type\nconvert a color number to hex value\nex 1677845 -> #FF5500",

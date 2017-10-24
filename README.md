@@ -58,10 +58,12 @@ The other change is it officially supports Custom Elements. It’s now possible 
 <div>
     Hello
 </div>
- 
+ <button onclick="this.host.displaySomething()">go</button>
 <html-view-othertestcomponent data-id="_otherComponent"></html-view-othertestcomponent>
 
 ```
+
+You can access to the component host using "this.host" on your node element.
 
 ### Life cycle
 
