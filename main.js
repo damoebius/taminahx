@@ -79,6 +79,7 @@ var org_tamina_html_component_HTMLApplication = function() {
 };
 $hxClasses["org.tamina.html.component.HTMLApplication"] = org_tamina_html_component_HTMLApplication;
 org_tamina_html_component_HTMLApplication.__name__ = ["org","tamina","html","component","HTMLApplication"];
+    org_tamina_html_component_HTMLApplication.__properties__ = {get_componentsXTagList: "get_componentsXTagList"};
 org_tamina_html_component_HTMLApplication.get_componentsXTagList = function() {
 	if(org_tamina_html_component_HTMLApplication.componentsXTagList == null) {
 		org_tamina_html_component_HTMLApplication.componentsXTagList = new haxe_ds_StringMap();
@@ -303,6 +304,7 @@ org_tamina_net_BaseRequest.prototype = {
 		org_tamina_log_QuickLogger.info("downloading " + progress.loaded + "/" + progress.total);
 	}
 	,__class__: org_tamina_net_BaseRequest
+    , __properties__: {get_id: "get_id"}
 };
 var GetAlbumsRequest = function() {
 	org_tamina_net_BaseRequest.call(this,"http://api.heidi.tech/Api.svc/GetAlbums","POST","application/json");
@@ -339,6 +341,40 @@ Reflect.field = function(o,field) {
 		return null;
 	}
 };
+    Reflect.getProperty = function (o, field) {
+        var tmp;
+        if (o == null) {
+            return null;
+        } else {
+            var tmp1;
+            if (o.__properties__) {
+                tmp = o.__properties__["get_" + field];
+                tmp1 = tmp;
+            } else {
+                tmp1 = false;
+            }
+            if (tmp1) {
+                return o[tmp]();
+            } else {
+                return o[field];
+            }
+        }
+    };
+    Reflect.setProperty = function (o, field, value) {
+        var tmp;
+        var tmp1;
+        if (o.__properties__) {
+            tmp = o.__properties__["set_" + field];
+            tmp1 = tmp;
+        } else {
+            tmp1 = false;
+        }
+        if (tmp1) {
+            o[tmp](value);
+        } else {
+            o[field] = value;
+        }
+    };
 Reflect.fields = function(o) {
 	var a = [];
 	if(o != null) {
@@ -427,6 +463,19 @@ Type.resolveClass = function(name) {
 var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
 haxe_IMap.__name__ = ["haxe","IMap"];
+    var haxe_Timer = function (time_ms) {
+        var me = this;
+        this.id = setInterval(function () {
+            me.run();
+        }, time_ms);
+    };
+    $hxClasses["haxe.Timer"] = haxe_Timer;
+    haxe_Timer.__name__ = ["haxe", "Timer"];
+    haxe_Timer.prototype = {
+        run: function () {
+        }
+        , __class__: haxe_Timer
+    };
 var haxe_ds_StringMap = function() {
 	this.h = { };
 };
@@ -795,6 +844,11 @@ org_tamina_display_BitmapData.getMimeTypeFromURL = function(url) {
 var org_tamina_display_ColorMatrix = function() { };
 $hxClasses["org.tamina.display.ColorMatrix"] = org_tamina_display_ColorMatrix;
 org_tamina_display_ColorMatrix.__name__ = ["org","tamina","display","ColorMatrix"];
+    org_tamina_display_ColorMatrix.__properties__ = {
+        get_SEPIA_MATRIX: "get_SEPIA_MATRIX",
+        get_NEGATIVE_MATRIX: "get_NEGATIVE_MATRIX",
+        get_BANDW_MATRIX: "get_BANDW_MATRIX"
+    };
 org_tamina_display_ColorMatrix.get_BANDW_MATRIX = function() {
 	return [0.2225,0.7169,0.0606,0,0,0.2225,0.7169,0.0606,0,0,0.2225,0.7169,0.0606,0,0,0,0,0,1,0];
 };
@@ -1086,6 +1140,7 @@ org_tamina_html_component_HTMLComponent.prototype = $extend(HTMLHtmlElement.prot
 		}
 	}
 	,__class__: org_tamina_html_component_HTMLComponent
+    , __properties__: {set_visible: "set_visible", get_visible: "get_visible"}
 });
 var org_tamina_html_component_HTMLComponentEventFactory = function() { };
 $hxClasses["org.tamina.html.component.HTMLComponentEventFactory"] = org_tamina_html_component_HTMLComponentEventFactory;
@@ -1109,6 +1164,7 @@ var org_tamina_i18n_LocalizationManager = function() {
 };
 $hxClasses["org.tamina.i18n.LocalizationManager"] = org_tamina_i18n_LocalizationManager;
 org_tamina_i18n_LocalizationManager.__name__ = ["org","tamina","i18n","LocalizationManager"];
+    org_tamina_i18n_LocalizationManager.__properties__ = {get_instance: "get_instance"};
 org_tamina_i18n_LocalizationManager.add = function(manager) {
 	org_tamina_i18n_LocalizationManager._instance = manager;
 };
@@ -1197,6 +1253,7 @@ org_tamina_io_ImageLoader.prototype = {
 		}
 	}
 	,__class__: org_tamina_io_ImageLoader
+    , __properties__: {get_image: "get_image", get_dataURL: "get_dataURL"}
 };
 var org_tamina_log__$LogLevel_LogLevel_$Impl_$ = {};
 $hxClasses["org.tamina.log._LogLevel.LogLevel_Impl_"] = org_tamina_log__$LogLevel_LogLevel_$Impl_$;
@@ -1416,6 +1473,7 @@ org_tamina_net_AssetLoaderCache.prototype = {
 		return Reflect.field(window,"assetLoaderCache");
 	}
 	,__class__: org_tamina_net_AssetLoaderCache
+    , __properties__: {set__cache: "set__cache", get__cache: "get__cache"}
 };
 var org_tamina_net__$AssetLoaderCache_Cache = function() {
 	this.assetsLoaded = [];
@@ -1570,6 +1628,13 @@ org_tamina_net_URL.prototype = {
 		this.path = rtn;
 	}
 	,__class__: org_tamina_net_URL
+    ,
+    __properties__: {
+        get_parameters: "get_parameters",
+        get_scheme: "get_scheme",
+        get_extension: "get_extension",
+        get_documentName: "get_documentName"
+    }
 };
 var org_tamina_net_AssetURL = function(path,assetType) {
 	if(assetType == null) {
@@ -1683,6 +1748,58 @@ org_tamina_net_XMLLoader.prototype = {
 	}
 	,__class__: org_tamina_net_XMLLoader
 };
+    var org_tamina_utils_BindingUtils = function () {
+        this._bindings = [];
+        this._timer = new haxe_Timer(2);
+        this._timer.run = $bind(this, this.evalBindings);
+    };
+    $hxClasses["org.tamina.utils.BindingUtils"] = org_tamina_utils_BindingUtils;
+    org_tamina_utils_BindingUtils.__name__ = ["org", "tamina", "utils", "BindingUtils"];
+    org_tamina_utils_BindingUtils.bindProperty = function (source, sourceProperty, target, targetProperty) {
+        if (org_tamina_utils_BindingUtils._instance == null) {
+            org_tamina_utils_BindingUtils._instance = new org_tamina_utils_BindingUtils();
+        }
+        var model = new org_tamina_utils__$BindingUtils_BindingModel(source, sourceProperty, target, targetProperty);
+        org_tamina_utils_BindingUtils._instance.registerBinding(model);
+        return model;
+    };
+    org_tamina_utils_BindingUtils.remove = function (model) {
+        org_tamina_utils_BindingUtils._instance.unRegisterBinding(model);
+    };
+    org_tamina_utils_BindingUtils.prototype = {
+        evalBindings: function () {
+            var _g = 0;
+            var _g1 = this._bindings;
+            while (_g < _g1.length) {
+                var model = _g1[_g];
+                ++_g;
+                var currentValue = Reflect.getProperty(model.source, model.sourceProperty);
+                if (model.value != currentValue) {
+                    model.value = currentValue;
+                    Reflect.setProperty(model.target, model.targetProperty, model.value);
+                }
+            }
+        }
+        , registerBinding: function (model) {
+            this._bindings.push(model);
+        }
+        , unRegisterBinding: function (model) {
+            HxOverrides.remove(this._bindings, model);
+        }
+        , __class__: org_tamina_utils_BindingUtils
+    };
+    var org_tamina_utils__$BindingUtils_BindingModel = function (source, sourceProperty, target, targetProperty) {
+        this.source = source;
+        this.sourceProperty = sourceProperty;
+        this.target = target;
+        this.targetProperty = targetProperty;
+        this.value = Reflect.getProperty(source, sourceProperty);
+    };
+    $hxClasses["org.tamina.utils._BindingUtils.BindingModel"] = org_tamina_utils__$BindingUtils_BindingModel;
+    org_tamina_utils__$BindingUtils_BindingModel.__name__ = ["org", "tamina", "utils", "_BindingUtils", "BindingModel"];
+    org_tamina_utils__$BindingUtils_BindingModel.prototype = {
+        __class__: org_tamina_utils__$BindingUtils_BindingModel
+    };
 var org_tamina_utils_ClassUtils = function() { };
 $hxClasses["org.tamina.utils.ClassUtils"] = org_tamina_utils_ClassUtils;
 org_tamina_utils_ClassUtils.__name__ = ["org","tamina","utils","ClassUtils"];
@@ -1692,9 +1809,6 @@ org_tamina_utils_ClassUtils.expose = function(instance,rootInstanceName) {
 var org_tamina_utils_ColorUtils = function() { };
 $hxClasses["org.tamina.utils.ColorUtils"] = org_tamina_utils_ColorUtils;
 org_tamina_utils_ColorUtils.__name__ = ["org","tamina","utils","ColorUtils"];
-org_tamina_utils_ColorUtils.decColor2hex = function(color) {
-	return "#000000";
-};
 org_tamina_utils_ColorUtils.invert = function(color) {
 	if(color.length != 7) {
 		throw new Error("Hex color must be six hex numbers in length.");
@@ -2113,12 +2227,25 @@ org_tamina_utils_UID.getUID = function() {
         attachedCallback: function () {
             this._otherComponent.displaySomething();
             this._rand = Math.random();
+            this._index = 0;
+            this._data = {message: "click to update", name: "me"};
+            var watcher = org_tamina_utils_BindingUtils.bindProperty(this._data, "message", this._messageSpan, "innerHTML");
+            var _g = 0;
+            while (_g < 1000) {
+                var i = _g++;
+                var element = window.document.createElement("span");
+                org_tamina_utils_BindingUtils.bindProperty(this._data, "message", element, "innerHTML");
+                this.appendChild(element);
+            }
+            org_tamina_utils_BindingUtils.remove(watcher);
         }
         , toto: function () {
             console.log("clicked " + this._rand);
+            this._index++;
+            this._data.message = "clicked " + this._index + " times";
         }
         , getView: function () {
-            return "<div>\n    lalalalalaaa\n    <button onclick=\"this.host.toto()\">click me</button>\n</div>\n<test-html-view-othertestcomponent data-id=\"_otherComponent\"></test-html-view-othertestcomponent>";
+            return "<div>\n    lalalalalaaa\n    <button onclick=\"this.host.toto()\">click me</button>\n    Today's message is: <span data-bind=\"innerHTML: _data.message\" data-id=\"_messageSpan\"></span>\n</div>\n<test-html-view-othertestcomponent data-id=\"_otherComponent\"></test-html-view-othertestcomponent>";
         }
         , __class__: test_html_view_TestComponent
     });
@@ -2172,7 +2299,7 @@ org_tamina_utils_UID._lastUID = 0;
     }(this));
     test_html_view_TestComponent.__meta__ = {
         obj: {view: ["test/html/view/TestComponent.html"]},
-        fields: {_otherComponent: {skinpart: [""]}}
+        fields: {_otherComponent: {skinpart: [""]}, _messageSpan: {skinpart: [""]}}
     };
     test_html_view_TestComponent.__registered = (function ($this) {
         var $r;

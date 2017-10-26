@@ -375,10 +375,31 @@
             "fors": {},
             "namespaces": {}
         },
+      "org/tamina/utils/BindingUtils.hx": {
+        "name": "org/tamina/utils/BindingUtils.hx",
+        "modules": {},
+        "classes": {
+          "BindingUtils": 1,
+          "BindingModel": 1
+        },
+        "fors": {},
+        "namespaces": {}
+      },
+      "org/tamina/utils/ClassUtils.hx": {
+        "name": "org/tamina/utils/ClassUtils.hx",
+        "modules": {},
+        "classes": {
+          "ClassUtils": 1
+        },
+        "fors": {},
+        "namespaces": {}
+      },
         "org/tamina/utils/ColorUtils.hx": {
             "name": "org/tamina/utils/ColorUtils.hx",
             "modules": {},
-            "classes": {},
+          "classes": {
+            "ColorUtils": 1
+          },
             "fors": {},
             "namespaces": {}
         },
@@ -471,6 +492,10 @@
                 "ImageLoader": 1,
                 "LogLevel": 1,
                 "AssetLoaderCache": 1,
+              "BindingUtils": 1,
+              "BindingModel": 1,
+              "ClassUtils": 1,
+              "ColorUtils": 1,
                 "DateUtils": 1,
                 "HTMLUtils": 1,
                 "NumberUtils": 1
@@ -906,7 +931,7 @@
             "module": "Tamina",
             "namespace": "",
             "file": "org/tamina/html/component/HTMLComponent.hx",
-          "line": 20,
+          "line": 18,
             "description": "HTMLComponent is the base class to build Custom Elements.<br>\n## x-tag\nHTMLComponent now extends HTMLElement. That means we can deal with components in an easier way (like DOM elements).<br>\nThe other change is it officially supports Custom Elements. It’s now possible to instantiate HTMLComponent in their view.\n\n    <html-view-othertestcomponent data-id=\"_otherComponent\"></html-view-othertestcomponent>\n\nThe tag name is made from your component namespace and classname. In the previous example, our component is *html.view.OtherTestComponent*<br>\n## Life cycle\nOur component life cycle is the same as Custom Elements.\n\npublic function  createdCallback() //Called after the element is created.\n\npublic function  attachedCallback() //Called when the element is attached to the document\n\npublic function  detachedCallback() //Called when the element is detached from the document.\n\npublic function  attributeChangedCallback(attrName:String, oldVal:String, newVal:String) //Called when one of attributes of the element is changed.\n\nYou can override them if you need it.<br>\n## Skin Parts\nAnother usefull feature is Skin Part support. This metadata is used to reference an element from his view.\nYou don’t need to do it yourself anymore, A macro will automatically do it while compiling.<br>\nThis technique was inspired by Flex4 Spark components architecture.\n\n    \\@view('html/view/TestComponent.html')\n    class TestComponent extends HTMLComponent {\n\n        \\@skinpart(\"\")\n        private var _otherComponent:OtherTestComponent;\n\n        override public function attachedCallback() {\n            _otherComponent.displayHellWorld();\n        }\n\n    }\n\n## View\nThis metadata is used to link an HTML file as the view part of your component. In the previous exemple,\nTestComponent.html is used to describe the view structure.\n\n     <div>\n        \\{{title}}\n    </div>\n\n    <html-view-othertestcomponent data-id=\"_otherComponent\"></html-view-othertestcomponent>\nmore info : http://happy-technologies.com/custom-elements-and-component-developement-en/",
             "extends": "js.html.HTMLElement"
         },
@@ -1083,6 +1108,62 @@
             "author": "d.mouton",
             "is_constructor": 1
         },
+      "BindingUtils": {
+        "name": "BindingUtils",
+        "shortname": "BindingUtils",
+        "classitems": [],
+        "plugins": [],
+        "extensions": [],
+        "plugin_for": [],
+        "extension_for": [],
+        "module": "Tamina",
+        "namespace": "",
+        "file": "org/tamina/utils/BindingUtils.hx",
+        "line": 5,
+        "description": "The BindingUtils class defines utility methods for performing data binding from Haxe code. You can use the methods defined in this class to configure data bindings."
+      },
+      "BindingModel": {
+        "name": "BindingModel",
+        "shortname": "BindingModel",
+        "classitems": [],
+        "plugins": [],
+        "extensions": [],
+        "plugin_for": [],
+        "extension_for": [],
+        "module": "Tamina",
+        "namespace": "",
+        "file": "org/tamina/utils/BindingUtils.hx",
+        "line": 70,
+        "description": "The BindingModel represent the result of a data binding.",
+        "access": "private",
+        "tagname": ""
+      },
+      "ClassUtils": {
+        "name": "ClassUtils",
+        "shortname": "ClassUtils",
+        "classitems": [],
+        "plugins": [],
+        "extensions": [],
+        "plugin_for": [],
+        "extension_for": [],
+        "module": "Tamina",
+        "namespace": "",
+        "file": "org/tamina/utils/ClassUtils.hx",
+        "line": 4
+      },
+      "ColorUtils": {
+        "name": "ColorUtils",
+        "shortname": "ColorUtils",
+        "classitems": [],
+        "plugins": [],
+        "extensions": [],
+        "plugin_for": [],
+        "extension_for": [],
+        "module": "Tamina",
+        "namespace": "",
+        "file": "org/tamina/utils/ColorUtils.hx",
+        "line": 4
+      },
         "DateUtils": {
             "name": "DateUtils",
             "shortname": "DateUtils",
@@ -6743,7 +6824,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-          "line": 73,
+          "line": 71,
             "description": "Whether or not the display object is visible.",
             "itemtype": "property",
             "name": "visible",
@@ -6753,7 +6834,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-          "line": 80,
+          "line": 78,
             "description": "Whether or not the display object is initialized.",
             "itemtype": "property",
             "name": "initialized",
@@ -6763,7 +6844,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-          "line": 87,
+          "line": 85,
             "description": "Whether or not the display object has been created.",
             "itemtype": "property",
             "name": "created",
@@ -6773,7 +6854,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-          "line": 94,
+          "line": 92,
             "description": "Whether or not the display object and its children have been created.",
             "itemtype": "property",
             "name": "creationComplete",
@@ -6783,7 +6864,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-          "line": 113,
+          "line": 111,
             "description": "Called after the element is created.",
             "itemtype": "method",
             "name": "createdCallback",
@@ -6792,7 +6873,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-          "line": 132,
+          "line": 130,
             "description": "Called when component creation is complete",
             "itemtype": "method",
             "name": "creationCompleteCallback",
@@ -6801,7 +6882,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-          "line": 141,
+          "line": 139,
             "description": "Called when the element is attached to the document",
             "itemtype": "method",
             "name": "attachedCallback",
@@ -6810,7 +6891,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-          "line": 153,
+          "line": 151,
             "description": "Called when the element is detached from the document.",
             "itemtype": "method",
             "name": "detachedCallback",
@@ -6819,7 +6900,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-          "line": 161,
+          "line": 159,
             "description": "Called when one of attributes of the element is changed.",
             "itemtype": "method",
             "name": "attributeChangedCallback",
@@ -6845,7 +6926,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-          "line": 317,
+          "line": 324,
             "description": "Dispatched when the component has finished its construction and has all initialization properties set, at the end of createdCallback\nSee the {{#crossLink \"HTMLComponentEventType\"}}{{/crossLink}} class for a listing of event properties.",
             "itemtype": "event",
             "name": "HTMLComponentEventType.CREATION_COMPLETE",
@@ -6854,7 +6935,7 @@
         },
         {
             "file": "org/tamina/html/component/HTMLComponent.hx",
-          "line": 323,
+          "line": 330,
             "description": "Dispatched when the component has finished its construction, property processing, measuring, layout, and drawing, at the end of attachedCallback\nSee the {{#crossLink \"HTMLComponentEventType\"}}{{/crossLink}} class for a listing of event properties.",
             "itemtype": "event",
             "name": "HTMLComponentEventType.INITIALIZE",
@@ -8527,14 +8608,101 @@
             "line": 3,
             "description": "...",
             "author": "David Mouton",
-            "class": "DateUtils",
+          "class": "BindingUtils",
+          "module": "Tamina"
+        },
+      {
+        "file": "org/tamina/utils/BindingUtils.hx",
+        "line": 40,
+        "description": "Binds a public property, sourceProperty on the source Object, to a bindable property on the target Object.",
+        "itemtype": "method",
+        "name": "bindProperty",
+        "static": 1,
+        "params": [
+          {
+            "name": "source",
+            "description": "",
+            "type": "Any"
+          },
+          {
+            "name": "sourceProperty",
+            "description": "",
+            "type": "String"
+          },
+          {
+            "name": "target",
+            "description": "",
+            "type": "Any"
+          },
+          {
+            "name": "targetProperty",
+            "description": "",
+            "type": "String"
+          }
+        ],
+        "return": {
+          "description": "",
+          "type": "BindingModel"
+        },
+        "class": "BindingUtils",
+        "module": "Tamina"
+      },
+      {
+        "file": "org/tamina/utils/BindingUtils.hx",
+        "line": 59,
+        "description": "Remove a binding",
+        "itemtype": "method",
+        "name": "remove",
+        "static": 1,
+        "params": [
+          {
+            "name": "model",
+            "description": "",
+            "type": "BindingModel"
+          }
+        ],
+        "class": "BindingUtils",
+        "module": "Tamina"
+      },
+      {
+        "file": "org/tamina/utils/ClassUtils.hx",
+        "line": 9,
+        "description": "Expose an object or a function in the window global env",
+        "itemtype": "method",
+        "name": "expose",
+        "static": 1,
+        "params": [
+          {
+            "name": "instance",
+            "description": "",
+            "type": "Dynamic"
+          },
+          {
+            "name": "rootInstanceName",
+            "description": "",
+            "type": "String"
+          }
+        ],
+        "class": "ClassUtils",
             "module": "Tamina"
         },
         {
             "file": "org/tamina/utils/ColorUtils.hx",
-            "line": 4,
-            "description": "convert a color number to hex value\nex 1677845 -> #FF5500",
-            "class": "DateUtils",
+          "line": 9,
+          "itemtype": "method",
+          "name": "invert",
+          "params": [
+            {
+              "name": "color",
+              "description": "in hex format",
+              "type": "String"
+            }
+          ],
+          "return": {
+            "description": "",
+            "type": "String"
+          },
+          "class": "ColorUtils",
             "module": "Tamina"
         },
         {
@@ -8852,10 +9020,6 @@
         {
             "message": "Missing item type\n...",
             "line": " org/tamina/net/URL.hx:3"
-        },
-        {
-            "message": "Missing item type\nconvert a color number to hex value\nex 1677845 -> #FF5500",
-            "line": " org/tamina/utils/ColorUtils.hx:4"
         },
         {
             "message": "Missing item type\nArrondi à un nombre de chiffre apres la virgule",

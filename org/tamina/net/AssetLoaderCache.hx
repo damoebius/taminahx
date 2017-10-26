@@ -33,18 +33,13 @@ package org.tamina.net;
 * @class AssetLoaderCache
 * @constructor
 */
+import js.Browser;
 import js.html.Element;
 import js.html.LinkElement;
 import js.html.ScriptElement;
-import js.Browser;
 class AssetLoaderCache {
 
     private var _cache(get, set):Cache;
-
-
-    /**
-    * @constructor
-    */
 
     public function new() {
         if (_cache == null) {
@@ -52,6 +47,11 @@ class AssetLoaderCache {
         }
     }
 
+    /**
+    * @method getLoadingAsset
+    * @param {AssetURL} url
+    * @return {Element}
+    **/
     public function getLoadingAsset(url:AssetURL):Element {
         var result:Element = null;
 
