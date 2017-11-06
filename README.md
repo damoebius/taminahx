@@ -97,6 +97,69 @@ class TestComponent extends HTMLComponent {
 }
 ```
 
+
+### Host reference
+
+You can access your host component from your view with "this.host" on your node element. In this example a click on the button will call the host's *displaySomething* function.
+
+```html
+<div>
+    Hello
+</div>
+ <button onclick="this.host.displaySomething()">go</button>
+<html-view-othertestcomponent data-id="_otherComponent"></html-view-othertestcomponent>
+
+```
+
+### Data Binding
+
+Data Binding is now only available from your Haxe code.
+In this example, every change on *_data.message* will update 1000 SpanElement innerHTML property.
+
+```haxe
+class TestComponent extends HTMLComponent {
+
+    @skinpart("") private var _otherComponent:OtherTestComponent;
+    @skinpart("") private var _messageSpan:SpanElement;
+
+    private var _rand:Float;
+    private var _data:TestData;
+    private var _index:Int;
+
+    override public function attachedCallback() {
+        _otherComponent.displaySomething();
+        _rand = Math.random();
+        _index = 0;
+        _data = {
+            message: "click to update",
+            name:"me"
+        };
+
+        var watcher = BindingUtils.bindProperty(_data, "message", _messageSpan, "innerHTML");
+        for (i in 0...1000) {
+            var element = Browser.document.createSpanElement();
+            BindingUtils.bindProperty(_data, "message", element, "innerHTML");
+            this.appendChild(element);
+        }
+
+        BindingUtils.remove(watcher);
+
+    }
+
+    private function toto():Void {
+        trace("clicked " + _rand);
+        _index++;
+        _data.message = "clicked " + _index + " times";
+    }
+
+}
+
+typedef TestData = {
+    var message:String;
+    var name:String;
+}
+```
+
 ### Instance Factory
 
 To instantiate dynamically a component from your application, like an itemRenderer for example, you can use a Factory available in HTMLComponent.
@@ -108,6 +171,28 @@ public static function createInstance<T>(type:Class<T>):T;
 var myComponent = HTMLComponent.createInstance(TestComponent);
 Browser.document.body.appendChild(myComponent);
 ```
+
+
+### Intellij Code Template
+
+You can configure your favorite IDE to use a HTMLComponent Code Template and increase your productivity.
+
+```haxe
+package ${PACKAGE_NAME};
+
+import org.tamina.html.component.HTMLComponent;
+
+#set($path = $PACKAGE_NAME.replace(".", "/"))
+/**
+* @class ${NAME}
+**/
+@view("$path/${NAME}.html")
+class ${NAME} extends HTMLComponent {
+    
+}
+
+```
+
 
 
 ### Polyfills
@@ -161,7 +246,7 @@ And an example of initialization :
 ```haxe
 LocalizationManager.instance.setTranslations(translations);
 ```
-### Utilization
+### Usage
 
 To use a translation from your application, you just have to call the LocalizationManager.
 
