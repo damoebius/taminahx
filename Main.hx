@@ -1,5 +1,7 @@
 package ;
 
+import haxe.http.HttpMethod;
+import haxe.io.Mime;
 import js.html.Image;
 import org.tamina.net.AssetCompositeLoader;
 import org.tamina.net.AssetsSequenceLoader;
@@ -7,8 +9,6 @@ import org.tamina.net.AssetURL;
 import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventType;
 import test.html.view.TestComponent;
 import js.Error;
-import haxe.MimeType;
-import haxe.HTTPMethod;
 import js.Browser;
 import org.tamina.utils.UID;
 import org.tamina.utils.ObjectUtils;
@@ -118,7 +118,7 @@ typedef MainEvent = Event<String>;
 
 class GetAlbumsRequest extends org.tamina.net.BaseRequest<GetAlbumsRequestHeader, GetAlbumsRequestResponse> {
     public function new( ) {
-        super("http://api.heidi.tech/Api.svc/GetAlbums", HTTPMethod.POST, MimeType.JSON);
+        super("http://api.heidi.tech/Api.svc/GetAlbums", HttpMethod.Post, Mime.ApplicationJson);
     }
 
 

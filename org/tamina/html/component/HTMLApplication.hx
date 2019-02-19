@@ -83,7 +83,7 @@ class HTMLApplication {
     public function loadComponents():Void {
         for (tag in HTMLApplication.componentsXTagList.keys()) {
             var componentClass = Type.resolveClass(HTMLApplication.componentsXTagList.get(tag));
-            Browser.document.registerElement(tag, cast componentClass);
+            untyped Browser.document.customElements.define(tag, cast componentClass);
         }
     }
 

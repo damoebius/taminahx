@@ -106,6 +106,7 @@ class HTMLComponent extends HtmlElement {
     private var _skinPartsAttached:Bool = false;
 
     private function new() {
+        super();
     }
 
     /**

@@ -91,14 +91,14 @@ class HTMLComponentFactory {
         _registeredXTags.push(xtagExpr);
 
         // Print custom components info (xtag + haxe class) if DEBUG_COMPONENTS is defined
-        var debugComponents = Compiler.getDefine("DEBUG_COMPONENTS");
+        /*var debugComponents = Compiler.getDefine("DEBUG_COMPONENTS");
         if (debugComponents != null) {
             if (isCustomXTag) {
                 Context.warning('Registering custom component **$xtagExpr** from the class **$className**', cls.pos);
             } else {
                 Context.warning('Registering custom component **$xtagExpr**', cls.pos);
             }
-        }
+        }*/
 
         fields.push({
             name: '__registered',

@@ -1,9 +1,9 @@
 package org.tamina.net;
 
-import haxe.HTTPStatus;
-import haxe.HTTPMethod;
+import haxe.http.HttpStatus;
+import haxe.http.HttpMethod;
+import haxe.io.Mime;
 import haxe.Json;
-import haxe.MimeType;
 import js.Error;
 import js.Promise;
 import js.html.ProgressEvent;
@@ -15,14 +15,14 @@ import org.tamina.utils.UID;
 class BaseRequest<Header, Response> {
 
     private var _httpRequest:XMLHttpRequest;
-    private var _contentType:MimeType;
+    private var _contentType:Mime;
     private var _header:Header;
 
     private var _id:Float;
     public var id(get, null):Float;
 
 
-    public function new( remoteMethod:String, method:HTTPMethod = HTTPMethod.POST, ?contentType:MimeType = MimeType.JSON ) {
+    public function new( remoteMethod:String, method:HttpMethod = HttpMethod.Post, ?contentType:Mime = Mime.ApplicationJson ) {
         _id = UID.getUID();
         _contentType = contentType;
         _httpRequest = new XMLHttpRequest();
@@ -47,7 +47,7 @@ class BaseRequest<Header, Response> {
             _httpRequest.addEventListener(XMLHttpRequestEvent.LOAD, function( result:ProgressEvent ):Void {
                 var req:XMLHttpRequest = cast result.target;
 
-                if(req.status == HTTPStatus.OK){
+                if(req.status == HttpStatus.OK){
                     try {
                         var p:Response = Json.parse(req.response);
                         resolve(p);

@@ -1,6 +1,6 @@
 package org.tamina.net;
 
-import haxe.HTTPMethod;
+import haxe.http.HttpMethod;
 import js.Error;
 import js.Promise;
 import js.html.XMLHttpRequestResponseType;
@@ -43,7 +43,7 @@ class XMLLoader {
         _configLoader.addEventListener(XMLHttpRequestEvent.ERROR, function(error:Error):Void{
             reject(error);
         });
-        _configLoader.open(HTTPMethod.GET, _url.path, true);
+        _configLoader.open(HttpMethod.Get, _url.path, true);
         _configLoader.send(null);
     }
 }

@@ -5,7 +5,7 @@ package org.tamina.net;
  * @author David Mouton
  */
 
-import haxe.Scheme;
+import haxe.io.Scheme;
 import haxe.ds.StringMap;
 
 class URL 

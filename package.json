@@ -12,7 +12,7 @@
   "author": {
     "name": "David Mouton"
   },
-  "version": "2.0.2",
+  "version": "4.0.0",
   "license": "MIT",
   "engines": {
     "node": ">=0.8.0"
@@ -24,7 +24,7 @@
     "haxe",
     "README.md"
   ],
-  "homepage": "https://developers.heidi.tech",
+  "homepage": "https://github.com/damoebius/taminahx",
   "bugs": {
     "url": "https://github.com/damoebius/taminahx/issues"
   },
@@ -36,10 +36,10 @@
     "build:doc": "yuidoc -c yuidoc.json -e .hx -p haxe org"
   },
   "config": {
-    "haxe:version": "3.2.1"
+    "haxe:version": "4.0.0-rc1"
   },
   "devDependencies": {
-    "haxe": "4.0.0"
+    "haxe": "5.0.10"
   },
   "readmeFilename": "README.md"
 }
