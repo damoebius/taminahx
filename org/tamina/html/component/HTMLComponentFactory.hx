@@ -56,12 +56,6 @@ class HTMLComponentFactory {
             if (viewParams.length > 1) {
                 var xtag:String = ExprTools.getValue(viewParams[1]);
                 isCustomXTag = true;
-                
-                // Use xtag prefix if defined
-                var xtagPrefix = Compiler.getDefine("XTAG_PREFIX");
-                if (xtagPrefix != null) {
-                    xtag = xtagPrefix + "-" + xtag;
-                }
 
                 // Fail if no dash found (custom components names must contain at least one dash)
                 if (xtag.indexOf("-") > -1) {

@@ -1,13 +1,13 @@
 package test.html.view;
 import org.tamina.html.component.HTMLComponent;
 
-@view('test/html/view/OtherTestComponent.html')
+@view("", "my-othercustomelement")
 class OtherTestComponent  extends HTMLComponent {
 
     private var _myvar:String="coucou";
 
-    override public function createdCallback() {
-        super.createdCallback();
+    override public function connectedCallback() {
+        super.connectedCallback();
         _myvar = "pouet";
     }
 

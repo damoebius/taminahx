@@ -3,4 +3,6 @@
 # org.tamina.net.BaseRequest (js:org.tamina.net.baserequest.js)
 -main Main
 -cp .
+-D js-es=6
+-D XTAG_PREFIX=heidi
 -js main.js

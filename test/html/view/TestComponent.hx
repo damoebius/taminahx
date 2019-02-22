@@ -4,7 +4,7 @@ import js.html.SpanElement;
 import org.tamina.html.component.HTMLComponent;
 import org.tamina.utils.BindingUtils;
 
-@view('test/html/view/TestComponent.html')
+@view("", "my-customelement")
 class TestComponent extends HTMLComponent {
 
     @skinpart("") private var _otherComponent:OtherTestComponent;
@@ -14,7 +14,8 @@ class TestComponent extends HTMLComponent {
     private var _data:TestData;
     private var _index:Int;
 
-    override public function attachedCallback() {
+    override public function connectedCallback() {
+        super.connectedCallback();
         _otherComponent.displaySomething();
         _rand = Math.random();
         _index = 0;

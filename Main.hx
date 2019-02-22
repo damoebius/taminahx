@@ -54,11 +54,11 @@ typedef MainEvent = Event<String>;
 
     public static function init( translations:Array<ITranslation> ):Void {
         LocalizationManager.instance.setTranslations(translations);
-        _instance.loadComponents();
     }
 
     public static function main( ):Void {
         _instance = new Main();
+        _instance.loadComponents();
         _instance.build();
     }
 
@@ -74,11 +74,11 @@ typedef MainEvent = Event<String>;
         ClassUtils.expose(null, '');
         ColorUtils.invert('#FFFFFF');
         DateUtils.toFrenchString(Date.now());
-        HTMLUtils.getElementById(Browser.document.body, 'test');
+        HTMLUtils.getElementById(Browser.document.head, 'test');
         NumberUtils.toFixed(0, 0);
         ObjectUtils.merge({}, {});
         UID.getUID();
-        var url = new URL("https://cdn.heidi.tech/partners/6/designs/1844052/249990b2-51f5-4d3a-89d6-5796ee87d402.png");
+        var url = new URL("https://fr.wikipedia.org/wiki/Red_Hat#/media/File:RedHat.svg");
         trace(url.scheme);
         var l = new ImageLoader();
         l.load(url).then(function(image:Image){
@@ -88,10 +88,7 @@ typedef MainEvent = Event<String>;
         });
 
         var xmlLoader = new XMLLoader();
-        xmlLoader.load(new URL("https://raw.githubusercontent.com/bryanlittlefield/Magento-local.xml-Template/master/local.xml")).then(function(value){trace(value);}).catchError(function(value){trace(value);});
-
-        var assetLoader = new AssetLoader();
-        assetLoader.load(new AssetURL("toto.js")).then(function(value){trace(value);}).catchError(function(value){trace(value.message);});
+        xmlLoader.load(new URL("http://www.bouletcorp.com/feed/")).then(value -> trace(value)).catchError(value -> trace(value));
 
         var assetListLoader = new AssetsSequenceLoader();
         assetListLoader.load([new AssetURL("https://code.jquery.com/jquery-3.2.1.slim.min.js"),new AssetURL("https://code.createjs.com/easeljs-0.8.2.min.js")]).then(function(value){trace(value);}).catchError(function(value){trace(value);});
@@ -100,7 +97,8 @@ typedef MainEvent = Event<String>;
 
         var myComponent:TestComponent = HTMLApplication.createInstance(TestComponent);
         myComponent.addEventListener(HTMLComponentEventType.CREATION_COMPLETE, myComponent_creationCompleteHandler);
-        Browser.document.body.appendChild(myComponent);
+        Browser.document.addEventListener('DOMContentLoaded', event -> Browser.document.body.appendChild(myComponent));
+
         L.warn("log");
         var request = new GetAlbumsRequest();
         request.setHeaders(new GetAlbumsRequestHeader("fr_FR", "F7CF4DD5-ECBF-4CD6-9E7D-29C513C17401"));

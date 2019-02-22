@@ -3,7 +3,6 @@ package org.tamina.html.component;
 import haxe.rtti.Meta;
 import js.Browser;
 import js.html.Element;
-import js.html.HtmlElement;
 import js.RegExp;
 import org.tamina.display.CSSDisplayValue;
 import org.tamina.html.component.HTMLComponentEvent.HTMLComponentEventFactory;
@@ -27,11 +26,11 @@ import org.tamina.utils.HTMLUtils;
  * ## Life cycle
  * Our component life cycle is the same as Custom Elements.
  *
- * public function  createdCallback() //Called after the element is created.
+ * public function  connectedCallback() //Called when the element is attached to the document
  *
- * public function  attachedCallback() //Called when the element is attached to the document
+ * public function  disconnectedCallback() //Called when the element is detached from the document.
  *
- * public function  detachedCallback() //Called when the element is detached from the document.
+ * public function  adoptedCallback() //Called when the element move to a new document.
  *
  * public function  attributeChangedCallback(attrName:String, oldVal:String, newVal:String) //Called when one of attributes of the element is changed.
  *
@@ -66,7 +65,7 @@ import org.tamina.utils.HTMLUtils;
  * @class HTMLComponent
  * @extends js.html.HTMLElement
  */
-class HTMLComponent extends HtmlElement {
+class HTMLComponent extends Element {
 
     /**
      * Whether or not the display object is visible.
@@ -103,46 +102,17 @@ class HTMLComponent extends HtmlElement {
 
     private var _skinParts:Array<HTMLComponent>;
     private var _skinPartsWaiting:Array<HTMLComponent>;
-    private var _skinPartsAttached:Bool = false;
+    private var _skinPartsAttached:Bool;
 
-    private function new() {
-        super();
-    }
 
     /**
-     * Called after the element is created.
-     * @method createdCallback
+     * Invoked each time the custom element is appended into a document-connected element. This will happen each time the node is moved, and may happen before the element's contents have been fully parsed.
+     * @method connectedCallback
      */
-    public function createdCallback():Void {
-        // trace('createdCallback----------------> ' + this.localName);
-        initDefaultValues();
-        parseContent();
-        initContent();
-        displayContent();
-        updateSkinPartsStatus();
-
-        created = true;
-
-        if (_skinPartsAttached) {
-            creationCompleteCallback();
+    public function connectedCallback():Void {
+        if (!created) {
+            createComponent();
         }
-    }
-
-    /**
-     * Called when component creation is complete
-     * @method creationCompleteCallback
-     */
-    public function creationCompleteCallback():Void {
-        creationComplete = true;
-        this.dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.CREATION_COMPLETE, false));
-    }
-
-    /**
-     * Called when the element is attached to the document
-     * @method attachedCallback
-     */
-    public function attachedCallback():Void {
-        // trace('attachedCallback----------------> ' +  this.localName);
         if (!initialized) {
             this.dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.INITIALIZE, false));
         }
@@ -150,12 +120,16 @@ class HTMLComponent extends HtmlElement {
     }
 
     /**
-     * Called when the element is detached from the document.
-     * @method detachedCallback
+     * Invoked each time the custom element is disconnected from the document's DOM.
+     * @method disconnectedCallback
      */
-    public function detachedCallback():Void {
-        // trace('detachedCallback---------------->');
-    }
+    public function disconnectedCallback():Void {}
+
+    /**
+     * Invoked each time the custom element is moved to a new document.
+     * @method adoptedCallback
+     */
+    public function adoptedCallback():Void {}
 
     /**
      * Called when one of attributes of the element is changed.
@@ -164,9 +138,7 @@ class HTMLComponent extends HtmlElement {
      * @param   oldVal {String} A string representing the old value.
      * @param   newVal {String} A string representing the new value.
      */
-    public function attributeChangedCallback(attrName:String, oldVal:String, newVal:String):Void {
-        // trace('attributeChangedCallback---------------->'+attrName);
-    }
+    public function attributeChangedCallback(attrName:String, oldVal:String, newVal:String):Void {}
 
     private function initDefaultValues():Void {
         _visible = true;
@@ -196,6 +168,25 @@ class HTMLComponent extends HtmlElement {
         }
 
         return _visible;
+    }
+
+    private function createComponent():Void {
+        initDefaultValues();
+        parseContent();
+        initContent();
+        displayContent();
+        updateSkinPartsStatus();
+
+        created = true;
+
+        if (_skinPartsAttached) {
+            creationCompleteCallback();
+        }
+    }
+
+    private function creationCompleteCallback():Void {
+        creationComplete = true;
+        this.dispatchEvent(HTMLComponentEventFactory.createEvent(HTMLComponentEventType.CREATION_COMPLETE, false));
     }
 
     private function getContent():String {
