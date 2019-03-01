@@ -1,4 +1,4 @@
-<img align="left" src="http://tamina.io/tamina-white.png">TAMINA [![NPM version][npm-image]][npm-url]
+<img align="left" src="https://www.tamina-online.com/taminahx/tamina-white.png">TAMINA [![NPM version][npm-image]][npm-url]
 ========
 
 TAMINA IS A FAST, SMALL, AND FEATURE-RICH HAXE LIBRARY
@@ -197,13 +197,9 @@ class ${NAME} extends HTMLComponent {
 
 ### Polyfills
 Browsers don’t support Custom Elements very well. But it'll be native soonly.
-![caniuse](http://happy-technologies.com/wp-content/uploads/2015/12/ce1-1024x256.jpg)
-To make them compatible we used [webcomponent.js](https://github.com/WebComponents/webcomponentsjs).
-![polyfill](http://happy-technologies.com/wp-content/uploads/2015/12/ce2.jpg)
-An optimized and minified version of 15Kb is available on our [CDN here](http://storage.sakuradesigner.microclimat.com/apps/html5/js/CustomElements.min.js).
-
-## JS Typing enhancement
-Tamina give a set of new class and abstract to enhance javascript types, like Url, [Scheme](http://tamina.io/doc/classes/Scheme.html), [Event](http://tamina.io/doc/classes/Event[T].html), [HTTPMethod](http://tamina.io/doc/classes/HTTPMethod.html), and [MimeType](http://tamina.io/doc/classes/MimeType.html)
+![caniuse](https://www.tamina-online.com/taminahx/caniuse.jpg)
+To make them compatible we used [Custom Elements (v1) Polyfill](https://github.com/webcomponents/custom-elements).
+![polyfill](https://www.tamina-online.com/taminahx/polyfill.jpg)
 
 ## Saas support
 You can use Saas style in your web components
